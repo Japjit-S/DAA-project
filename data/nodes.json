@@ -1,0 +1,106 @@
+[
+  {
+    "id": "N001",
+    "name": "Main Entrance Gate",
+    "type": "GATE",
+    "x": 100,
+    "y": 550,
+    "accessible": true
+  },
+  {
+    "id": "N002",
+    "name": "Administrative Block Plaza",
+    "type": "ACADEMIC",
+    "x": 260,
+    "y": 480,
+    "accessible": true
+  },
+  {
+    "id": "N003",
+    "name": "Central University Library",
+    "type": "LIBRARY",
+    "x": 450,
+    "y": 460,
+    "accessible": true
+  },
+  {
+    "id": "N004",
+    "name": "CSE & Information Technology Block",
+    "type": "ACADEMIC",
+    "x": 450,
+    "y": 220,
+    "accessible": true
+  },
+  {
+    "id": "N005",
+    "name": "ECE & Mechanical Engineering Wing",
+    "type": "ACADEMIC",
+    "x": 660,
+    "y": 320,
+    "accessible": true
+  },
+  {
+    "id": "N006",
+    "name": "Student Center & Cafeteria",
+    "type": "AMENITY",
+    "x": 280,
+    "y": 300,
+    "accessible": true
+  },
+  {
+    "id": "N007",
+    "name": "Sports Arena & Gymnasium",
+    "type": "FACILITY",
+    "x": 820,
+    "y": 490,
+    "accessible": true
+  },
+  {
+    "id": "N008",
+    "name": "Innovation & Incubation Hub",
+    "type": "ACADEMIC",
+    "x": 620,
+    "y": 150,
+    "accessible": true
+  },
+  {
+    "id": "N009",
+    "name": "Aryabhatta Hostel Complex",
+    "type": "HOSTEL",
+    "x": 820,
+    "y": 180,
+    "accessible": false
+  },
+  {
+    "id": "N010",
+    "name": "Gargi Hostel Complex",
+    "type": "HOSTEL",
+    "x": 160,
+    "y": 160,
+    "accessible": true
+  },
+  {
+    "id": "N011",
+    "name": "Central Quadrangle Junction",
+    "type": "JUNCTION",
+    "x": 450,
+    "y": 340,
+    "accessible": true
+  },
+  {
+    "id": "N012",
+    "name": "East Gate & Transit Stop",
+    "type": "GATE",
+    "x": 920,
+    "y": 340,
+    "accessible": true
+  },
+  {
+    "id": "N013",
+    "name": "Health Center & North Parking",
+    "type": "FACILITY",
+    "x": 220,
+    "y": 620,
+    "accessible": true
+  }
+]

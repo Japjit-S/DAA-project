@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Campus Navigation &amp; Resource Optimizer</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation / Application Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-icon">🏛️</div>
+      <div class="brand-title">
+        <h1>Smart Campus Navigation and Resource Optimizer</h1>
+        <div class="brand-subtitle">DAA Algorithm Testbed &amp; Spatial Graph Foundation</div>
+      </div>
+    </div>
+
+    <div class="header-status-group">
+      <!-- Live Metrics Badges -->
+      <div class="metrics-pills">
+        <div class="metric-badge">
+          <span>Nodes:</span> <strong id="nodeCountBadge">-</strong>
+        </div>
+        <div class="metric-badge">
+          <span>Edges:</span> <strong id="edgeCountBadge">-</strong>
+        </div>
+        <div class="metric-badge">
+          <span>Buildings:</span> <strong id="buildingCountBadge">-</strong>
+        </div>
+      </div>
+
+      <!-- Live Spring Boot Connection Health Status -->
+      <div id="statusPill" class="status-pill offline" title="Backend Health Status">
+        <div class="pulse-dot"></div>
+        <span id="statusText">Connecting...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Grid: Sidebar & Map Visualization -->
+  <div class="app-container">
+    
+    <!-- Left Sidebar: Building Catalog, Search, and Details -->
+    <aside class="sidebar">
+      <!-- Search Input -->
+      <div class="sidebar-search-box">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search buildings, facilities, departments..." />
+        </div>
+      </div>
+
+      <!-- Category Filter Chips -->
+      <div class="category-filter-chips">
+        <button class="filter-chip active" data-category="ALL">All</button>
+        <button class="filter-chip" data-category="ACADEMIC">Academic</button>
+        <button class="filter-chip" data-category="LIBRARY">Library</button>
+        <button class="filter-chip" data-category="HOSTEL">Hostels</button>
+        <button class="filter-chip" data-category="FACILITY">Facilities</button>
+        <button class="filter-chip" data-category="AMENITY">Amenities</button>
+      </div>
+
+      <!-- Scrollable Building Catalog -->
+      <div class="sidebar-scroll-area">
+        <div class="section-label">Campus Locations</div>
+        <div id="buildingList" style="display:flex; flex-direction:column; gap:0.5rem;">
+          <!-- Dynamically populated via app.js -->
+        </div>
+      </div>
+
+      <!-- Selected Location Information Card -->
+      <div class="detail-view-panel" id="detailPanel">
+        <h3 id="detailTitle">Location Information</h3>
+        <div id="detailContent">
+          <p style="font-size: 0.78rem; color: var(--text-muted);">
+            Select any building from the list or click a vertex node on the campus map to inspect its connectivity, coordinates, and facility attributes.
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Workspace: Interactive SVG Map Canvas -->
+    <main class="map-workspace">
+      <!-- Floating Map Toolbar & Legend -->
+      <div class="map-toolbar">
+        <div class="map-legend">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#3b82f6;"></span> Academic
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#a855f7;"></span> Library
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#eab308;"></span> Hostels
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#10b981;"></span> Facilities
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#06b6d4;"></span> Waypoints
+          </div>
+          <div class="legend-item">
+            <span class="legend-line" style="background:#64748b;"></span> Pathway
+          </div>
+        </div>
+
+        <div class="map-controls-group">
+          <button id="resetHighlightsBtn" class="btn-ctrl" title="Reset map selection">↺ Reset Selection</button>
+          <button id="reloadMapBtn" class="btn-ctrl" title="Reload data from backend">↻ Refresh Data</button>
+        </div>
+      </div>
+
+      <!-- SVG Map Viewport -->
+      <div class="map-canvas-container">
+        <!-- Embed SVG Map -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="100%" height="100%" id="campusMapSvg">
+          <defs>
+            <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0f172a" />
+              <stop offset="100%" stop-color="#1e293b" />
+            </linearGradient>
+            <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#064e3b" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#10b981" stop-opacity="0.15"/>
+            </linearGradient>
+            <linearGradient id="waterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0284c7" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.2"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Campus Base Plane -->
+          <rect width="1000" height="700" fill="url(#bgGrad)" />
+
+          <!-- Blueprint Grid -->
+          <g stroke="#334155" stroke-width="0.5" opacity="0.25">
+            <line x1="100" y1="0" x2="100" y2="700" />
+            <line x1="200" y1="0" x2="200" y2="700" />
+            <line x1="300" y1="0" x2="300" y2="700" />
+            <line x1="400" y1="0" x2="400" y2="700" />
+            <line x1="500" y1="0" x2="500" y2="700" />
+            <line x1="600" y1="0" x2="600" y2="700" />
+            <line x1="700" y1="0" x2="700" y2="700" />
+            <line x1="800" y1="0" x2="800" y2="700" />
+            <line x1="900" y1="0" x2="900" y2="700" />
+
+            <line x1="0" y1="100" x2="1000" y2="100" />
+            <line x1="0" y1="200" x2="1000" y2="200" />
+            <line x1="0" y1="300" x2="1000" y2="300" />
+            <line x1="0" y1="400" x2="1000" y2="400" />
+            <line x1="0" y1="500" x2="1000" y2="500" />
+            <line x1="0" y1="600" x2="1000" y2="600" />
+          </g>
+
+          <!-- Campus Zones & Landscaping -->
+          <g id="campusZones">
+            <path d="M 80,80 Q 250,50 320,120 T 150,220 Z" fill="url(#greenGrad)" stroke="#10b981" stroke-width="1" stroke-opacity="0.3"/>
+            <ellipse cx="450" cy="340" rx="90" ry="50" fill="url(#greenGrad)" stroke="#10b981" stroke-width="1" stroke-opacity="0.4"/>
+            <ellipse cx="450" cy="340" rx="28" ry="16" fill="url(#waterGrad)" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.6"/>
+            <!-- Sports Arena -->
+            <rect x="740" y="430" width="160" height="120" rx="40" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-opacity="0.4" stroke-dasharray="6,4"/>
+            <ellipse cx="820" cy="490" rx="55" ry="35" fill="#14532d" fill-opacity="0.3" stroke="#22c55e" stroke-width="1"/>
+          </g>
+
+          <!-- Building Outlines / Visual Footprints -->
+          <g id="buildingFootprints">
+            <!-- Main Gate -->
+            <rect x="70" y="530" width="60" height="40" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5" opacity="0.8"/>
+            <text x="100" y="585" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="sans-serif">Main Gate</text>
+
+            <!-- Admin Block -->
+            <rect x="200" y="440" width="120" height="70" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" opacity="0.9"/>
+            <text x="260" y="475" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Admin Block</text>
+            <text x="260" y="492" fill="#60a5fa" font-size="9" text-anchor="middle" font-family="sans-serif">B001 • ADM-01</text>
+
+            <!-- Central Library -->
+            <rect x="390" y="420" width="120" height="75" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5" opacity="0.9"/>
+            <text x="450" y="455" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Central Library</text>
+            <text x="450" y="472" fill="#a78bfa" font-size="9" text-anchor="middle" font-family="sans-serif">B002 • LIB-01</text>
+
+            <!-- CSE & IT Block -->
+            <rect x="385" y="175" width="130" height="75" rx="6" fill="#1e293b" stroke="#06b6d4" stroke-width="1.5" opacity="0.9"/>
+            <text x="450" y="210" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">CSE &amp; IT Block</text>
+            <text x="450" y="227" fill="#22d3ee" font-size="9" text-anchor="middle" font-family="sans-serif">B003 • ENG-CS</text>
+
+            <!-- ECE & Mech Wing -->
+            <rect x="595" y="280" width="130" height="75" rx="6" fill="#1e293b" stroke="#06b6d4" stroke-width="1.5" opacity="0.9"/>
+            <text x="660" y="315" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">ECE &amp; Mech Wing</text>
+            <text x="660" y="332" fill="#22d3ee" font-size="9" text-anchor="middle" font-family="sans-serif">B004 • ENG-EC</text>
+
+            <!-- Student Center -->
+            <rect x="220" y="265" width="120" height="65" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" opacity="0.9"/>
+            <text x="280" y="295" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Student Center</text>
+            <text x="280" y="312" fill="#fbbf24" font-size="9" text-anchor="middle" font-family="sans-serif">B005 • SAC-01</text>
+
+            <!-- Sports Complex -->
+            <text x="820" y="485" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Sports Complex</text>
+            <text x="820" y="502" fill="#34d399" font-size="9" text-anchor="middle" font-family="sans-serif">B006 • SPT-01</text>
+
+            <!-- Innovation Hub -->
+            <rect x="560" y="110" width="120" height="65" rx="6" fill="#1e293b" stroke="#ec4899" stroke-width="1.5" opacity="0.9"/>
+            <text x="620" y="140" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Innovation Hub</text>
+            <text x="620" y="157" fill="#f472b6" font-size="9" text-anchor="middle" font-family="sans-serif">B007 • INC-01</text>
+
+            <!-- Aryabhatta Hostel -->
+            <rect x="760" y="145" width="120" height="65" rx="6" fill="#1e293b" stroke="#eab308" stroke-width="1.5" opacity="0.9"/>
+            <text x="820" y="175" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Aryabhatta Hall</text>
+            <text x="820" y="192" fill="#fde047" font-size="9" text-anchor="middle" font-family="sans-serif">B008 • HST-01</text>
+
+            <!-- Gargi Hostel -->
+            <rect x="100" y="125" width="120" height="65" rx="6" fill="#1e293b" stroke="#eab308" stroke-width="1.5" opacity="0.9"/>
+            <text x="160" y="155" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Gargi Hall</text>
+            <text x="160" y="172" fill="#fde047" font-size="9" text-anchor="middle" font-family="sans-serif">B009 • HST-02</text>
+
+            <!-- East Gate -->
+            <rect x="890" y="320" width="60" height="40" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5" opacity="0.8"/>
+            <text x="920" y="375" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="sans-serif">East Gate</text>
+
+            <!-- Health Center -->
+            <rect x="160" y="590" width="120" height="55" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" opacity="0.9"/>
+            <text x="220" y="618" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Health Center</text>
+            <text x="220" y="633" fill="#f87171" font-size="9" text-anchor="middle" font-family="sans-serif">B010 • MED-01</text>
+          </g>
+
+          <!-- Dynamic Graph Layer (Edges and Nodes injected by app.js) -->
+          <g id="graphEdgesLayer"></g>
+          <g id="graphNodesLayer"></g>
+        </svg>
+      </div>
+
+      <!-- DAA Algorithms Readiness Banner -->
+      <div class="daa-hooks-banner">
+        <div>
+          <strong style="color:#a5b4fc;">DAA Foundation Ready:</strong>
+          <span style="color:#94a3b8; margin-left:0.4rem;">Graph data model structured for seamless algorithm integration.</span>
+        </div>
+        <div class="daa-hook-badges">
+          <span class="daa-tag">BFS</span>
+          <span class="daa-tag">DFS</span>
+          <span class="daa-tag">Dijkstra</span>
+          <span class="daa-tag">Prim's</span>
+          <span class="daa-tag">Kruskal's</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Collapsible Live REST API Inspector Drawer -->
+  <div class="api-inspector-drawer" id="apiInspectorDrawer">
+    <div class="drawer-header" id="drawerToggle">
+      <div class="drawer-title">
+        <div class="terminal-dot"></div>
+        <span>REST API Communication Inspector</span>
+      </div>
+      <div style="font-size:0.75rem; color:var(--text-muted);">
+        Click to Expand / Minimize ▾
+      </div>
+    </div>
+    <div class="drawer-content">
+      <div class="api-logs-list" id="apiLogsList">
+        <!-- Intercepted requests listed here -->
+      </div>
+      <div class="api-json-viewer" id="jsonViewer">
+        // Real-time backend JSON response viewer
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "B001",
+    "name": "Administrative Headquarters",
+    "code": "ADM-01",
+    "category": "ADMINISTRATIVE",
+    "nodeId": "N002",
+    "description": "Houses the Vice Chancellor's office, Registrar, Admissions, and Finance divisions.",
+    "floors": 4,
+    "facilities": ["Auditorium", "Conference Hall", "Registrar Office", "Help Desk"]
+  },
+  {
+    "id": "B002",
+    "name": "Central University Library",
+    "code": "LIB-01",
+    "category": "LIBRARY",
+    "nodeId": "N003",
+    "description": "Four-story repository with 100,000+ volumes, digital research lab, and 24/7 reading rooms.",
+    "floors": 4,
+    "facilities": ["Digital Resource Lab", "Silent Study Area", "Reprographics", "Café Kiosk"]
+  },
+  {
+    "id": "B003",
+    "name": "Alan Turing Computer Science Block",
+    "code": "ENG-CS",
+    "category": "ACADEMIC",
+    "nodeId": "N004",
+    "description": "Faculty of Computing, Advanced AI & Algorithms Laboratories, and Software Innovation Suites.",
+    "floors": 5,
+    "facilities": ["AI/ML Computing Lab", "Algorithms Lab", "Seminar Halls", "Server Room"]
+  },
+  {
+    "id": "B004",
+    "name": "Nikola Tesla Engineering Wing",
+    "code": "ENG-EC-ME",
+    "category": "ACADEMIC",
+    "nodeId": "N005",
+    "description": "Houses Electronics, Microprocessor, VLSI design, and Mechanical fabrication workshops.",
+    "floors": 4,
+    "facilities": ["Robotics Lab", "VLSI Workstation", "Maker Space", "Wind Tunnel"]
+  },
+  {
+    "id": "B005",
+    "name": "Student Activities & Food Court",
+    "code": "SAC-01",
+    "category": "AMENITY",
+    "nodeId": "N006",
+    "description": "Multi-cuisine dining hall, indoor recreation arena, student clubs headquarters, and bank ATM.",
+    "floors": 2,
+    "facilities": ["Dining Hall", "Co-working Space", "Bank & ATM", "Stationery Store"]
+  },
+  {
+    "id": "B006",
+    "name": "Major Dhyan Chand Sports Complex",
+    "code": "SPT-01",
+    "category": "FACILITY",
+    "nodeId": "N007",
+    "description": "Olympic-size track, indoor badminton courts, state-of-the-art gym, and swimming pavilion.",
+    "floors": 2,
+    "facilities": ["Fitness Center", "Badminton Arena", "Medical First Aid", "Locker Rooms"]
+  },
+  {
+    "id": "B007",
+    "name": "Technology Transfer & Incubation Center",
+    "code": "INC-01",
+    "category": "ACADEMIC",
+    "nodeId": "N008",
+    "description": "Startup venture incubation hub, prototyping laboratories, and industry research partners.",
+    "floors": 3,
+    "facilities": ["Incubator Suites", "3D Rapid Prototyping", "Pitch Theater", "IP Cell"]
+  },
+  {
+    "id": "B008",
+    "name": "Aryabhatta Residence Hall",
+    "code": "HST-01",
+    "category": "HOSTEL",
+    "nodeId": "N009",
+    "description": "Men's residential facility with recreational courtyards, laundry, and study lounges.",
+    "floors": 6,
+    "facilities": ["Mess Hall", "Common Room", "Laundry Unit", "Wi-Fi Lounge"]
+  },
+  {
+    "id": "B009",
+    "name": "Gargi Residence Hall",
+    "code": "HST-02",
+    "category": "HOSTEL",
+    "nodeId": "N010",
+    "description": "Women's residential facility with 24/7 security, gymnasium, library reading annex.",
+    "floors": 6,
+    "facilities": ["Mess Hall", "Fitness Room", "Reading Lounge", "Garden Courtyard"]
+  },
+  {
+    "id": "B010",
+    "name": "University Health & Emergency Care",
+    "code": "MED-01",
+    "category": "FACILITY",
+    "nodeId": "N013",
+    "description": "Full-time primary healthcare clinic, ambulance bay, and pharmacy services.",
+    "floors": 2,
+    "facilities": ["Emergency Triage", "Pharmacy", "Doctor Consultation", "Observation Ward"]
+  }
+]

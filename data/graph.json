@@ -1,0 +1,274 @@
+{
+  "graphId": "CAMPUS_MAIN_GRAPH",
+  "directed": false,
+  "nodeCount": 13,
+  "edgeCount": 20,
+  "nodes": [
+    {
+      "id": "N001",
+      "name": "Main Entrance Gate",
+      "type": "GATE",
+      "x": 100,
+      "y": 550,
+      "accessible": true
+    },
+    {
+      "id": "N002",
+      "name": "Administrative Block Plaza",
+      "type": "ACADEMIC",
+      "x": 260,
+      "y": 480,
+      "accessible": true
+    },
+    {
+      "id": "N003",
+      "name": "Central University Library",
+      "type": "LIBRARY",
+      "x": 450,
+      "y": 460,
+      "accessible": true
+    },
+    {
+      "id": "N004",
+      "name": "CSE & Information Technology Block",
+      "type": "ACADEMIC",
+      "x": 450,
+      "y": 220,
+      "accessible": true
+    },
+    {
+      "id": "N005",
+      "name": "ECE & Mechanical Engineering Wing",
+      "type": "ACADEMIC",
+      "x": 660,
+      "y": 320,
+      "accessible": true
+    },
+    {
+      "id": "N006",
+      "name": "Student Center & Cafeteria",
+      "type": "AMENITY",
+      "x": 280,
+      "y": 300,
+      "accessible": true
+    },
+    {
+      "id": "N007",
+      "name": "Sports Arena & Gymnasium",
+      "type": "FACILITY",
+      "x": 820,
+      "y": 490,
+      "accessible": true
+    },
+    {
+      "id": "N008",
+      "name": "Innovation & Incubation Hub",
+      "type": "ACADEMIC",
+      "x": 620,
+      "y": 150,
+      "accessible": true
+    },
+    {
+      "id": "N009",
+      "name": "Aryabhatta Hostel Complex",
+      "type": "HOSTEL",
+      "x": 820,
+      "y": 180,
+      "accessible": false
+    },
+    {
+      "id": "N010",
+      "name": "Gargi Hostel Complex",
+      "type": "HOSTEL",
+      "x": 160,
+      "y": 160,
+      "accessible": true
+    },
+    {
+      "id": "N011",
+      "name": "Central Quadrangle Junction",
+      "type": "JUNCTION",
+      "x": 450,
+      "y": 340,
+      "accessible": true
+    },
+    {
+      "id": "N012",
+      "name": "East Gate & Transit Stop",
+      "type": "GATE",
+      "x": 920,
+      "y": 340,
+      "accessible": true
+    },
+    {
+      "id": "N013",
+      "name": "Health Center & North Parking",
+      "type": "FACILITY",
+      "x": 220,
+      "y": 620,
+      "accessible": true
+    }
+  ],
+  "edges": [
+    {
+      "id": "E001",
+      "source": "N001",
+      "target": "N002",
+      "weight": 180.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E002",
+      "source": "N001",
+      "target": "N013",
+      "weight": 140.0,
+      "bidirectional": true,
+      "type": "ROAD"
+    },
+    {
+      "id": "E003",
+      "source": "N002",
+      "target": "N013",
+      "weight": 150.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E004",
+      "source": "N002",
+      "target": "N003",
+      "weight": 190.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E005",
+      "source": "N002",
+      "target": "N006",
+      "weight": 185.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E006",
+      "source": "N006",
+      "target": "N010",
+      "weight": 190.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E007",
+      "source": "N006",
+      "target": "N011",
+      "weight": 175.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E008",
+      "source": "N003",
+      "target": "N011",
+      "weight": 120.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E009",
+      "source": "N011",
+      "target": "N004",
+      "weight": 120.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E010",
+      "source": "N010",
+      "target": "N004",
+      "weight": 295.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E011",
+      "source": "N004",
+      "target": "N008",
+      "weight": 185.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E012",
+      "source": "N011",
+      "target": "N005",
+      "weight": 210.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E013",
+      "source": "N008",
+      "target": "N005",
+      "weight": 175.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E014",
+      "source": "N008",
+      "target": "N009",
+      "weight": 205.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E015",
+      "source": "N005",
+      "target": "N009",
+      "weight": 215.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E016",
+      "source": "N005",
+      "target": "N012",
+      "weight": 260.0,
+      "bidirectional": true,
+      "type": "ROAD"
+    },
+    {
+      "id": "E017",
+      "source": "N003",
+      "target": "N007",
+      "weight": 370.0,
+      "bidirectional": true,
+      "type": "ROAD"
+    },
+    {
+      "id": "E018",
+      "source": "N005",
+      "target": "N007",
+      "weight": 235.0,
+      "bidirectional": true,
+      "type": "WALKWAY"
+    },
+    {
+      "id": "E019",
+      "source": "N007",
+      "target": "N012",
+      "weight": 180.0,
+      "bidirectional": true,
+      "type": "ROAD"
+    },
+    {
+      "id": "E020",
+      "source": "N009",
+      "target": "N012",
+      "weight": 190.0,
+      "bidirectional": true,
+      "type": "ROAD"
+    }
+  ]
+}
