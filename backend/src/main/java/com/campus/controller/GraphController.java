@@ -67,7 +67,6 @@ public class GraphController {
 
     /**
      * Runs Breadth-First Search (BFS) between startNodeId and optional endNodeId.
-     * Example: GET /api/graph/bfs?startNodeId=N001&endNodeId=N004&accessibleOnly=false
      */
     @GetMapping("/bfs")
     public ResponseEntity<ApiResponse<AlgorithmResult>> runBfs(
@@ -83,7 +82,6 @@ public class GraphController {
 
     /**
      * Runs Depth-First Search (DFS) for traversal, connectivity, connected components, and cycle detection.
-     * Example: GET /api/graph/dfs?startNodeId=N001&endNodeId=N009&iterative=false
      */
     @GetMapping("/dfs")
     public ResponseEntity<ApiResponse<AlgorithmResult>> runDfs(
@@ -99,10 +97,55 @@ public class GraphController {
     }
 
     /**
-     * POST endpoint accepting a GraphRequest body for BFS / DFS / DFS_ITERATIVE.
+     * Runs Dijkstra's Shortest Path Algorithm between startNodeId and endNodeId.
+     * Example: GET /api/graph/shortest-path?startNodeId=N001&endNodeId=N004&accessibleOnly=false
      */
-    @PostMapping("/traverse")
-    public ResponseEntity<ApiResponse<AlgorithmResult>> traverseGraph(@RequestBody GraphRequest request) {
+    @GetMapping("/shortest-path")
+    public ResponseEntity<ApiResponse<AlgorithmResult>> getShortestPath(
+            @RequestParam String startNodeId,
+            @RequestParam String endNodeId,
+            @RequestParam(defaultValue = "false") boolean accessibleOnly,
+            @RequestParam(required = false) List<String> blockedEdges) {
+
+        Set<String> blocked = blockedEdges != null ? new HashSet<>(blockedEdges) : Collections.emptySet();
+        AlgorithmResult result = graphService.runDijkstra(startNodeId, endNodeId, blocked, accessibleOnly);
+        return ResponseEntity.ok(ApiResponse.success(result, "Shortest path calculated successfully"));
+    }
+
+    /**
+     * Runs Prim's Minimum Spanning Tree (MST) algorithm.
+     * Example: GET /api/graph/mst/prim?startNodeId=N001&accessibleOnly=false
+     */
+    @GetMapping("/mst/prim")
+    public ResponseEntity<ApiResponse<AlgorithmResult>> getPrimsMst(
+            @RequestParam(required = false) String startNodeId,
+            @RequestParam(defaultValue = "false") boolean accessibleOnly,
+            @RequestParam(required = false) List<String> blockedEdges) {
+
+        Set<String> blocked = blockedEdges != null ? new HashSet<>(blockedEdges) : Collections.emptySet();
+        AlgorithmResult result = graphService.runPrimsMst(startNodeId, blocked, accessibleOnly);
+        return ResponseEntity.ok(ApiResponse.success(result, "Prim's MST calculated successfully"));
+    }
+
+    /**
+     * Runs Kruskal's Minimum Spanning Tree (MST) algorithm.
+     * Example: GET /api/graph/mst/kruskal?accessibleOnly=false
+     */
+    @GetMapping("/mst/kruskal")
+    public ResponseEntity<ApiResponse<AlgorithmResult>> getKruskalsMst(
+            @RequestParam(defaultValue = "false") boolean accessibleOnly,
+            @RequestParam(required = false) List<String> blockedEdges) {
+
+        Set<String> blocked = blockedEdges != null ? new HashSet<>(blockedEdges) : Collections.emptySet();
+        AlgorithmResult result = graphService.runKruskalsMst(blocked, accessibleOnly);
+        return ResponseEntity.ok(ApiResponse.success(result, "Kruskal's MST calculated successfully"));
+    }
+
+    /**
+     * POST endpoint accepting a GraphRequest body for ANY algorithm (BFS, DFS, DIJKSTRA, PRIMS, KRUSKALS).
+     */
+    @PostMapping("/execute")
+    public ResponseEntity<ApiResponse<AlgorithmResult>> executeAlgorithm(@RequestBody GraphRequest request) {
         try {
             AlgorithmResult result = graphService.executeTraversalRequest(request);
             return ResponseEntity.ok(ApiResponse.success(result, result.getAlgorithm() + " executed successfully"));
