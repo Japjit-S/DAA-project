@@ -4,6 +4,9 @@ import com.campus.model.Building;
 import com.campus.model.Edge;
 import com.campus.model.Graph;
 import com.campus.model.Node;
+import com.campus.validation.CampusDataValidator;
+import com.campus.validation.DataValidationException;
+import com.campus.validation.ValidationReport;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
@@ -41,10 +44,14 @@ public class JsonDataRepository {
     private final List<Edge> edges = new CopyOnWriteArrayList<>();
     private final Map<String, Building> buildingMap = new ConcurrentHashMap<>();
     private final Map<String, Node> nodeMap = new ConcurrentHashMap<>();
+    private final Map<String, Edge> edgeMap = new ConcurrentHashMap<>();
+    private final CampusDataValidator validator;
     private volatile Graph graph = new Graph();
+    private volatile ValidationReport latestReport;
 
-    public JsonDataRepository(ObjectMapper objectMapper) {
+    public JsonDataRepository(ObjectMapper objectMapper, CampusDataValidator validator) {
         this.objectMapper = objectMapper;
+        this.validator = validator;
     }
 
     @PostConstruct
@@ -122,23 +129,48 @@ public class JsonDataRepository {
                         edgesFile, new TypeReference<List<Edge>>() {}
                 );
                 edges.clear();
+                edgeMap.clear();
                 edges.addAll(loadedEdges);
+                loadedEdges.forEach(e -> edgeMap.put(e.getId(), e));
                 logger.info("Loaded {} edges", edges.size());
             }
 
-            // 4. Load or synthesize Graph
-            File graphFile = dataDir.resolve("graph.json").toFile();
-            if (graphFile.exists()) {
-                graph = objectMapper.readValue(graphFile, Graph.class);
-                logger.info("Loaded graph '{}' with {} nodes and {} edges",
-                        graph.getGraphId(), graph.getNodeCount(), graph.getEdgeCount());
-            } else {
-                graph = new Graph("CAMPUS_MAIN_GRAPH", false, new ArrayList<>(nodes), new ArrayList<>(edges));
-                logger.info("Synthesized graph with {} nodes and {} edges", graph.getNodeCount(), graph.getEdgeCount());
+            // 4. Compose in-memory Graph directly from canonical nodes and edges
+            this.graph = new Graph("NSUT_MAIN_GRAPH", false, new ArrayList<>(nodes), new ArrayList<>(edges));
+            logger.info("Composed in-memory graph '{}' from canonical nodes ({}) and edges ({})",
+                    graph.getGraphId(), graph.getNodeCount(), graph.getEdgeCount());
+
+            // 5. Strict Data & Geometry Validation
+            this.latestReport = validator.validate(nodes, edges, buildings);
+            logger.info("Campus dataset validation completed: status={}, errors={}, warnings={}, info={}",
+                    latestReport.isValid() ? "VALID" : "INVALID",
+                    latestReport.getErrorCount(),
+                    latestReport.getWarningCount(),
+                    latestReport.getInfoCount());
+
+            if (!latestReport.isValid()) {
+                logger.error("Dataset validation failed with {} errors:\n{}",
+                        latestReport.getErrorCount(), latestReport.toSummaryString());
+                throw new DataValidationException(
+                        "Campus dataset failed validation with " + latestReport.getErrorCount() + " error(s)",
+                        latestReport);
             }
+
+            // 6. Refresh synchronized graph.json export if data directory is writable
+            exportGraphJson(dataDir);
 
         } catch (IOException e) {
             logger.error("Error reading JSON data files: {}", e.getMessage(), e);
+        }
+    }
+
+    private void exportGraphJson(Path dataDir) {
+        try {
+            File graphFile = dataDir.resolve("graph.json").toFile();
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(graphFile, this.graph);
+            logger.debug("Refreshed synchronized graph.json export");
+        } catch (Exception e) {
+            logger.warn("Could not write synchronized graph.json: {}", e.getMessage());
         }
     }
 
@@ -164,7 +196,16 @@ public class JsonDataRepository {
         return Collections.unmodifiableList(edges);
     }
 
+    public Optional<Edge> findEdgeById(String id) {
+        if (id == null) return Optional.empty();
+        return Optional.ofNullable(edgeMap.get(id));
+    }
+
     public Graph getGraph() {
         return graph;
+    }
+
+    public ValidationReport getLatestValidationReport() {
+        return latestReport;
     }
 }

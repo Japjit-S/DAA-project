@@ -1,102 +1,506 @@
 [
   {
     "id": "B001",
-    "name": "Administrative Headquarters",
-    "code": "ADM-01",
+    "name": "Admin Block / Director's Office",
+    "code": "DIR",
     "category": "ADMINISTRATIVE",
-    "nodeId": "N002",
-    "description": "Houses the Vice Chancellor's office, Registrar, Admissions, and Finance divisions.",
-    "floors": 4,
-    "facilities": ["Auditorium", "Conference Hall", "Registrar Office", "Help Desk"]
+    "nodeId": "N003",
+    "description": "Administrative headquarters housing the Director's Office, Registrar, Admissions, Academic Affairs, and Accounts division.",
+    "floors": 3,
+    "facilities": [
+      "Director's Office",
+      "Registrar",
+      "Exam Section",
+      "Accounts"
+    ]
   },
   {
     "id": "B002",
-    "name": "Central University Library",
-    "code": "LIB-01",
-    "category": "LIBRARY",
-    "nodeId": "N003",
-    "description": "Four-story repository with 100,000+ volumes, digital research lab, and 24/7 reading rooms.",
+    "name": "Block 4",
+    "code": "BLK-4",
+    "category": "ACADEMIC",
+    "nodeId": "N004",
+    "description": "Department of Computer Science and Engineering featuring AI/ML research labs, software laboratories, and smart classrooms.",
     "floors": 4,
-    "facilities": ["Digital Resource Lab", "Silent Study Area", "Reprographics", "Café Kiosk"]
+    "facilities": [
+      "CSE Labs",
+      "Faculty Rooms",
+      "Research Lab",
+      "Classrooms"
+    ]
   },
   {
     "id": "B003",
-    "name": "Alan Turing Computer Science Block",
-    "code": "ENG-CS",
+    "name": "Block 5",
+    "code": "BLK-5",
     "category": "ACADEMIC",
-    "nodeId": "N004",
-    "description": "Faculty of Computing, Advanced AI & Algorithms Laboratories, and Software Innovation Suites.",
-    "floors": 5,
-    "facilities": ["AI/ML Computing Lab", "Algorithms Lab", "Seminar Halls", "Server Room"]
+    "nodeId": "N005",
+    "description": "Department of Electronics & Communication Engineering and Instrumentation & Control Engineering wings.",
+    "floors": 4,
+    "facilities": [
+      "Electronics Lab",
+      "Signal Lab",
+      "Power Lab",
+      "Control Lab",
+      "Faculty Rooms"
+    ]
   },
   {
     "id": "B004",
-    "name": "Nikola Tesla Engineering Wing",
-    "code": "ENG-EC-ME",
+    "name": "Old Academic Block (Block 6)",
+    "code": "BLK-6",
     "category": "ACADEMIC",
-    "nodeId": "N005",
-    "description": "Houses Electronics, Microprocessor, VLSI design, and Mechanical fabrication workshops.",
+    "nodeId": "N006",
+    "description": "Historic academic block housing foundational science departments, physics and chemistry laboratories, and core lecture halls.",
     "floors": 4,
-    "facilities": ["Robotics Lab", "VLSI Workstation", "Maker Space", "Wind Tunnel"]
+    "facilities": [
+      "Classrooms",
+      "Seminar Hall",
+      "Faculty Rooms",
+      "Physics & Chemistry Labs"
+    ]
   },
   {
     "id": "B005",
-    "name": "Student Activities & Food Court",
-    "code": "SAC-01",
-    "category": "AMENITY",
-    "nodeId": "N006",
-    "description": "Multi-cuisine dining hall, indoor recreation arena, student clubs headquarters, and bank ATM.",
-    "floors": 2,
-    "facilities": ["Dining Hall", "Co-working Space", "Bank & ATM", "Stationery Store"]
+    "name": "Block 8A (Connecting)",
+    "code": "BLK-8A",
+    "category": "ACADEMIC",
+    "nodeId": "N007",
+    "description": "Connecting academic corridor bridging Block 4 and Block 5, containing tutorial rooms and faculty cabins.",
+    "floors": 3,
+    "facilities": [
+      "Tutorial Rooms",
+      "Connecting Corridors",
+      "Faculty Offices"
+    ]
   },
   {
     "id": "B006",
-    "name": "Major Dhyan Chand Sports Complex",
-    "code": "SPT-01",
-    "category": "FACILITY",
-    "nodeId": "N007",
-    "description": "Olympic-size track, indoor badminton courts, state-of-the-art gym, and swimming pavilion.",
-    "floors": 2,
-    "facilities": ["Fitness Center", "Badminton Arena", "Medical First Aid", "Locker Rooms"]
+    "name": "F-Tech Block",
+    "code": "F-TECH",
+    "category": "ACADEMIC",
+    "nodeId": "N008",
+    "description": "Modern multi-storey academic facility housing emerging technology departments, project labs, and multimedia lecture theatres.",
+    "floors": 5,
+    "facilities": [
+      "Classrooms",
+      "Project Labs",
+      "Seminar Halls",
+      "Faculty Rooms"
+    ]
   },
   {
     "id": "B007",
-    "name": "Technology Transfer & Incubation Center",
-    "code": "INC-01",
+    "name": "APJ Hall",
+    "code": "APJ",
     "category": "ACADEMIC",
-    "nodeId": "N008",
-    "description": "Startup venture incubation hub, prototyping laboratories, and industry research partners.",
-    "floors": 3,
-    "facilities": ["Incubator Suites", "3D Rapid Prototyping", "Pitch Theater", "IP Cell"]
+    "nodeId": "N009",
+    "description": "Premier campus auditorium complex named after Dr. A.P.J. Abdul Kalam, hosting convocations, national symposia, and cultural events.",
+    "floors": 2,
+    "facilities": [
+      "Main Auditorium",
+      "Acoustic Hall",
+      "Convocation Center",
+      "Green Rooms"
+    ]
   },
   {
     "id": "B008",
-    "name": "Aryabhatta Residence Hall",
-    "code": "HST-01",
-    "category": "HOSTEL",
-    "nodeId": "N009",
-    "description": "Men's residential facility with recreational courtyards, laundry, and study lounges.",
-    "floors": 6,
-    "facilities": ["Mess Hall", "Common Room", "Laundry Unit", "Wi-Fi Lounge"]
+    "name": "Department of Design",
+    "code": "DOD",
+    "category": "ACADEMIC",
+    "nodeId": "N010",
+    "description": "Creative hub of NSUT featuring industrial design studios, ergonomics labs, rapid prototyping, and digital media suites.",
+    "floors": 3,
+    "facilities": [
+      "Design Studios",
+      "Prototyping Lab",
+      "Exhibition Gallery",
+      "Faculty Offices"
+    ]
   },
   {
     "id": "B009",
-    "name": "Gargi Residence Hall",
-    "code": "HST-02",
-    "category": "HOSTEL",
-    "nodeId": "N010",
-    "description": "Women's residential facility with 24/7 security, gymnasium, library reading annex.",
-    "floors": 6,
-    "facilities": ["Mess Hall", "Fitness Room", "Reading Lounge", "Garden Courtyard"]
+    "name": "Training and Placement Building",
+    "code": "TNP",
+    "category": "ACADEMIC",
+    "nodeId": "N011",
+    "description": "Dedicated corporate engagement facility hosting university placement drives, pre-placement talks, and executive interviews.",
+    "floors": 2,
+    "facilities": [
+      "Interview Rooms",
+      "Group Discussion Rooms",
+      "T&P Cell",
+      "Auditorium"
+    ]
   },
   {
     "id": "B010",
-    "name": "University Health & Emergency Care",
-    "code": "MED-01",
-    "category": "FACILITY",
+    "name": "Central Library, SAC & Gym",
+    "code": "LIB",
+    "category": "LIBRARY",
+    "nodeId": "N012",
+    "description": "State-of-the-art knowledge repository spanning multi-level reading halls, digital catalog access, Student Activity Center, and gymnasium.",
+    "floors": 3,
+    "facilities": [
+      "Digital Resources",
+      "Reading Room",
+      "Journals Section",
+      "Reprographics",
+      "Student Activity Center",
+      "Gymnasium"
+    ]
+  },
+  {
+    "id": "B011",
+    "name": "Students Centre / Canteen",
+    "code": "CAN-1",
+    "category": "AMENITY",
     "nodeId": "N013",
-    "description": "Full-time primary healthcare clinic, ambulance bay, and pharmacy services.",
+    "description": "Central social gathering point offering multi-cuisine food stalls, student stationery, common seating, and open-air plaza.",
     "floors": 2,
-    "facilities": ["Emergency Triage", "Pharmacy", "Doctor Consultation", "Observation Ward"]
+    "facilities": [
+      "Dining Hall",
+      "Food Stalls",
+      "Seating Area",
+      "Stationery Kiosk"
+    ]
+  },
+  {
+    "id": "B012",
+    "name": "Safal",
+    "code": "SFL",
+    "category": "AMENITY",
+    "nodeId": "N014",
+    "description": "On-campus daily retail outlet providing fresh fruits, vegetables, and household groceries to students and residents.",
+    "floors": 1,
+    "facilities": [
+      "Fresh Produce",
+      "Daily Essentials",
+      "Grocery Counter"
+    ]
+  },
+  {
+    "id": "B013",
+    "name": "Mother Dairy",
+    "code": "MD",
+    "category": "AMENITY",
+    "nodeId": "N015",
+    "description": "Campus dairy booth providing milk products, ice creams, and refreshing beverages throughout the day.",
+    "floors": 1,
+    "facilities": [
+      "Dairy Products",
+      "Ice Cream",
+      "Beverages"
+    ]
+  },
+  {
+    "id": "B014",
+    "name": "Nescafé Kiosk",
+    "code": "NES",
+    "category": "AMENITY",
+    "nodeId": "N016",
+    "description": "Popular open-air coffee hub near the administrative lawn serving brewed coffee, iced drinks, and quick snacks.",
+    "floors": 1,
+    "facilities": [
+      "Coffee & Snacks",
+      "Outdoor Seating"
+    ]
+  },
+  {
+    "id": "B015",
+    "name": "Running Track",
+    "code": "TRK",
+    "category": "SPORTS",
+    "nodeId": "N017",
+    "description": "Standard 400m synthetic running track enclosing the central athletic field and fitness conditioning zone.",
+    "floors": 1,
+    "facilities": [
+      "400m Synthetic Track",
+      "Athletic Field",
+      "Jogging Lane"
+    ]
+  },
+  {
+    "id": "B016",
+    "name": "Cricket Ground",
+    "code": "CRK",
+    "category": "SPORTS",
+    "nodeId": "N018",
+    "description": "Full-size university cricket pavilion featuring turf pitch, boundary seating, and practice net cages.",
+    "floors": 1,
+    "facilities": [
+      "Cricket Pitch",
+      "Pavilion",
+      "Cricket Nets"
+    ]
+  },
+  {
+    "id": "B017",
+    "name": "Basketball Court",
+    "code": "BB",
+    "category": "SPORTS",
+    "nodeId": "N019",
+    "description": "Floodlit concrete basketball courts adhering to FIBA specifications for inter-college tournaments and daily practice.",
+    "floors": 1,
+    "facilities": [
+      "Basketball Court",
+      "Floodlights",
+      "Spectator Stands"
+    ]
+  },
+  {
+    "id": "B018",
+    "name": "Volleyball Court",
+    "code": "VB",
+    "category": "SPORTS",
+    "nodeId": "N020",
+    "description": "Outdoor regulation volleyball courts with sand and hard court surfaces.",
+    "floors": 1,
+    "facilities": [
+      "Volleyball Courts",
+      "Sand Pitch",
+      "Practice Zone"
+    ]
+  },
+  {
+    "id": "B019",
+    "name": "Lawn Tennis Courts",
+    "code": "TC",
+    "category": "SPORTS",
+    "nodeId": "N021",
+    "description": "All-weather synthetic tennis courts equipped with training wall and perimeter fencing.",
+    "floors": 1,
+    "facilities": [
+      "Synthetic Tennis Courts",
+      "Practice Wall"
+    ]
+  },
+  {
+    "id": "B020",
+    "name": "Aryabhata Hostel",
+    "code": "BH-1",
+    "category": "HOSTEL",
+    "nodeId": "N022",
+    "description": "Boys residence hall named after the great astronomer Aryabhata, housing undergraduate students.",
+    "floors": 5,
+    "facilities": [
+      "Mess",
+      "Common Room",
+      "Wi-Fi",
+      "Laundry"
+    ]
+  },
+  {
+    "id": "B021",
+    "name": "Ramanujan Hostel",
+    "code": "BH-2",
+    "category": "HOSTEL",
+    "nodeId": "N023",
+    "description": "Boys residence hall honoring mathematician Srinivasa Ramanujan, featuring reading halls and recreational amenities.",
+    "floors": 5,
+    "facilities": [
+      "Mess",
+      "Common Room",
+      "Wi-Fi",
+      "Laundry"
+    ]
+  },
+  {
+    "id": "B022",
+    "name": "J. C. Bose Hostel",
+    "code": "BH-3",
+    "category": "HOSTEL",
+    "nodeId": "N024",
+    "description": "Boys residence hall honoring physicist and biologist Jagadish Chandra Bose.",
+    "floors": 5,
+    "facilities": [
+      "Mess",
+      "Common Room",
+      "Wi-Fi",
+      "Laundry"
+    ]
+  },
+  {
+    "id": "B023",
+    "name": "Raman Hostel",
+    "code": "BH-4",
+    "category": "HOSTEL",
+    "nodeId": "N025",
+    "description": "Boys residence hall honoring Nobel laureate C. V. Raman, offering quiet residential suites.",
+    "floors": 5,
+    "facilities": [
+      "Mess",
+      "Common Room",
+      "Wi-Fi"
+    ]
+  },
+  {
+    "id": "B024",
+    "name": "Bhaskara Hostel",
+    "code": "BH-5",
+    "category": "HOSTEL",
+    "nodeId": "N026",
+    "description": "Boys residence hall named after mathematician-astronomer Bhaskara II.",
+    "floors": 5,
+    "facilities": [
+      "Mess",
+      "Common Room",
+      "Wi-Fi"
+    ]
+  },
+  {
+    "id": "B025",
+    "name": "Saraswati Hostel",
+    "code": "GH-1",
+    "category": "HOSTEL",
+    "nodeId": "N027",
+    "description": "Premier girls residence hall with landscaped gardens, indoor dining mess, and round-the-clock security.",
+    "floors": 5,
+    "facilities": [
+      "Mess",
+      "Common Room",
+      "Wi-Fi",
+      "Laundry",
+      "Garden"
+    ]
+  },
+  {
+    "id": "B026",
+    "name": "Alaknanda Hostel",
+    "code": "GH-2",
+    "category": "HOSTEL",
+    "nodeId": "N028",
+    "description": "Girls hostel named after the sacred river Alaknanda, providing quiet study spaces and recreational lounge.",
+    "floors": 5,
+    "facilities": [
+      "Mess",
+      "Common Room",
+      "Wi-Fi"
+    ]
+  },
+  {
+    "id": "B027",
+    "name": "Kaveri Hostel",
+    "code": "GH-3",
+    "category": "HOSTEL",
+    "nodeId": "N029",
+    "description": "Modern girls residence hall located on the north-east residential campus sector.",
+    "floors": 4,
+    "facilities": [
+      "Mess",
+      "Common Room",
+      "Wi-Fi",
+      "Study Room"
+    ]
+  },
+  {
+    "id": "B028",
+    "name": "Medical Centre",
+    "code": "MED",
+    "category": "FACILITY",
+    "nodeId": "N030",
+    "description": "University primary healthcare center staffed with resident medical officers, emergency pharmacy, and triage room.",
+    "floors": 1,
+    "facilities": [
+      "Doctor Consultation",
+      "Pharmacy",
+      "First Aid",
+      "Ambulance Bay"
+    ]
+  },
+  {
+    "id": "B029",
+    "name": "Faculty Housing area 1",
+    "code": "FH-1",
+    "category": "FACILITY",
+    "nodeId": "N031",
+    "description": "Residential quarters for faculty members and university administrative staff located near the southwest gate.",
+    "floors": 3,
+    "facilities": [
+      "Residential Apartments",
+      "Parking Area"
+    ]
+  },
+  {
+    "id": "B030",
+    "name": "Faculty Housing area 2",
+    "code": "FH-2",
+    "category": "FACILITY",
+    "nodeId": "N032",
+    "description": "Senior faculty apartments set amidst green groves in the residential enclave.",
+    "floors": 3,
+    "facilities": [
+      "Residential Apartments",
+      "Play Area"
+    ]
+  },
+  {
+    "id": "B031",
+    "name": "Faculty Housing area 3",
+    "code": "FH-3",
+    "category": "FACILITY",
+    "nodeId": "N033",
+    "description": "Staff and faculty residential units bordering the campus nursery sector.",
+    "floors": 3,
+    "facilities": [
+      "Residential Apartments",
+      "Community Hall"
+    ]
+  },
+  {
+    "id": "B032",
+    "name": "Nursery",
+    "code": "NUR",
+    "category": "FACILITY",
+    "nodeId": "N034",
+    "description": "Campus flora conservation center, plant nursery, and organic composting facility maintaining university green cover.",
+    "floors": 1,
+    "facilities": [
+      "Greenhouse",
+      "Plant Nursery",
+      "Compost Facility"
+    ]
+  },
+  {
+    "id": "B033",
+    "name": "Sewage Treatment Plant",
+    "code": "STP",
+    "category": "FACILITY",
+    "nodeId": "N035",
+    "description": "Campus wastewater recycling plant promoting sustainable zero-discharge campus operations.",
+    "floors": 1,
+    "facilities": [
+      "Water Recycling",
+      "Filtration Beds",
+      "Pumping Station"
+    ]
+  },
+  {
+    "id": "B034",
+    "name": "Main Electric Substation",
+    "code": "ESS-1",
+    "category": "FACILITY",
+    "nodeId": "N036",
+    "description": "Primary 11kV electrical distribution substation supplying power grid connectivity across the university campus.",
+    "floors": 1,
+    "facilities": [
+      "Power Transformers",
+      "Switchyard",
+      "Control Room"
+    ]
+  },
+  {
+    "id": "B035",
+    "name": "Electric Substation 2",
+    "code": "ESS-2",
+    "category": "FACILITY",
+    "nodeId": "N037",
+    "description": "Auxiliary power distribution substation supplying uninterrupted power to labs, IT hubs, and northern hostels.",
+    "floors": 1,
+    "facilities": [
+      "Substation Transformers",
+      "Backup Generators"
+    ]
   }
 ]

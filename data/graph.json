@@ -1,274 +1,1553 @@
 {
-  "graphId": "CAMPUS_MAIN_GRAPH",
-  "directed": false,
-  "nodeCount": 13,
-  "edgeCount": 20,
-  "nodes": [
-    {
-      "id": "N001",
-      "name": "Main Entrance Gate",
-      "type": "GATE",
-      "x": 100,
-      "y": 550,
-      "accessible": true
-    },
-    {
-      "id": "N002",
-      "name": "Administrative Block Plaza",
-      "type": "ACADEMIC",
-      "x": 260,
-      "y": 480,
-      "accessible": true
-    },
-    {
-      "id": "N003",
-      "name": "Central University Library",
-      "type": "LIBRARY",
-      "x": 450,
-      "y": 460,
-      "accessible": true
-    },
-    {
-      "id": "N004",
-      "name": "CSE & Information Technology Block",
-      "type": "ACADEMIC",
-      "x": 450,
-      "y": 220,
-      "accessible": true
-    },
-    {
-      "id": "N005",
-      "name": "ECE & Mechanical Engineering Wing",
-      "type": "ACADEMIC",
-      "x": 660,
-      "y": 320,
-      "accessible": true
-    },
-    {
-      "id": "N006",
-      "name": "Student Center & Cafeteria",
-      "type": "AMENITY",
-      "x": 280,
-      "y": 300,
-      "accessible": true
-    },
-    {
-      "id": "N007",
-      "name": "Sports Arena & Gymnasium",
-      "type": "FACILITY",
-      "x": 820,
-      "y": 490,
-      "accessible": true
-    },
-    {
-      "id": "N008",
-      "name": "Innovation & Incubation Hub",
-      "type": "ACADEMIC",
-      "x": 620,
-      "y": 150,
-      "accessible": true
-    },
-    {
-      "id": "N009",
-      "name": "Aryabhatta Hostel Complex",
-      "type": "HOSTEL",
-      "x": 820,
-      "y": 180,
-      "accessible": false
-    },
-    {
-      "id": "N010",
-      "name": "Gargi Hostel Complex",
-      "type": "HOSTEL",
-      "x": 160,
-      "y": 160,
-      "accessible": true
-    },
-    {
-      "id": "N011",
-      "name": "Central Quadrangle Junction",
-      "type": "JUNCTION",
-      "x": 450,
-      "y": 340,
-      "accessible": true
-    },
-    {
-      "id": "N012",
-      "name": "East Gate & Transit Stop",
-      "type": "GATE",
-      "x": 920,
-      "y": 340,
-      "accessible": true
-    },
-    {
-      "id": "N013",
-      "name": "Health Center & North Parking",
-      "type": "FACILITY",
-      "x": 220,
-      "y": 620,
-      "accessible": true
-    }
-  ],
-  "edges": [
-    {
-      "id": "E001",
-      "source": "N001",
-      "target": "N002",
-      "weight": 180.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E002",
-      "source": "N001",
-      "target": "N013",
-      "weight": 140.0,
-      "bidirectional": true,
-      "type": "ROAD"
-    },
-    {
-      "id": "E003",
-      "source": "N002",
-      "target": "N013",
-      "weight": 150.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E004",
-      "source": "N002",
-      "target": "N003",
-      "weight": 190.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E005",
-      "source": "N002",
-      "target": "N006",
-      "weight": 185.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E006",
-      "source": "N006",
-      "target": "N010",
-      "weight": 190.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E007",
-      "source": "N006",
-      "target": "N011",
-      "weight": 175.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E008",
-      "source": "N003",
-      "target": "N011",
-      "weight": 120.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E009",
-      "source": "N011",
-      "target": "N004",
-      "weight": 120.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E010",
-      "source": "N010",
-      "target": "N004",
-      "weight": 295.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E011",
-      "source": "N004",
-      "target": "N008",
-      "weight": 185.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E012",
-      "source": "N011",
-      "target": "N005",
-      "weight": 210.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E013",
-      "source": "N008",
-      "target": "N005",
-      "weight": 175.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E014",
-      "source": "N008",
-      "target": "N009",
-      "weight": 205.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E015",
-      "source": "N005",
-      "target": "N009",
-      "weight": 215.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E016",
-      "source": "N005",
-      "target": "N012",
-      "weight": 260.0,
-      "bidirectional": true,
-      "type": "ROAD"
-    },
-    {
-      "id": "E017",
-      "source": "N003",
-      "target": "N007",
-      "weight": 370.0,
-      "bidirectional": true,
-      "type": "ROAD"
-    },
-    {
-      "id": "E018",
-      "source": "N005",
-      "target": "N007",
-      "weight": 235.0,
-      "bidirectional": true,
-      "type": "WALKWAY"
-    },
-    {
-      "id": "E019",
-      "source": "N007",
-      "target": "N012",
-      "weight": 180.0,
-      "bidirectional": true,
-      "type": "ROAD"
-    },
-    {
-      "id": "E020",
-      "source": "N009",
-      "target": "N012",
-      "weight": 190.0,
-      "bidirectional": true,
-      "type": "ROAD"
-    }
-  ]
+  "graphId" : "NSUT_MAIN_GRAPH",
+  "directed" : false,
+  "nodeCount" : 61,
+  "edgeCount" : 61,
+  "nodes" : [ {
+    "id" : "N001",
+    "name" : "Main Gate",
+    "type" : "GATE",
+    "x" : 1762.96,
+    "y" : 1389.57,
+    "accessible" : true,
+    "lat" : 28.609539,
+    "lng" : 77.036475
+  }, {
+    "id" : "N002",
+    "name" : "North Gate",
+    "type" : "GATE",
+    "x" : 1197.82,
+    "y" : 562.85,
+    "accessible" : true,
+    "lat" : 28.6131922,
+    "lng" : 77.0336303
+  }, {
+    "id" : "N003",
+    "name" : "Admin Block / Director's Office",
+    "type" : "ADMIN",
+    "x" : 1876.0,
+    "y" : 1326.38,
+    "accessible" : true,
+    "lat" : 28.6098182,
+    "lng" : 77.037044
+  }, {
+    "id" : "N004",
+    "name" : "Block 4",
+    "type" : "ACADEMIC",
+    "x" : 1996.1,
+    "y" : 1354.61,
+    "accessible" : true,
+    "lat" : 28.609693465645197,
+    "lng" : 77.03764849197938
+  }, {
+    "id" : "N005",
+    "name" : "Block 5",
+    "type" : "ACADEMIC",
+    "x" : 2164.2,
+    "y" : 1289.64,
+    "accessible" : true,
+    "lat" : 28.609980579548864,
+    "lng" : 77.0384946827076
+  }, {
+    "id" : "N006",
+    "name" : "Old Academic Block (Block 6)",
+    "type" : "ACADEMIC",
+    "x" : 2033.3,
+    "y" : 1166.9,
+    "accessible" : true,
+    "lat" : 28.610522941366483,
+    "lng" : 77.03783578846183
+  }, {
+    "id" : "N007",
+    "name" : "Block 8A (Connecting)",
+    "type" : "ACADEMIC",
+    "x" : 2090.89,
+    "y" : 1364.69,
+    "accessible" : true,
+    "lat" : 28.609648929465923,
+    "lng" : 77.03812567324927
+  }, {
+    "id" : "N008",
+    "name" : "F-Tech Block",
+    "type" : "ACADEMIC",
+    "x" : 2272.48,
+    "y" : 970.3,
+    "accessible" : true,
+    "lat" : 28.61139171871608,
+    "lng" : 77.03903968346205
+  }, {
+    "id" : "N009",
+    "name" : "APJ Hall",
+    "type" : "ACADEMIC",
+    "x" : 1869.17,
+    "y" : 829.82,
+    "accessible" : true,
+    "lat" : 28.6120125,
+    "lng" : 77.0370096
+  }, {
+    "id" : "N010",
+    "name" : "Department of Design",
+    "type" : "ACADEMIC",
+    "x" : 1215.66,
+    "y" : 323.27,
+    "accessible" : true,
+    "lat" : 28.6142509,
+    "lng" : 77.0337201
+  }, {
+    "id" : "N011",
+    "name" : "Training and Placement Building",
+    "type" : "ACADEMIC",
+    "x" : 2389.83,
+    "y" : 1616.2,
+    "accessible" : true,
+    "lat" : 28.6085375,
+    "lng" : 77.0396304
+  }, {
+    "id" : "N012",
+    "name" : "Central Library (SAC & Gym)",
+    "type" : "LIBRARY",
+    "x" : 2261.75,
+    "y" : 1215.95,
+    "accessible" : true,
+    "lat" : 28.6103062,
+    "lng" : 77.0389857
+  }, {
+    "id" : "N013",
+    "name" : "Students Centre / Canteen",
+    "type" : "AMENITY",
+    "x" : 1850.48,
+    "y" : 929.23,
+    "accessible" : true,
+    "lat" : 28.6115732,
+    "lng" : 77.0369155
+  }, {
+    "id" : "N014",
+    "name" : "Safal",
+    "type" : "AMENITY",
+    "x" : 1743.89,
+    "y" : 802.91,
+    "accessible" : true,
+    "lat" : 28.6121314,
+    "lng" : 77.036379
+  }, {
+    "id" : "N015",
+    "name" : "Mother Dairy",
+    "type" : "AMENITY",
+    "x" : 1714.61,
+    "y" : 833.62,
+    "accessible" : true,
+    "lat" : 28.6119957,
+    "lng" : 77.0362316
+  }, {
+    "id" : "N016",
+    "name" : "Nescafé Kiosk",
+    "type" : "AMENITY",
+    "x" : 1803.49,
+    "y" : 1242.02,
+    "accessible" : true,
+    "lat" : 28.610191,
+    "lng" : 77.036679
+  }, {
+    "id" : "N017",
+    "name" : "Running Track",
+    "type" : "SPORTS",
+    "x" : 2642.05,
+    "y" : 1542.65,
+    "accessible" : true,
+    "lat" : 28.6088625,
+    "lng" : 77.0409
+  }, {
+    "id" : "N018",
+    "name" : "Cricket Ground",
+    "type" : "SPORTS",
+    "x" : 2714.07,
+    "y" : 1240.8,
+    "accessible" : true,
+    "lat" : 28.6101964,
+    "lng" : 77.0412625
+  }, {
+    "id" : "N019",
+    "name" : "Basketball Court",
+    "type" : "SPORTS",
+    "x" : 2502.73,
+    "y" : 1262.04,
+    "accessible" : true,
+    "lat" : 28.610102521923423,
+    "lng" : 77.04019872035511
+  }, {
+    "id" : "N020",
+    "name" : "Volleyball Court",
+    "type" : "SPORTS",
+    "x" : 2523.17,
+    "y" : 1338.27,
+    "accessible" : true,
+    "lat" : 28.609765677699553,
+    "lng" : 77.04030159410246
+  }, {
+    "id" : "N021",
+    "name" : "Lawn Tennis Courts",
+    "type" : "SPORTS",
+    "x" : 2578.62,
+    "y" : 1420.33,
+    "accessible" : true,
+    "lat" : 28.609403041944603,
+    "lng" : 77.04058070124769
+  }, {
+    "id" : "N022",
+    "name" : "Aryabhata Hostel",
+    "type" : "HOSTEL",
+    "x" : 1504.12,
+    "y" : 692.32,
+    "accessible" : true,
+    "lat" : 28.6126201,
+    "lng" : 77.0351721
+  }, {
+    "id" : "N023",
+    "name" : "Ramanujan Hostel",
+    "type" : "HOSTEL",
+    "x" : 1460.06,
+    "y" : 603.05,
+    "accessible" : true,
+    "lat" : 28.6130146,
+    "lng" : 77.0349503
+  }, {
+    "id" : "N024",
+    "name" : "J. C. Bose Hostel",
+    "type" : "HOSTEL",
+    "x" : 1335.24,
+    "y" : 459.71,
+    "accessible" : true,
+    "lat" : 28.613648,
+    "lng" : 77.034322
+  }, {
+    "id" : "N025",
+    "name" : "Raman Hostel",
+    "type" : "HOSTEL",
+    "x" : 1517.43,
+    "y" : 545.75,
+    "accessible" : true,
+    "lat" : 28.613267788529395,
+    "lng" : 77.03523909113397
+  }, {
+    "id" : "N026",
+    "name" : "Bhaskara Hostel",
+    "type" : "HOSTEL",
+    "x" : 1586.35,
+    "y" : 674.0,
+    "accessible" : true,
+    "lat" : 28.612701072870323,
+    "lng" : 77.03558596497462
+  }, {
+    "id" : "N027",
+    "name" : "Saraswati Hostel",
+    "type" : "HOSTEL",
+    "x" : 2390.56,
+    "y" : 1877.16,
+    "accessible" : true,
+    "lat" : 28.6073843,
+    "lng" : 77.0396341
+  }, {
+    "id" : "N028",
+    "name" : "Alaknanda Hostel",
+    "type" : "HOSTEL",
+    "x" : 2390.62,
+    "y" : 1732.22,
+    "accessible" : true,
+    "lat" : 28.6080248,
+    "lng" : 77.0396344
+  }, {
+    "id" : "N029",
+    "name" : "Kaveri Hostel",
+    "type" : "HOSTEL",
+    "x" : 2104.94,
+    "y" : 418.93,
+    "accessible" : true,
+    "lat" : 28.6138282,
+    "lng" : 77.0381964
+  }, {
+    "id" : "N030",
+    "name" : "Medical Centre",
+    "type" : "FACILITY",
+    "x" : 2187.73,
+    "y" : 905.79,
+    "accessible" : true,
+    "lat" : 28.6116768,
+    "lng" : 77.0386131
+  }, {
+    "id" : "N031",
+    "name" : "Faculty Housing area 1",
+    "type" : "FACILITY",
+    "x" : 1734.24,
+    "y" : 1933.41,
+    "accessible" : true,
+    "lat" : 28.6071357,
+    "lng" : 77.0363304
+  }, {
+    "id" : "N032",
+    "name" : "Faculty Housing area 2",
+    "type" : "FACILITY",
+    "x" : 1730.98,
+    "y" : 1902.23,
+    "accessible" : true,
+    "lat" : 28.6072735,
+    "lng" : 77.036314
+  }, {
+    "id" : "N033",
+    "name" : "Faculty Housing area 3",
+    "type" : "FACILITY",
+    "x" : 1834.86,
+    "y" : 1800.2,
+    "accessible" : true,
+    "lat" : 28.6077244,
+    "lng" : 77.0368369
+  }, {
+    "id" : "N034",
+    "name" : "Nursery",
+    "type" : "FACILITY",
+    "x" : 2150.79,
+    "y" : 1944.73,
+    "accessible" : true,
+    "lat" : 28.607085702486472,
+    "lng" : 77.03842716312455
+  }, {
+    "id" : "N035",
+    "name" : "Sewage Treatment Plant",
+    "type" : "FACILITY",
+    "x" : 2311.0,
+    "y" : 860.68,
+    "accessible" : false,
+    "lat" : 28.611876151482278,
+    "lng" : 77.03923359410246
+  }, {
+    "id" : "N036",
+    "name" : "Main Electric Substation",
+    "type" : "FACILITY",
+    "x" : 2643.46,
+    "y" : 1818.3,
+    "accessible" : false,
+    "lat" : 28.6076444,
+    "lng" : 77.0409071
+  }, {
+    "id" : "N037",
+    "name" : "Electric Substation 2",
+    "type" : "FACILITY",
+    "x" : 2114.0,
+    "y" : 921.81,
+    "accessible" : false,
+    "lat" : 28.611606,
+    "lng" : 77.038242
+  }, {
+    "id" : "N039",
+    "name" : "Academic Core Junction",
+    "type" : "JUNCTION",
+    "x" : 2065.93,
+    "y" : 1285.24,
+    "accessible" : true,
+    "lat" : 28.61,
+    "lng" : 77.038
+  }, {
+    "id" : "N040",
+    "name" : "Sports Complex West Junction",
+    "type" : "JUNCTION",
+    "x" : 2373.86,
+    "y" : 1330.5,
+    "accessible" : true,
+    "lat" : 28.6098,
+    "lng" : 77.03955
+  }, {
+    "id" : "N041",
+    "name" : "Hostel Road Junction",
+    "type" : "JUNCTION",
+    "x" : 1509.67,
+    "y" : 606.35,
+    "accessible" : true,
+    "lat" : 28.613,
+    "lng" : 77.0352
+  }, {
+    "id" : "N042",
+    "name" : "Department of Design Access Junction",
+    "type" : "JUNCTION",
+    "x" : 1235.51,
+    "y" : 411.73,
+    "accessible" : true,
+    "lat" : 28.61386,
+    "lng" : 77.03382
+  }, {
+    "id" : "N043",
+    "name" : "North Gate South Approach",
+    "type" : "JUNCTION",
+    "x" : 1259.35,
+    "y" : 624.45,
+    "accessible" : true,
+    "lat" : 28.61292,
+    "lng" : 77.03394
+  }, {
+    "id" : "N044",
+    "name" : "Hostel North-West Turn",
+    "type" : "JUNCTION",
+    "x" : 1396.43,
+    "y" : 574.67,
+    "accessible" : true,
+    "lat" : 28.61314,
+    "lng" : 77.03463
+  }, {
+    "id" : "N045",
+    "name" : "Hostel East Road Junction",
+    "type" : "JUNCTION",
+    "x" : 1632.84,
+    "y" : 701.4,
+    "accessible" : true,
+    "lat" : 28.61258,
+    "lng" : 77.03582
+  }, {
+    "id" : "N046",
+    "name" : "Hostel South Road Junction",
+    "type" : "JUNCTION",
+    "x" : 1652.71,
+    "y" : 846.23,
+    "accessible" : true,
+    "lat" : 28.61194,
+    "lng" : 77.03592
+  }, {
+    "id" : "N047",
+    "name" : "Student Centre Road Junction",
+    "type" : "JUNCTION",
+    "x" : 1831.5,
+    "y" : 918.64,
+    "accessible" : true,
+    "lat" : 28.61162,
+    "lng" : 77.03682
+  }, {
+    "id" : "N048",
+    "name" : "APJ Hall Access Junction",
+    "type" : "JUNCTION",
+    "x" : 1907.0,
+    "y" : 882.44,
+    "accessible" : true,
+    "lat" : 28.61178,
+    "lng" : 77.0372
+  }, {
+    "id" : "N049",
+    "name" : "Academic West Road Junction",
+    "type" : "JUNCTION",
+    "x" : 1936.8,
+    "y" : 1158.52,
+    "accessible" : true,
+    "lat" : 28.61056,
+    "lng" : 77.03735
+  }, {
+    "id" : "N050",
+    "name" : "Academic South-West Junction",
+    "type" : "JUNCTION",
+    "x" : 1922.89,
+    "y" : 1335.03,
+    "accessible" : true,
+    "lat" : 28.60978,
+    "lng" : 77.03728
+  }, {
+    "id" : "N051",
+    "name" : "Academic East Walkway Junction",
+    "type" : "JUNCTION",
+    "x" : 2181.15,
+    "y" : 1276.19,
+    "accessible" : true,
+    "lat" : 28.61004,
+    "lng" : 77.03858
+  }, {
+    "id" : "N052",
+    "name" : "Main Gate Boulevard Junction",
+    "type" : "JUNCTION",
+    "x" : 1837.46,
+    "y" : 1364.45,
+    "accessible" : true,
+    "lat" : 28.60965,
+    "lng" : 77.03685
+  }, {
+    "id" : "N053",
+    "name" : "South Campus Road Junction",
+    "type" : "JUNCTION",
+    "x" : 2075.86,
+    "y" : 1552.27,
+    "accessible" : true,
+    "lat" : 28.60882,
+    "lng" : 77.03805
+  }, {
+    "id" : "N054",
+    "name" : "Sports West Entrance Junction",
+    "type" : "JUNCTION",
+    "x" : 2326.18,
+    "y" : 1470.81,
+    "accessible" : true,
+    "lat" : 28.60918,
+    "lng" : 77.03931
+  }, {
+    "id" : "N055",
+    "name" : "Sports North Access Junction",
+    "type" : "JUNCTION",
+    "x" : 2467.23,
+    "y" : 1208.3,
+    "accessible" : true,
+    "lat" : 28.61034,
+    "lng" : 77.04002
+  }, {
+    "id" : "N056",
+    "name" : "Sports South Access Junction",
+    "type" : "JUNCTION",
+    "x" : 2489.08,
+    "y" : 1443.65,
+    "accessible" : true,
+    "lat" : 28.6093,
+    "lng" : 77.04013
+  }, {
+    "id" : "N057",
+    "name" : "Faculty Housing Road Junction",
+    "type" : "JUNCTION",
+    "x" : 1843.42,
+    "y" : 1839.66,
+    "accessible" : true,
+    "lat" : 28.60755,
+    "lng" : 77.03688
+  }, {
+    "id" : "N058",
+    "name" : "Nursery Road Junction",
+    "type" : "JUNCTION",
+    "x" : 2093.74,
+    "y" : 1927.91,
+    "accessible" : true,
+    "lat" : 28.60716,
+    "lng" : 77.03814
+  }, {
+    "id" : "N059",
+    "name" : "Girls Hostel Road Junction",
+    "type" : "JUNCTION",
+    "x" : 2304.32,
+    "y" : 1778.56,
+    "accessible" : true,
+    "lat" : 28.60782,
+    "lng" : 77.0392
+  }, {
+    "id" : "N060",
+    "name" : "East Utilities Road Junction",
+    "type" : "JUNCTION",
+    "x" : 2532.79,
+    "y" : 1817.03,
+    "accessible" : true,
+    "lat" : 28.60765,
+    "lng" : 77.04035
+  }, {
+    "id" : "N061",
+    "name" : "North-East Utility Junction",
+    "type" : "JUNCTION",
+    "x" : 2284.46,
+    "y" : 941.27,
+    "accessible" : true,
+    "lat" : 28.61152,
+    "lng" : 77.0391
+  }, {
+    "id" : "N062",
+    "name" : "Kaveri Road Junction",
+    "type" : "JUNCTION",
+    "x" : 2165.26,
+    "y" : 674.24,
+    "accessible" : true,
+    "lat" : 28.6127,
+    "lng" : 77.0385
+  } ],
+  "edges" : [ {
+    "id" : "E001",
+    "source" : "N002",
+    "target" : "N043",
+    "weight" : 42.8,
+    "bidirectional" : true,
+    "type" : "MAIN_ROAD",
+    "geometry" : [ {
+      "lat" : 28.6131922,
+      "lng" : 77.0336303
+    }, {
+      "lat" : 28.61305,
+      "lng" : 77.03378
+    }, {
+      "lat" : 28.61292,
+      "lng" : 77.03394
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E002",
+    "source" : "N043",
+    "target" : "N041",
+    "weight" : 123.4,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.61292,
+      "lng" : 77.03394
+    }, {
+      "lat" : 28.61298,
+      "lng" : 77.0346
+    }, {
+      "lat" : 28.613,
+      "lng" : 77.0352
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E003",
+    "source" : "N041",
+    "target" : "N044",
+    "weight" : 58.2,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.613,
+      "lng" : 77.0352
+    }, {
+      "lat" : 28.6131,
+      "lng" : 77.03493
+    }, {
+      "lat" : 28.61314,
+      "lng" : 77.03463
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E004",
+    "source" : "N044",
+    "target" : "N045",
+    "weight" : 131.8,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.61314,
+      "lng" : 77.03463
+    }, {
+      "lat" : 28.61282,
+      "lng" : 77.03534
+    }, {
+      "lat" : 28.61258,
+      "lng" : 77.03582
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E005",
+    "source" : "N045",
+    "target" : "N046",
+    "weight" : 72.8,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.61258,
+      "lng" : 77.03582
+    }, {
+      "lat" : 28.6122,
+      "lng" : 77.03582
+    }, {
+      "lat" : 28.61194,
+      "lng" : 77.03592
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E006",
+    "source" : "N046",
+    "target" : "N047",
+    "weight" : 94.8,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.61194,
+      "lng" : 77.03592
+    }, {
+      "lat" : 28.6118,
+      "lng" : 77.03635
+    }, {
+      "lat" : 28.61162,
+      "lng" : 77.03682
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E007",
+    "source" : "N047",
+    "target" : "N048",
+    "weight" : 41.8,
+    "bidirectional" : true,
+    "type" : "WALKWAY",
+    "geometry" : [ {
+      "lat" : 28.61162,
+      "lng" : 77.03682
+    }, {
+      "lat" : 28.61166,
+      "lng" : 77.037
+    }, {
+      "lat" : 28.61178,
+      "lng" : 77.0372
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E008",
+    "source" : "N048",
+    "target" : "N049",
+    "weight" : 136.7,
+    "bidirectional" : true,
+    "type" : "WALKWAY",
+    "geometry" : [ {
+      "lat" : 28.61178,
+      "lng" : 77.0372
+    }, {
+      "lat" : 28.61118,
+      "lng" : 77.03732
+    }, {
+      "lat" : 28.61056,
+      "lng" : 77.03735
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E009",
+    "source" : "N049",
+    "target" : "N039",
+    "weight" : 89.4,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.61056,
+      "lng" : 77.03735
+    }, {
+      "lat" : 28.6103,
+      "lng" : 77.03772
+    }, {
+      "lat" : 28.61,
+      "lng" : 77.038
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E010",
+    "source" : "N039",
+    "target" : "N050",
+    "weight" : 74.7,
+    "bidirectional" : true,
+    "type" : "WALKWAY",
+    "geometry" : [ {
+      "lat" : 28.61,
+      "lng" : 77.038
+    }, {
+      "lat" : 28.6099,
+      "lng" : 77.03758
+    }, {
+      "lat" : 28.60978,
+      "lng" : 77.03728
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E011",
+    "source" : "N039",
+    "target" : "N051",
+    "weight" : 57.0,
+    "bidirectional" : true,
+    "type" : "WALKWAY",
+    "geometry" : [ {
+      "lat" : 28.61,
+      "lng" : 77.038
+    }, {
+      "lat" : 28.61004,
+      "lng" : 77.03828
+    }, {
+      "lat" : 28.61004,
+      "lng" : 77.03858
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E012",
+    "source" : "N050",
+    "target" : "N051",
+    "weight" : 132.5,
+    "bidirectional" : true,
+    "type" : "WALKWAY",
+    "geometry" : [ {
+      "lat" : 28.60978,
+      "lng" : 77.03728
+    }, {
+      "lat" : 28.60978,
+      "lng" : 77.03785
+    }, {
+      "lat" : 28.61004,
+      "lng" : 77.03858
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E013",
+    "source" : "N050",
+    "target" : "N052",
+    "weight" : 44.6,
+    "bidirectional" : true,
+    "type" : "MAIN_ROAD",
+    "geometry" : [ {
+      "lat" : 28.60978,
+      "lng" : 77.03728
+    }, {
+      "lat" : 28.60972,
+      "lng" : 77.03702
+    }, {
+      "lat" : 28.60965,
+      "lng" : 77.03685
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E014",
+    "source" : "N052",
+    "target" : "N001",
+    "weight" : 39.0,
+    "bidirectional" : true,
+    "type" : "MAIN_ROAD",
+    "geometry" : [ {
+      "lat" : 28.60965,
+      "lng" : 77.03685
+    }, {
+      "lat" : 28.60957,
+      "lng" : 77.03666
+    }, {
+      "lat" : 28.609539,
+      "lng" : 77.036475
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E015",
+    "source" : "N050",
+    "target" : "N053",
+    "weight" : 131.4,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.60978,
+      "lng" : 77.03728
+    }, {
+      "lat" : 28.60935,
+      "lng" : 77.03772
+    }, {
+      "lat" : 28.60882,
+      "lng" : 77.03805
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E016",
+    "source" : "N053",
+    "target" : "N054",
+    "weight" : 129.4,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.60882,
+      "lng" : 77.03805
+    }, {
+      "lat" : 28.609,
+      "lng" : 77.03872
+    }, {
+      "lat" : 28.60918,
+      "lng" : 77.03931
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E017",
+    "source" : "N054",
+    "target" : "N040",
+    "weight" : 73.9,
+    "bidirectional" : true,
+    "type" : "WALKWAY",
+    "geometry" : [ {
+      "lat" : 28.60918,
+      "lng" : 77.03931
+    }, {
+      "lat" : 28.60944,
+      "lng" : 77.03948
+    }, {
+      "lat" : 28.6098,
+      "lng" : 77.03955
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E018",
+    "source" : "N040",
+    "target" : "N055",
+    "weight" : 78.6,
+    "bidirectional" : true,
+    "type" : "WALKWAY",
+    "geometry" : [ {
+      "lat" : 28.6098,
+      "lng" : 77.03955
+    }, {
+      "lat" : 28.61002,
+      "lng" : 77.03988
+    }, {
+      "lat" : 28.61034,
+      "lng" : 77.04002
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E019",
+    "source" : "N040",
+    "target" : "N056",
+    "weight" : 79.6,
+    "bidirectional" : true,
+    "type" : "WALKWAY",
+    "geometry" : [ {
+      "lat" : 28.6098,
+      "lng" : 77.03955
+    }, {
+      "lat" : 28.60952,
+      "lng" : 77.03992
+    }, {
+      "lat" : 28.6093,
+      "lng" : 77.04013
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E020",
+    "source" : "N053",
+    "target" : "N057",
+    "weight" : 187.3,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.60882,
+      "lng" : 77.03805
+    }, {
+      "lat" : 28.60822,
+      "lng" : 77.0372
+    }, {
+      "lat" : 28.60755,
+      "lng" : 77.03688
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E021",
+    "source" : "N057",
+    "target" : "N058",
+    "weight" : 130.7,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.60755,
+      "lng" : 77.03688
+    }, {
+      "lat" : 28.60742,
+      "lng" : 77.03742
+    }, {
+      "lat" : 28.60716,
+      "lng" : 77.03814
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E022",
+    "source" : "N058",
+    "target" : "N059",
+    "weight" : 128.2,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.60716,
+      "lng" : 77.03814
+    }, {
+      "lat" : 28.60742,
+      "lng" : 77.03872
+    }, {
+      "lat" : 28.60782,
+      "lng" : 77.0392
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E023",
+    "source" : "N059",
+    "target" : "N060",
+    "weight" : 116.3,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.60782,
+      "lng" : 77.0392
+    }, {
+      "lat" : 28.60762,
+      "lng" : 77.03982
+    }, {
+      "lat" : 28.60765,
+      "lng" : 77.04035
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E024",
+    "source" : "N051",
+    "target" : "N061",
+    "weight" : 173.0,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.61004,
+      "lng" : 77.03858
+    }, {
+      "lat" : 28.6107,
+      "lng" : 77.0389
+    }, {
+      "lat" : 28.61152,
+      "lng" : 77.0391
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E025",
+    "source" : "N010",
+    "target" : "N042",
+    "weight" : 44.5,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6142509,
+      "lng" : 77.0337201
+    }, {
+      "lat" : 28.61386,
+      "lng" : 77.03382
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E026",
+    "source" : "N024",
+    "target" : "N044",
+    "weight" : 64.0,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.613648,
+      "lng" : 77.034322
+    }, {
+      "lat" : 28.61314,
+      "lng" : 77.03463
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E027",
+    "source" : "N023",
+    "target" : "N041",
+    "weight" : 24.4,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6130146,
+      "lng" : 77.0349503
+    }, {
+      "lat" : 28.613,
+      "lng" : 77.0352
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E028",
+    "source" : "N025",
+    "target" : "N041",
+    "weight" : 30.0,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.61326779,
+      "lng" : 77.03523909
+    }, {
+      "lat" : 28.613,
+      "lng" : 77.0352
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E029",
+    "source" : "N026",
+    "target" : "N045",
+    "weight" : 26.5,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.61270107,
+      "lng" : 77.03558596
+    }, {
+      "lat" : 28.61258,
+      "lng" : 77.03582
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E030",
+    "source" : "N022",
+    "target" : "N045",
+    "weight" : 63.4,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6126201,
+      "lng" : 77.0351721
+    }, {
+      "lat" : 28.61258,
+      "lng" : 77.03582
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E031",
+    "source" : "N003",
+    "target" : "N052",
+    "weight" : 26.6,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6098182,
+      "lng" : 77.037044
+    }, {
+      "lat" : 28.60965,
+      "lng" : 77.03685
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E032",
+    "source" : "N004",
+    "target" : "N050",
+    "weight" : 37.2,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.60969347,
+      "lng" : 77.03764849
+    }, {
+      "lat" : 28.60978,
+      "lng" : 77.03728
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E033",
+    "source" : "N005",
+    "target" : "N051",
+    "weight" : 10.6,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.60998058,
+      "lng" : 77.03849468
+    }, {
+      "lat" : 28.61004,
+      "lng" : 77.03858
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E034",
+    "source" : "N006",
+    "target" : "N049",
+    "weight" : 47.6,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.61052294,
+      "lng" : 77.03783579
+    }, {
+      "lat" : 28.61056,
+      "lng" : 77.03735
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E035",
+    "source" : "N007",
+    "target" : "N039",
+    "weight" : 40.9,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.60964893,
+      "lng" : 77.03812567
+    }, {
+      "lat" : 28.61,
+      "lng" : 77.038
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E036",
+    "source" : "N008",
+    "target" : "N061",
+    "weight" : 15.4,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.61139172,
+      "lng" : 77.03903968
+    }, {
+      "lat" : 28.61152,
+      "lng" : 77.0391
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E037",
+    "source" : "N009",
+    "target" : "N048",
+    "weight" : 31.8,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6120125,
+      "lng" : 77.0370096
+    }, {
+      "lat" : 28.61178,
+      "lng" : 77.0372
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E038",
+    "source" : "N011",
+    "target" : "N054",
+    "weight" : 78.0,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6085375,
+      "lng" : 77.0396304
+    }, {
+      "lat" : 28.60918,
+      "lng" : 77.03931
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E039",
+    "source" : "N012",
+    "target" : "N051",
+    "weight" : 49.4,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6103062,
+      "lng" : 77.0389857
+    }, {
+      "lat" : 28.61004,
+      "lng" : 77.03858
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E040",
+    "source" : "N013",
+    "target" : "N047",
+    "weight" : 10.7,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6115732,
+      "lng" : 77.0369155
+    }, {
+      "lat" : 28.61162,
+      "lng" : 77.03682
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E041",
+    "source" : "N014",
+    "target" : "N047",
+    "weight" : 71.3,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6121314,
+      "lng" : 77.036379
+    }, {
+      "lat" : 28.61162,
+      "lng" : 77.03682
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E042",
+    "source" : "N015",
+    "target" : "N047",
+    "weight" : 71.0,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6119957,
+      "lng" : 77.0362316
+    }, {
+      "lat" : 28.61162,
+      "lng" : 77.03682
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E043",
+    "source" : "N016",
+    "target" : "N052",
+    "weight" : 62.4,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.610191,
+      "lng" : 77.036679
+    }, {
+      "lat" : 28.60965,
+      "lng" : 77.03685
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E044",
+    "source" : "N017",
+    "target" : "N056",
+    "weight" : 89.5,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6088625,
+      "lng" : 77.0409
+    }, {
+      "lat" : 28.6093,
+      "lng" : 77.04013
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E045",
+    "source" : "N018",
+    "target" : "N055",
+    "weight" : 122.3,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6101964,
+      "lng" : 77.0412625
+    }, {
+      "lat" : 28.61034,
+      "lng" : 77.04002
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E046",
+    "source" : "N019",
+    "target" : "N055",
+    "weight" : 31.6,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.61010252,
+      "lng" : 77.04019872
+    }, {
+      "lat" : 28.61034,
+      "lng" : 77.04002
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E047",
+    "source" : "N020",
+    "target" : "N040",
+    "weight" : 73.5,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.60976568,
+      "lng" : 77.04030159
+    }, {
+      "lat" : 28.6098,
+      "lng" : 77.03955
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E048",
+    "source" : "N021",
+    "target" : "N056",
+    "weight" : 45.5,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.60940304,
+      "lng" : 77.0405807
+    }, {
+      "lat" : 28.6093,
+      "lng" : 77.04013
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E049",
+    "source" : "N027",
+    "target" : "N059",
+    "weight" : 64.4,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6073843,
+      "lng" : 77.0396341
+    }, {
+      "lat" : 28.60782,
+      "lng" : 77.0392
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E050",
+    "source" : "N028",
+    "target" : "N059",
+    "weight" : 48.1,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6080248,
+      "lng" : 77.0396344
+    }, {
+      "lat" : 28.60782,
+      "lng" : 77.0392
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E051",
+    "source" : "N030",
+    "target" : "N061",
+    "weight" : 50.6,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6116768,
+      "lng" : 77.0386131
+    }, {
+      "lat" : 28.61152,
+      "lng" : 77.0391
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E052",
+    "source" : "N031",
+    "target" : "N057",
+    "weight" : 70.7,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6071357,
+      "lng" : 77.0363304
+    }, {
+      "lat" : 28.60755,
+      "lng" : 77.03688
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E053",
+    "source" : "N032",
+    "target" : "N057",
+    "weight" : 63.2,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6072735,
+      "lng" : 77.036314
+    }, {
+      "lat" : 28.60755,
+      "lng" : 77.03688
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E054",
+    "source" : "N033",
+    "target" : "N057",
+    "weight" : 19.8,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6077244,
+      "lng" : 77.0368369
+    }, {
+      "lat" : 28.60755,
+      "lng" : 77.03688
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E055",
+    "source" : "N034",
+    "target" : "N058",
+    "weight" : 29.2,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6070857,
+      "lng" : 77.03842716
+    }, {
+      "lat" : 28.60716,
+      "lng" : 77.03814
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E056",
+    "source" : "N035",
+    "target" : "N061",
+    "weight" : 41.7,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.61187615,
+      "lng" : 77.03923359
+    }, {
+      "lat" : 28.61152,
+      "lng" : 77.0391
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E057",
+    "source" : "N036",
+    "target" : "N060",
+    "weight" : 54.4,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6076444,
+      "lng" : 77.0409071
+    }, {
+      "lat" : 28.60765,
+      "lng" : 77.04035
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E058",
+    "source" : "N037",
+    "target" : "N061",
+    "weight" : 84.3,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.611606,
+      "lng" : 77.038242
+    }, {
+      "lat" : 28.61152,
+      "lng" : 77.0391
+    } ],
+    "confidence" : "LOW"
+  }, {
+    "id" : "E059",
+    "source" : "N061",
+    "target" : "N062",
+    "weight" : 143.7,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.61152,
+      "lng" : 77.0391
+    }, {
+      "lat" : 28.61215,
+      "lng" : 77.03877
+    }, {
+      "lat" : 28.6127,
+      "lng" : 77.0385
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E060",
+    "source" : "N062",
+    "target" : "N029",
+    "weight" : 129.1,
+    "bidirectional" : true,
+    "type" : "INTERNAL_ROAD",
+    "geometry" : [ {
+      "lat" : 28.6127,
+      "lng" : 77.0385
+    }, {
+      "lat" : 28.6133,
+      "lng" : 77.03838
+    }, {
+      "lat" : 28.6138282,
+      "lng" : 77.0381964
+    } ],
+    "confidence" : "MEDIUM"
+  }, {
+    "id" : "E061",
+    "source" : "N002",
+    "target" : "N042",
+    "weight" : 78.4,
+    "bidirectional" : true,
+    "type" : "ACCESS_PATH",
+    "geometry" : [ {
+      "lat" : 28.6131922,
+      "lng" : 77.0336303
+    }, {
+      "lat" : 28.61355,
+      "lng" : 77.03382
+    }, {
+      "lat" : 28.61386,
+      "lng" : 77.03382
+    } ],
+    "confidence" : "LOW"
+  } ]
 }

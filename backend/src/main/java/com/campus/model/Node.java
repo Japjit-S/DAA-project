@@ -5,6 +5,7 @@ import java.util.Objects;
 /**
  * Generic Node representing a physical location, intersection, or point of interest
  * on campus. Coordinates x and y are normalized to the campus map canvas.
+ * Geographic coordinates (lat, lng) store the real-world GPS position.
  */
 public class Node {
     private String id;
@@ -13,17 +14,25 @@ public class Node {
     private double x;
     private double y;
     private boolean accessible;
+    private Double lat;
+    private Double lng;
 
     public Node() {
     }
 
     public Node(String id, String name, String type, double x, double y, boolean accessible) {
+        this(id, name, type, x, y, accessible, null, null);
+    }
+
+    public Node(String id, String name, String type, double x, double y, boolean accessible, Double lat, Double lng) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.x = x;
         this.y = y;
         this.accessible = accessible;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public String getId() {
@@ -74,6 +83,22 @@ public class Node {
         this.accessible = accessible;
     }
 
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,6 +121,8 @@ public class Node {
                 ", x=" + x +
                 ", y=" + y +
                 ", accessible=" + accessible +
+                ", lat=" + lat +
+                ", lng=" + lng +
                 '}';
     }
 }

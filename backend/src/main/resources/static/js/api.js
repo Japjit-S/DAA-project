@@ -82,6 +82,20 @@ const ApiClient = (function () {
     getGraph: () => request('/api/graph'),
     getNodes: () => request('/api/graph/nodes'),
     getNodeById: (id) => request(`/api/graph/nodes/${encodeURIComponent(id)}`),
-    getEdges: () => request('/api/graph/edges')
+    getEdges: () => request('/api/graph/edges'),
+    getEdgeById: (id) => request(`/api/graph/edges/${encodeURIComponent(id)}`),
+    getValidationReport: () => request('/api/graph/validation'),
+
+    // Phase 6 Route Finding & Algorithm Execution
+    executeAlgorithm: (payload) => request('/api/graph/execute', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    }),
+    getShortestPath: (startNodeId, endNodeId, accessibleOnly = false) => request(
+      `/api/graph/shortest-path?startNodeId=${encodeURIComponent(startNodeId)}&endNodeId=${encodeURIComponent(endNodeId)}&accessibleOnly=${Boolean(accessibleOnly)}`
+    ),
+    runBfs: (startNodeId, endNodeId, accessibleOnly = false) => request(
+      `/api/graph/bfs?startNodeId=${encodeURIComponent(startNodeId)}${endNodeId ? `&endNodeId=${encodeURIComponent(endNodeId)}` : ''}&accessibleOnly=${Boolean(accessibleOnly)}`
+    )
   };
 })();

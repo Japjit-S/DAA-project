@@ -31,4 +31,8 @@ public class CampusService {
     public Optional<Building> getBuildingById(String id) {
         return repository.findBuildingById(id);
     }
+
+    public void reloadData() {
+        repository.loadData();
+    }
 }

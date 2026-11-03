@@ -1,106 +1,612 @@
 [
   {
     "id": "N001",
-    "name": "Main Entrance Gate",
+    "name": "Main Gate",
     "type": "GATE",
-    "x": 100,
-    "y": 550,
-    "accessible": true
+    "x": 1762.96,
+    "y": 1389.57,
+    "accessible": true,
+    "lat": 28.609539,
+    "lng": 77.036475
   },
   {
     "id": "N002",
-    "name": "Administrative Block Plaza",
-    "type": "ACADEMIC",
-    "x": 260,
-    "y": 480,
-    "accessible": true
+    "name": "North Gate",
+    "type": "GATE",
+    "x": 1197.82,
+    "y": 562.85,
+    "accessible": true,
+    "lat": 28.6131922,
+    "lng": 77.0336303
   },
   {
     "id": "N003",
-    "name": "Central University Library",
-    "type": "LIBRARY",
-    "x": 450,
-    "y": 460,
-    "accessible": true
+    "name": "Admin Block / Director's Office",
+    "type": "ADMIN",
+    "x": 1876.0,
+    "y": 1326.38,
+    "accessible": true,
+    "lat": 28.6098182,
+    "lng": 77.037044
   },
   {
     "id": "N004",
-    "name": "CSE & Information Technology Block",
+    "name": "Block 4",
     "type": "ACADEMIC",
-    "x": 450,
-    "y": 220,
-    "accessible": true
+    "x": 1996.1,
+    "y": 1354.61,
+    "accessible": true,
+    "lat": 28.609693465645197,
+    "lng": 77.03764849197938
   },
   {
     "id": "N005",
-    "name": "ECE & Mechanical Engineering Wing",
+    "name": "Block 5",
     "type": "ACADEMIC",
-    "x": 660,
-    "y": 320,
-    "accessible": true
+    "x": 2164.2,
+    "y": 1289.64,
+    "accessible": true,
+    "lat": 28.609980579548864,
+    "lng": 77.0384946827076
   },
   {
     "id": "N006",
-    "name": "Student Center & Cafeteria",
-    "type": "AMENITY",
-    "x": 280,
-    "y": 300,
-    "accessible": true
+    "name": "Old Academic Block (Block 6)",
+    "type": "ACADEMIC",
+    "x": 2033.3,
+    "y": 1166.9,
+    "accessible": true,
+    "lat": 28.610522941366483,
+    "lng": 77.03783578846183
   },
   {
     "id": "N007",
-    "name": "Sports Arena & Gymnasium",
-    "type": "FACILITY",
-    "x": 820,
-    "y": 490,
-    "accessible": true
+    "name": "Block 8A (Connecting)",
+    "type": "ACADEMIC",
+    "x": 2090.89,
+    "y": 1364.69,
+    "accessible": true,
+    "lat": 28.609648929465923,
+    "lng": 77.03812567324927
   },
   {
     "id": "N008",
-    "name": "Innovation & Incubation Hub",
+    "name": "F-Tech Block",
     "type": "ACADEMIC",
-    "x": 620,
-    "y": 150,
-    "accessible": true
+    "x": 2272.48,
+    "y": 970.3,
+    "accessible": true,
+    "lat": 28.61139171871608,
+    "lng": 77.03903968346205
   },
   {
     "id": "N009",
-    "name": "Aryabhatta Hostel Complex",
-    "type": "HOSTEL",
-    "x": 820,
-    "y": 180,
-    "accessible": false
+    "name": "APJ Hall",
+    "type": "ACADEMIC",
+    "x": 1869.17,
+    "y": 829.82,
+    "accessible": true,
+    "lat": 28.6120125,
+    "lng": 77.0370096
   },
   {
     "id": "N010",
-    "name": "Gargi Hostel Complex",
-    "type": "HOSTEL",
-    "x": 160,
-    "y": 160,
-    "accessible": true
+    "name": "Department of Design",
+    "type": "ACADEMIC",
+    "x": 1215.66,
+    "y": 323.27,
+    "accessible": true,
+    "lat": 28.6142509,
+    "lng": 77.0337201
   },
   {
     "id": "N011",
-    "name": "Central Quadrangle Junction",
-    "type": "JUNCTION",
-    "x": 450,
-    "y": 340,
-    "accessible": true
+    "name": "Training and Placement Building",
+    "type": "ACADEMIC",
+    "x": 2389.83,
+    "y": 1616.2,
+    "accessible": true,
+    "lat": 28.6085375,
+    "lng": 77.0396304
   },
   {
     "id": "N012",
-    "name": "East Gate & Transit Stop",
-    "type": "GATE",
-    "x": 920,
-    "y": 340,
-    "accessible": true
+    "name": "Central Library (SAC & Gym)",
+    "type": "LIBRARY",
+    "x": 2261.75,
+    "y": 1215.95,
+    "accessible": true,
+    "lat": 28.6103062,
+    "lng": 77.0389857
   },
   {
     "id": "N013",
-    "name": "Health Center & North Parking",
+    "name": "Students Centre / Canteen",
+    "type": "AMENITY",
+    "x": 1850.48,
+    "y": 929.23,
+    "accessible": true,
+    "lat": 28.6115732,
+    "lng": 77.0369155
+  },
+  {
+    "id": "N014",
+    "name": "Safal",
+    "type": "AMENITY",
+    "x": 1743.89,
+    "y": 802.91,
+    "accessible": true,
+    "lat": 28.6121314,
+    "lng": 77.036379
+  },
+  {
+    "id": "N015",
+    "name": "Mother Dairy",
+    "type": "AMENITY",
+    "x": 1714.61,
+    "y": 833.62,
+    "accessible": true,
+    "lat": 28.6119957,
+    "lng": 77.0362316
+  },
+  {
+    "id": "N016",
+    "name": "Nescafé Kiosk",
+    "type": "AMENITY",
+    "x": 1803.49,
+    "y": 1242.02,
+    "accessible": true,
+    "lat": 28.610191,
+    "lng": 77.036679
+  },
+  {
+    "id": "N017",
+    "name": "Running Track",
+    "type": "SPORTS",
+    "x": 2642.05,
+    "y": 1542.65,
+    "accessible": true,
+    "lat": 28.6088625,
+    "lng": 77.0409
+  },
+  {
+    "id": "N018",
+    "name": "Cricket Ground",
+    "type": "SPORTS",
+    "x": 2714.07,
+    "y": 1240.8,
+    "accessible": true,
+    "lat": 28.6101964,
+    "lng": 77.0412625
+  },
+  {
+    "id": "N019",
+    "name": "Basketball Court",
+    "type": "SPORTS",
+    "x": 2502.73,
+    "y": 1262.04,
+    "accessible": true,
+    "lat": 28.610102521923423,
+    "lng": 77.04019872035511
+  },
+  {
+    "id": "N020",
+    "name": "Volleyball Court",
+    "type": "SPORTS",
+    "x": 2523.17,
+    "y": 1338.27,
+    "accessible": true,
+    "lat": 28.609765677699553,
+    "lng": 77.04030159410246
+  },
+  {
+    "id": "N021",
+    "name": "Lawn Tennis Courts",
+    "type": "SPORTS",
+    "x": 2578.62,
+    "y": 1420.33,
+    "accessible": true,
+    "lat": 28.609403041944603,
+    "lng": 77.04058070124769
+  },
+  {
+    "id": "N022",
+    "name": "Aryabhata Hostel",
+    "type": "HOSTEL",
+    "x": 1504.12,
+    "y": 692.32,
+    "accessible": true,
+    "lat": 28.6126201,
+    "lng": 77.0351721
+  },
+  {
+    "id": "N023",
+    "name": "Ramanujan Hostel",
+    "type": "HOSTEL",
+    "x": 1460.06,
+    "y": 603.05,
+    "accessible": true,
+    "lat": 28.6130146,
+    "lng": 77.0349503
+  },
+  {
+    "id": "N024",
+    "name": "J. C. Bose Hostel",
+    "type": "HOSTEL",
+    "x": 1335.24,
+    "y": 459.71,
+    "accessible": true,
+    "lat": 28.613648,
+    "lng": 77.034322
+  },
+  {
+    "id": "N025",
+    "name": "Raman Hostel",
+    "type": "HOSTEL",
+    "x": 1517.43,
+    "y": 545.75,
+    "accessible": true,
+    "lat": 28.613267788529395,
+    "lng": 77.03523909113397
+  },
+  {
+    "id": "N026",
+    "name": "Bhaskara Hostel",
+    "type": "HOSTEL",
+    "x": 1586.35,
+    "y": 674.0,
+    "accessible": true,
+    "lat": 28.612701072870323,
+    "lng": 77.03558596497462
+  },
+  {
+    "id": "N027",
+    "name": "Saraswati Hostel",
+    "type": "HOSTEL",
+    "x": 2390.56,
+    "y": 1877.16,
+    "accessible": true,
+    "lat": 28.6073843,
+    "lng": 77.0396341
+  },
+  {
+    "id": "N028",
+    "name": "Alaknanda Hostel",
+    "type": "HOSTEL",
+    "x": 2390.62,
+    "y": 1732.22,
+    "accessible": true,
+    "lat": 28.6080248,
+    "lng": 77.0396344
+  },
+  {
+    "id": "N029",
+    "name": "Kaveri Hostel",
+    "type": "HOSTEL",
+    "x": 2104.94,
+    "y": 418.93,
+    "accessible": true,
+    "lat": 28.6138282,
+    "lng": 77.0381964
+  },
+  {
+    "id": "N030",
+    "name": "Medical Centre",
     "type": "FACILITY",
-    "x": 220,
-    "y": 620,
-    "accessible": true
+    "x": 2187.73,
+    "y": 905.79,
+    "accessible": true,
+    "lat": 28.6116768,
+    "lng": 77.0386131
+  },
+  {
+    "id": "N031",
+    "name": "Faculty Housing area 1",
+    "type": "FACILITY",
+    "x": 1734.24,
+    "y": 1933.41,
+    "accessible": true,
+    "lat": 28.6071357,
+    "lng": 77.0363304
+  },
+  {
+    "id": "N032",
+    "name": "Faculty Housing area 2",
+    "type": "FACILITY",
+    "x": 1730.98,
+    "y": 1902.23,
+    "accessible": true,
+    "lat": 28.6072735,
+    "lng": 77.036314
+  },
+  {
+    "id": "N033",
+    "name": "Faculty Housing area 3",
+    "type": "FACILITY",
+    "x": 1834.86,
+    "y": 1800.2,
+    "accessible": true,
+    "lat": 28.6077244,
+    "lng": 77.0368369
+  },
+  {
+    "id": "N034",
+    "name": "Nursery",
+    "type": "FACILITY",
+    "x": 2150.79,
+    "y": 1944.73,
+    "accessible": true,
+    "lat": 28.607085702486472,
+    "lng": 77.03842716312455
+  },
+  {
+    "id": "N035",
+    "name": "Sewage Treatment Plant",
+    "type": "FACILITY",
+    "x": 2311.0,
+    "y": 860.68,
+    "accessible": false,
+    "lat": 28.611876151482278,
+    "lng": 77.03923359410246
+  },
+  {
+    "id": "N036",
+    "name": "Main Electric Substation",
+    "type": "FACILITY",
+    "x": 2643.46,
+    "y": 1818.3,
+    "accessible": false,
+    "lat": 28.6076444,
+    "lng": 77.0409071
+  },
+  {
+    "id": "N037",
+    "name": "Electric Substation 2",
+    "type": "FACILITY",
+    "x": 2114.0,
+    "y": 921.81,
+    "accessible": false,
+    "lat": 28.611606,
+    "lng": 77.038242
+  },
+  {
+    "id": "N039",
+    "name": "Academic Core Junction",
+    "type": "JUNCTION",
+    "x": 2065.93,
+    "y": 1285.24,
+    "accessible": true,
+    "lat": 28.61,
+    "lng": 77.038
+  },
+  {
+    "id": "N040",
+    "name": "Sports Complex West Junction",
+    "type": "JUNCTION",
+    "x": 2373.86,
+    "y": 1330.5,
+    "accessible": true,
+    "lat": 28.6098,
+    "lng": 77.03955
+  },
+  {
+    "id": "N041",
+    "name": "Hostel Road Junction",
+    "type": "JUNCTION",
+    "x": 1509.67,
+    "y": 606.35,
+    "accessible": true,
+    "lat": 28.613,
+    "lng": 77.0352
+  },
+  {
+    "id": "N042",
+    "name": "Department of Design Access Junction",
+    "type": "JUNCTION",
+    "x": 1235.51,
+    "y": 411.73,
+    "accessible": true,
+    "lat": 28.61386,
+    "lng": 77.03382
+  },
+  {
+    "id": "N043",
+    "name": "North Gate South Approach",
+    "type": "JUNCTION",
+    "x": 1259.35,
+    "y": 624.45,
+    "accessible": true,
+    "lat": 28.61292,
+    "lng": 77.03394
+  },
+  {
+    "id": "N044",
+    "name": "Hostel North-West Turn",
+    "type": "JUNCTION",
+    "x": 1396.43,
+    "y": 574.67,
+    "accessible": true,
+    "lat": 28.61314,
+    "lng": 77.03463
+  },
+  {
+    "id": "N045",
+    "name": "Hostel East Road Junction",
+    "type": "JUNCTION",
+    "x": 1632.84,
+    "y": 701.4,
+    "accessible": true,
+    "lat": 28.61258,
+    "lng": 77.03582
+  },
+  {
+    "id": "N046",
+    "name": "Hostel South Road Junction",
+    "type": "JUNCTION",
+    "x": 1652.71,
+    "y": 846.23,
+    "accessible": true,
+    "lat": 28.61194,
+    "lng": 77.03592
+  },
+  {
+    "id": "N047",
+    "name": "Student Centre Road Junction",
+    "type": "JUNCTION",
+    "x": 1831.5,
+    "y": 918.64,
+    "accessible": true,
+    "lat": 28.61162,
+    "lng": 77.03682
+  },
+  {
+    "id": "N048",
+    "name": "APJ Hall Access Junction",
+    "type": "JUNCTION",
+    "x": 1907.0,
+    "y": 882.44,
+    "accessible": true,
+    "lat": 28.61178,
+    "lng": 77.0372
+  },
+  {
+    "id": "N049",
+    "name": "Academic West Road Junction",
+    "type": "JUNCTION",
+    "x": 1936.8,
+    "y": 1158.52,
+    "accessible": true,
+    "lat": 28.61056,
+    "lng": 77.03735
+  },
+  {
+    "id": "N050",
+    "name": "Academic South-West Junction",
+    "type": "JUNCTION",
+    "x": 1922.89,
+    "y": 1335.03,
+    "accessible": true,
+    "lat": 28.60978,
+    "lng": 77.03728
+  },
+  {
+    "id": "N051",
+    "name": "Academic East Walkway Junction",
+    "type": "JUNCTION",
+    "x": 2181.15,
+    "y": 1276.19,
+    "accessible": true,
+    "lat": 28.61004,
+    "lng": 77.03858
+  },
+  {
+    "id": "N052",
+    "name": "Main Gate Boulevard Junction",
+    "type": "JUNCTION",
+    "x": 1837.46,
+    "y": 1364.45,
+    "accessible": true,
+    "lat": 28.60965,
+    "lng": 77.03685
+  },
+  {
+    "id": "N053",
+    "name": "South Campus Road Junction",
+    "type": "JUNCTION",
+    "x": 2075.86,
+    "y": 1552.27,
+    "accessible": true,
+    "lat": 28.60882,
+    "lng": 77.03805
+  },
+  {
+    "id": "N054",
+    "name": "Sports West Entrance Junction",
+    "type": "JUNCTION",
+    "x": 2326.18,
+    "y": 1470.81,
+    "accessible": true,
+    "lat": 28.60918,
+    "lng": 77.03931
+  },
+  {
+    "id": "N055",
+    "name": "Sports North Access Junction",
+    "type": "JUNCTION",
+    "x": 2467.23,
+    "y": 1208.3,
+    "accessible": true,
+    "lat": 28.61034,
+    "lng": 77.04002
+  },
+  {
+    "id": "N056",
+    "name": "Sports South Access Junction",
+    "type": "JUNCTION",
+    "x": 2489.08,
+    "y": 1443.65,
+    "accessible": true,
+    "lat": 28.6093,
+    "lng": 77.04013
+  },
+  {
+    "id": "N057",
+    "name": "Faculty Housing Road Junction",
+    "type": "JUNCTION",
+    "x": 1843.42,
+    "y": 1839.66,
+    "accessible": true,
+    "lat": 28.60755,
+    "lng": 77.03688
+  },
+  {
+    "id": "N058",
+    "name": "Nursery Road Junction",
+    "type": "JUNCTION",
+    "x": 2093.74,
+    "y": 1927.91,
+    "accessible": true,
+    "lat": 28.60716,
+    "lng": 77.03814
+  },
+  {
+    "id": "N059",
+    "name": "Girls Hostel Road Junction",
+    "type": "JUNCTION",
+    "x": 2304.32,
+    "y": 1778.56,
+    "accessible": true,
+    "lat": 28.60782,
+    "lng": 77.0392
+  },
+  {
+    "id": "N060",
+    "name": "East Utilities Road Junction",
+    "type": "JUNCTION",
+    "x": 2532.79,
+    "y": 1817.03,
+    "accessible": true,
+    "lat": 28.60765,
+    "lng": 77.04035
+  },
+  {
+    "id": "N061",
+    "name": "North-East Utility Junction",
+    "type": "JUNCTION",
+    "x": 2284.46,
+    "y": 941.27,
+    "accessible": true,
+    "lat": 28.61152,
+    "lng": 77.0391
+  },
+  {
+    "id": "N062",
+    "name": "Kaveri Road Junction",
+    "type": "JUNCTION",
+    "x": 2165.26,
+    "y": 674.24,
+    "accessible": true,
+    "lat": 28.6127,
+    "lng": 77.0385
   }
 ]

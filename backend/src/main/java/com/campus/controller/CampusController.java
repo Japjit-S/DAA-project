@@ -44,4 +44,13 @@ public class CampusController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(ApiResponse.error("Building not found with id: " + id)));
     }
+
+    /**
+     * Hot reload data files from disk into memory.
+     */
+    @PostMapping("/reload")
+    public ResponseEntity<ApiResponse<String>> reloadData() {
+        campusService.reloadData();
+        return ResponseEntity.ok(ApiResponse.success("Campus datasets reloaded from disk", "OK"));
+    }
 }

@@ -1,127 +1,845 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="100%" height="100%" id="campusMapSvg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="100%" id="campusMapSvg">
   <defs>
-    <!-- Background Gradients -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Background & Canvas Gradients -->
+    <radialGradient id="campusBgGrad" cx="50%" cy="50%" r="70%">
       <stop offset="0%" stop-color="#0f172a" />
-      <stop offset="100%" stop-color="#1e293b" />
-    </linearGradient>
+      <stop offset="100%" stop-color="#090d16" />
+    </radialGradient>
+
     <linearGradient id="academicGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.2"/>
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
     </linearGradient>
-    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#064e3b" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#10b981" stop-opacity="0.15"/>
+
+    <linearGradient id="adminGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#222044" />
+      <stop offset="100%" stop-color="#141328" />
     </linearGradient>
-    <linearGradient id="waterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.2"/>
+
+    <linearGradient id="libraryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#281a3d" />
+      <stop offset="100%" stop-color="#150f24" />
     </linearGradient>
-    
-    <!-- Filter Glow -->
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="3" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+
+    <linearGradient id="hostelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#261e0b" />
+      <stop offset="100%" stop-color="#171206" />
+    </linearGradient>
+
+    <linearGradient id="runningTrackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#991b1b" />
+      <stop offset="100%" stop-color="#7f1d1d" />
+    </linearGradient>
+
+    <linearGradient id="turfPitchGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#15803d" />
+      <stop offset="100%" stop-color="#166534" />
+    </linearGradient>
+
+    <!-- Drop Shadow Filter for Elevation -->
+    <filter id="bldgShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.65" />
     </filter>
+
+    <filter id="glowBeacon" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Embedded Map Styles & Animations -->
+    <style>
+      @keyframes rippleAnim {
+        0% { r: 3px; opacity: 0.9; }
+        100% { r: 22px; opacity: 0; }
+      }
+      @keyframes gatePulse {
+        0%, 100% { opacity: 0.95; transform: scale(1); }
+        50% { opacity: 0.35; transform: scale(0.85); }
+      }
+      @keyframes emergencyPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.45; }
+      }
+      .beacon-dot {
+        animation: gatePulse 2s ease-in-out infinite;
+        transform-origin: center;
+      }
+      .ripple-ring {
+        animation: rippleAnim 2.8s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+        transform-origin: center;
+      }
+      .emergency-beacon {
+        animation: emergencyPulse 1.4s ease-in-out infinite;
+      }
+      .bldg-shape {
+        transition: stroke 0.2s ease, filter 0.2s ease;
+      }
+      .bldg-shape:hover {
+        filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.65));
+      }
+      .map-lbl-title {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-size: 9px;
+        font-weight: 700;
+        fill: #f1f5f9;
+        text-anchor: middle;
+        letter-spacing: 0.02em;
+        pointer-events: none;
+        paint-order: stroke;
+        stroke: #090d16;
+        stroke-width: 3px;
+        stroke-linejoin: round;
+      }
+      .map-lbl-code {
+        font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        font-size: 8px;
+        font-weight: 700;
+        text-anchor: middle;
+        letter-spacing: 0.05em;
+        pointer-events: none;
+      }
+    </style>
   </defs>
 
-  <!-- Campus Base Plane -->
-  <rect width="1000" height="700" fill="url(#bgGrad)" />
+  <!-- ========================================== -->
+  <!-- 1. BASE TERRAIN & CAMPUS PERIMETER BOUNDARY -->
+  <!-- ========================================== -->
+  <g id="terrainBaseLayer">
+    <!-- Deep Canvas Background -->
+    <rect width="1200" height="900" fill="url(#campusBgGrad)" />
 
-  <!-- Grid overlay for technical blueprint aesthetics -->
-  <g stroke="#334155" stroke-width="0.5" opacity="0.3">
-    <line x1="100" y1="0" x2="100" y2="700" />
-    <line x1="200" y1="0" x2="200" y2="700" />
-    <line x1="300" y1="0" x2="300" y2="700" />
-    <line x1="400" y1="0" x2="400" y2="700" />
-    <line x1="500" y1="0" x2="500" y2="700" />
-    <line x1="600" y1="0" x2="600" y2="700" />
-    <line x1="700" y1="0" x2="700" y2="700" />
-    <line x1="800" y1="0" x2="800" y2="700" />
-    <line x1="900" y1="0" x2="900" y2="700" />
+    <!-- Technical Blueprint Grid -->
+    <g stroke="#1e3a5f" stroke-width="0.5" opacity="0.14">
+      <line x1="100" y1="0" x2="100" y2="900" />
+      <line x1="200" y1="0" x2="200" y2="900" />
+      <line x1="300" y1="0" x2="300" y2="900" />
+      <line x1="400" y1="0" x2="400" y2="900" />
+      <line x1="500" y1="0" x2="500" y2="900" />
+      <line x1="600" y1="0" x2="600" y2="900" />
+      <line x1="700" y1="0" x2="700" y2="900" />
+      <line x1="800" y1="0" x2="800" y2="900" />
+      <line x1="900" y1="0" x2="900" y2="900" />
+      <line x1="1000" y1="0" x2="1000" y2="900" />
+      <line x1="1100" y1="0" x2="1100" y2="900" />
+      <line x1="0" y1="100" x2="1200" y2="100" />
+      <line x1="0" y1="200" x2="1200" y2="200" />
+      <line x1="0" y1="300" x2="1200" y2="300" />
+      <line x1="0" y1="400" x2="1200" y2="400" />
+      <line x1="0" y1="500" x2="1200" y2="500" />
+      <line x1="0" y1="600" x2="1200" y2="600" />
+      <line x1="0" y1="700" x2="1200" y2="700" />
+      <line x1="0" y1="800" x2="1200" y2="800" />
+    </g>
 
-    <line x1="0" y1="100" x2="1000" y2="100" />
-    <line x1="0" y1="200" x2="1000" y2="200" />
-    <line x1="0" y1="300" x2="1000" y2="300" />
-    <line x1="0" y1="400" x2="1000" y2="400" />
-    <line x1="0" y1="500" x2="1000" y2="500" />
-    <line x1="0" y1="600" x2="1000" y2="600" />
+    <!-- Outer Security Fence & Boundary Wall -->
+    <polygon points="25,12 1175,12 1175,888 25,888" fill="#0d1424" stroke="#1e3a5f" stroke-width="2.5" />
+    <polygon points="32,20 1168,20 1168,880 32,880" fill="none" stroke="#334155" stroke-dasharray="8,6" stroke-width="1" opacity="0.6" />
+
+    <!-- Corner Watchtower Bastions -->
+    <rect x="23" y="10" width="8" height="8" fill="#3b82f6" opacity="0.6" />
+    <rect x="1169" y="10" width="8" height="8" fill="#3b82f6" opacity="0.6" />
+    <rect x="1169" y="882" width="8" height="8" fill="#3b82f6" opacity="0.6" />
+    <rect x="23" y="882" width="8" height="8" fill="#3b82f6" opacity="0.6" />
+
+    <!-- Sector Zone Ground Underlays -->
+    <!-- Academic Core Zone Pad -->
+    <path d="M 480 380 L 890 310 L 890 580 L 580 600 Z" fill="#111d33" opacity="0.45" />
+
+    <!-- Sports Complex Arena Ground Pad -->
+    <rect x="940" y="420" width="225" height="360" rx="16" fill="#042319" stroke="#047857" stroke-width="1.5" opacity="0.55" />
+    <text x="1052" y="442" fill="#10b981" font-size="10" font-family="'Inter', sans-serif" font-weight="700" opacity="0.6" text-anchor="middle" letter-spacing="0.1em">ATHLETIC &amp; SPORTS COMPLEX</text>
+
+    <!-- Northwest Hostel Zone Pad -->
+    <rect x="45" y="24" width="350" height="200" rx="16" fill="#241a06" opacity="0.3" stroke="#b45309" stroke-width="1" stroke-dasharray="6,4" />
+
+    <!-- Student Life & Canteen Zone Pad -->
+    <rect x="400" y="215" width="180" height="135" rx="14" fill="#291a08" opacity="0.35" />
+
+    <!-- South Faculty Housing & Nursery Greenery -->
+    <rect x="400" y="745" width="460" height="135" rx="14" fill="#062d1c" opacity="0.35" stroke="#047857" stroke-width="1" stroke-dasharray="6,4" />
+
+    <!-- Southeast Girls Hostel Zone Pad -->
+    <rect x="865" y="710" width="140" height="170" rx="12" fill="#241a06" opacity="0.3" stroke="#b45309" stroke-width="1" stroke-dasharray="6,4" />
   </g>
 
-  <!-- Campus Zones / Green Belts -->
-  <g id="campusZones">
-    <!-- North-West Green Belt -->
-    <path d="M 80,80 Q 250,50 320,120 T 150,220 Z" fill="url(#greenGrad)" stroke="#10b981" stroke-width="1" stroke-opacity="0.3"/>
-    <!-- Central Quad Lawns -->
-    <ellipse cx="450" cy="340" rx="90" ry="50" fill="url(#greenGrad)" stroke="#10b981" stroke-width="1" stroke-opacity="0.4"/>
-    <!-- Central Fountain / Water Basin -->
-    <ellipse cx="450" cy="340" rx="28" ry="16" fill="url(#waterGrad)" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.6"/>
-    <!-- Sports Complex Track & Field -->
-    <rect x="740" y="430" width="160" height="120" rx="40" fill="none" stroke="#f59e0b" stroke-width="3" stroke-opacity="0.4" stroke-dasharray="6,4"/>
-    <ellipse cx="820" cy="490" rx="55" ry="35" fill="#14532d" fill-opacity="0.3" stroke="#22c55e" stroke-width="1"/>
+  <!-- ========================================== -->
+  <!-- 2. LANDSCAPING, TREES, PLAZAS & WATER BASINS -->
+  <!-- ========================================== -->
+  <g id="landscapingLayer">
+    <!-- Admin Plaza Grand Water Basin & Animated Fountain -->
+    <ellipse cx="510" cy="495" rx="16" ry="12" fill="#0369a1" stroke="#38bdf8" stroke-width="1.5" />
+    <circle cx="510" cy="495" r="3" class="ripple-ring" fill="none" stroke="#7dd3fc" stroke-width="1" />
+    <circle cx="510" cy="495" r="9" class="ripple-ring" style="animation-delay: 1.4s;" fill="none" stroke="#38bdf8" stroke-width="0.8" />
+    <circle cx="510" cy="495" r="2.5" fill="#e0f2fe" />
+
+    <!-- Central Academic Quadrangle Lawn (between Block 4, 5, 6, 8A) -->
+    <polygon points="650,475 730,475 720,530 640,530" fill="#063826" stroke="#10b981" stroke-width="1" opacity="0.5" />
+    <circle cx="678" cy="505" r="9" fill="#0d9488" opacity="0.4" />
+
+    <!-- Formal Tree Clusters / Groves -->
+    <!-- Grove 1: Admin Boulevard Flank -->
+    <g fill="#15803d" stroke="#0f172a" stroke-width="1" opacity="0.8">
+      <circle cx="485" cy="535" r="6" />
+      <circle cx="493" cy="542" r="7.5" fill="#166534" />
+      <circle cx="488" cy="550" r="6" />
+      <circle cx="518" cy="552" r="6" />
+      <circle cx="528" cy="558" r="7" fill="#166534" />
+    </g>
+
+    <!-- Grove 2: Library Reading Garden -->
+    <g fill="#166534" stroke="#0f172a" stroke-width="1" opacity="0.8">
+      <circle cx="780" cy="425" r="6" />
+      <circle cx="788" cy="418" r="7" fill="#15803d" />
+      <circle cx="797" cy="424" r="5.5" />
+      <circle cx="855" cy="435" r="6.5" fill="#15803d" />
+      <circle cx="863" cy="442" r="7" />
+    </g>
+
+    <!-- Grove 3: West Hostel Buffer Green -->
+    <g fill="#14532d" stroke="#0f172a" stroke-width="1" opacity="0.75">
+      <circle cx="205" cy="95" r="6.5" />
+      <circle cx="213" cy="102" r="8" fill="#15803d" />
+      <circle cx="222" cy="94" r="6" />
+      <circle cx="340" cy="120" r="7" />
+      <circle cx="348" cy="128" r="8" fill="#15803d" />
+    </g>
+
+    <!-- Parking Plazas with Slot Striping -->
+    <!-- Main Gate Visitor Parking -->
+    <g id="mainGateParking">
+      <rect x="385" y="565" width="48" height="34" rx="4" fill="#131d2e" stroke="#334155" stroke-width="1.2" />
+      <text x="409" y="585" fill="#64748b" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="middle">PARK P1</text>
+      <line x1="392" y1="565" x2="392" y2="575" stroke="#475569" stroke-width="1" />
+      <line x1="400" y1="565" x2="400" y2="575" stroke="#475569" stroke-width="1" />
+      <line x1="408" y1="565" x2="408" y2="575" stroke="#475569" stroke-width="1" />
+      <line x1="416" y1="565" x2="416" y2="575" stroke="#475569" stroke-width="1" />
+      <line x1="424" y1="565" x2="424" y2="575" stroke="#475569" stroke-width="1" />
+    </g>
+
+    <!-- Admin & Faculty Parking -->
+    <g id="adminParking">
+      <rect x="565" y="560" width="50" height="30" rx="4" fill="#131d2e" stroke="#334155" stroke-width="1.2" />
+      <text x="590" y="578" fill="#64748b" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="middle">PARK P2</text>
+    </g>
+
+    <!-- NAB Tech Parking -->
+    <g id="nabParking">
+      <rect x="840" y="365" width="46" height="26" rx="4" fill="#131d2e" stroke="#334155" stroke-width="1.2" />
+      <text x="863" y="381" fill="#64748b" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="middle">PARK P3</text>
+    </g>
   </g>
 
-  <!-- Building Outlines / Visual Footprints -->
-  <g id="buildingFootprints">
-    <!-- N001 Main Entrance Arch -->
-    <rect x="70" y="530" width="60" height="40" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5" opacity="0.8"/>
-    <text x="100" y="585" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="sans-serif">Main Gate</text>
+  <!-- ========================================== -->
+  <!-- 3. ROAD & PEDESTRIAN CIRCULATION HIERARCHY -->
+  <!-- ========================================== -->
+  <g id="roadNetworkLayer">
+    <!-- A. Pedestrian Walkways (Paved Stone Pavers) -->
+    <g id="pedestrianWalkways" stroke="#475569" stroke-width="3" stroke-dasharray="4,4" stroke-linecap="round" opacity="0.75">
+      <!-- Block 4 <-> Block 8A <-> Block 5 Link -->
+      <line x1="628.1" y1="542.4" x2="695.7" y2="547.8" />
+      <line x1="695.7" y1="547.8" x2="748.0" y2="507.3" />
 
-    <!-- N002 Administrative Headquarters -->
-    <rect x="200" y="440" width="120" height="70" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" opacity="0.9"/>
-    <text x="260" y="475" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Admin Block</text>
-    <text x="260" y="492" fill="#60a5fa" font-size="9" text-anchor="middle" font-family="sans-serif">B001 • ADM-01</text>
+      <!-- APJ Hall to Food Kiosks & Student Centre -->
+      <line x1="537.6" y1="259.2" x2="524.3" y2="312.8" />
+      <line x1="537.6" y1="259.2" x2="448.3" y2="244.7" />
+      <line x1="537.6" y1="259.2" x2="427.4" y2="261.2" />
+      <line x1="542.5" y1="527.2" x2="490.8" y2="481.6" />
 
-    <!-- N003 Central University Library -->
-    <rect x="390" y="420" width="120" height="75" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5" opacity="0.9"/>
-    <text x="450" y="455" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Central Library</text>
-    <text x="450" y="472" fill="#a78bfa" font-size="9" text-anchor="middle" font-family="sans-serif">B002 • LIB-01</text>
+      <!-- North Gate to Dept of Design -->
+      <line x1="58.8" y1="115.1" x2="71.6" y2="50.0" />
 
-    <!-- N004 CSE & IT Department Block -->
-    <rect x="385" y="175" width="130" height="75" rx="6" fill="#1e293b" stroke="#06b6d4" stroke-width="1.5" opacity="0.9"/>
-    <text x="450" y="210" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">CSE &amp; IT Block</text>
-    <text x="450" y="227" fill="#22d3ee" font-size="9" text-anchor="middle" font-family="sans-serif">B003 • ENG-CS</text>
+      <!-- Medical Centre & Utility Pathways -->
+      <line x1="764.8" y1="300.2" x2="712.2" y2="308.8" />
+      <line x1="825.2" y1="335.0" x2="852.7" y2="275.8" />
+      <line x1="852.7" y1="275.8" x2="705.7" y2="37.5" />
 
-    <!-- N005 ECE & Mechanical Wing -->
-    <rect x="595" y="280" width="130" height="75" rx="6" fill="#1e293b" stroke="#06b6d4" stroke-width="1.5" opacity="0.9"/>
-    <text x="660" y="315" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">ECE &amp; Mech Wing</text>
-    <text x="660" y="332" fill="#22d3ee" font-size="9" text-anchor="middle" font-family="sans-serif">B004 • ENG-EC</text>
+      <!-- Sports Courts Links -->
+      <line x1="1088.8" y1="643.9" x2="989.4" y2="492.4" />
+      <line x1="989.4" y1="492.4" x2="1004.0" y2="533.6" />
+      <line x1="1004.0" y1="533.6" x2="1043.5" y2="577.9" />
+      <line x1="1003.8" y1="529.4" x2="1004.0" y2="533.6" />
+      <line x1="1003.8" y1="529.4" x2="989.4" y2="492.4" />
 
-    <!-- N006 Student Center & Canteen -->
-    <rect x="220" y="265" width="120" height="65" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" opacity="0.9"/>
-    <text x="280" y="295" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Student Center</text>
-    <text x="280" y="312" fill="#fbbf24" font-size="9" text-anchor="middle" font-family="sans-serif">B005 • SAC-01</text>
+      <!-- Residential & Nursery Connections -->
+      <line x1="909.5" y1="746.2" x2="738.4" y2="860.8" />
+      <line x1="1089.8" y1="792.6" x2="909.4" y2="824.4" />
+      <line x1="441.4" y1="854.7" x2="439.1" y2="837.9" />
+      <line x1="439.1" y1="837.9" x2="513.1" y2="782.8" />
+      <line x1="513.1" y1="782.8" x2="738.4" y2="860.8" />
+    </g>
 
-    <!-- N007 Sports Complex -->
-    <text x="820" y="485" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Sports Complex</text>
-    <text x="820" y="502" fill="#34d399" font-size="9" text-anchor="middle" font-family="sans-serif">B006 • SPT-01</text>
+    <!-- B. Secondary Internal Sector Roads (Curb + Roadbed) -->
+    <!-- Road Base Layer (Curb / Foundation) -->
+    <g id="secondaryRoadCurbs" stroke="#334155" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <!-- Main Gate to Block 6 & Academic Wings -->
+      <path d="M 461.9 561.2 L 654.7 441.1" />
+      <path d="M 542.5 527.2 L 628.1 542.4" />
+      <path d="M 654.7 441.1 L 628.1 542.4" />
+      <path d="M 677.9 505.0 L 654.7 441.1" />
+      <path d="M 677.9 505.0 L 628.1 542.4" />
+      <path d="M 677.9 505.0 L 748.0 507.3" />
+      <path d="M 677.9 505.0 L 817.6 467.6" />
+      <path d="M 748.0 507.3 L 817.6 467.6" />
+      <path d="M 817.6 467.6 L 825.2 335.0" />
+      <path d="M 825.2 335.0 L 764.8 300.2" />
+      <path d="M 764.8 300.2 L 524.3 312.8" />
+      <path d="M 764.8 300.2 L 705.7 37.5" />
 
-    <!-- N008 Innovation Hub -->
-    <rect x="560" y="110" width="120" height="65" rx="6" fill="#1e293b" stroke="#ec4899" stroke-width="1.5" opacity="0.9"/>
-    <text x="620" y="140" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Innovation Hub</text>
-    <text x="620" y="157" fill="#f472b6" font-size="9" text-anchor="middle" font-family="sans-serif">B007 • INC-01</text>
+      <!-- North Spine (Admin to Auditorium) -->
+      <path d="M 542.5 527.2 L 537.6 259.2" />
 
-    <!-- N009 Boys Hostel (Aryabhatta) -->
-    <rect x="760" y="145" width="120" height="65" rx="6" fill="#1e293b" stroke="#eab308" stroke-width="1.5" opacity="0.9"/>
-    <text x="820" y="175" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Aryabhatta Hall</text>
-    <text x="820" y="192" fill="#fde047" font-size="9" text-anchor="middle" font-family="sans-serif">B008 • HST-01</text>
+      <!-- Northwest Hostel Branch -->
+      <path d="M 281.2 138.6 L 156.8 59.5" />
+      <path d="M 281.2 138.6 L 286.8 105.9" />
+      <path d="M 281.2 138.6 L 335.9 175.1" />
+      <path d="M 281.2 138.6 L 245.9 136.8" />
+      <path d="M 281.2 138.6 L 277.3 185.0" />
 
-    <!-- N010 Girls Hostel (Gargi) -->
-    <rect x="100" y="125" width="120" height="65" rx="6" fill="#1e293b" stroke="#eab308" stroke-width="1.5" opacity="0.9"/>
-    <text x="160" y="155" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Gargi Hall</text>
-    <text x="160" y="172" fill="#fde047" font-size="9" text-anchor="middle" font-family="sans-serif">B009 • HST-02</text>
+      <!-- East Boulevard towards Sports & T&P -->
+      <path d="M 542.5 527.2 L 908.9 683.5" />
+      <path d="M 908.9 683.5 L 1088.8 643.9" />
+      <path d="M 1088.8 643.9 L 1140.1 481.0" />
+      <path d="M 1003.8 529.4 L 817.6 467.6" />
+      <path d="M 908.9 683.5 L 909.5 746.2" />
+      <path d="M 909.5 746.2 L 909.4 824.4" />
+      <path d="M 1088.8 643.9 L 1089.8 792.6" />
 
-    <!-- N012 East Gate -->
-    <rect x="890" y="320" width="60" height="40" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5" opacity="0.8"/>
-    <text x="920" y="375" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="sans-serif">East Gate</text>
+      <!-- South Housing Loop -->
+      <path d="M 461.9 561.2 L 441.4 854.7" />
+      <path d="M 513.1 782.8 L 461.9 561.2" />
+    </g>
 
-    <!-- N013 Health Center & Parking -->
-    <rect x="160" y="590" width="120" height="55" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" opacity="0.9"/>
-    <text x="220" y="618" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Health Center</text>
-    <text x="220" y="633" fill="#f87171" font-size="9" text-anchor="middle" font-family="sans-serif">B010 • MED-01</text>
+    <!-- Road Asphalt Top Surface -->
+    <g id="secondaryRoadAsphalt" stroke="#1e293b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M 461.9 561.2 L 654.7 441.1" />
+      <path d="M 542.5 527.2 L 628.1 542.4" />
+      <path d="M 654.7 441.1 L 628.1 542.4" />
+      <path d="M 677.9 505.0 L 654.7 441.1" />
+      <path d="M 677.9 505.0 L 628.1 542.4" />
+      <path d="M 677.9 505.0 L 748.0 507.3" />
+      <path d="M 677.9 505.0 L 817.6 467.6" />
+      <path d="M 748.0 507.3 L 817.6 467.6" />
+      <path d="M 817.6 467.6 L 825.2 335.0" />
+      <path d="M 825.2 335.0 L 764.8 300.2" />
+      <path d="M 764.8 300.2 L 524.3 312.8" />
+      <path d="M 764.8 300.2 L 705.7 37.5" />
+      <path d="M 542.5 527.2 L 537.6 259.2" />
+      <path d="M 281.2 138.6 L 156.8 59.5" />
+      <path d="M 281.2 138.6 L 286.8 105.9" />
+      <path d="M 281.2 138.6 L 335.9 175.1" />
+      <path d="M 281.2 138.6 L 245.9 136.8" />
+      <path d="M 281.2 138.6 L 277.3 185.0" />
+      <path d="M 542.5 527.2 L 908.9 683.5" />
+      <path d="M 908.9 683.5 L 1088.8 643.9" />
+      <path d="M 1088.8 643.9 L 1140.1 481.0" />
+      <path d="M 1003.8 529.4 L 817.6 467.6" />
+      <path d="M 908.9 683.5 L 909.5 746.2" />
+      <path d="M 909.5 746.2 L 909.4 824.4" />
+      <path d="M 1088.8 643.9 L 1089.8 792.6" />
+      <path d="M 461.9 561.2 L 441.4 854.7" />
+      <path d="M 513.1 782.8 L 461.9 561.2" />
+    </g>
+
+    <!-- C. Primary Arterial Boulevards (Grand Entry & Spine) -->
+    <!-- Outer Curb -->
+    <g stroke="#475569" stroke-width="18" stroke-linecap="round" fill="none">
+      <!-- Main South Entrance Approach to Main Gate -->
+      <path d="M 461.9 650 L 461.9 561.2" />
+      <!-- Main Gate to Admin Roundabout -->
+      <path d="M 461.9 561.2 L 542.5 527.2" />
+      <!-- North Gate to Hostel Junction & Student Centre -->
+      <path d="M 58.8 115.1 L 281.2 138.6" />
+      <path d="M 58.8 115.1 L 524.3 312.8" />
+    </g>
+
+    <!-- Boulevard Asphalt Bed -->
+    <g stroke="#1a2333" stroke-width="14" stroke-linecap="round" fill="none">
+      <path d="M 461.9 650 L 461.9 561.2" />
+      <path d="M 461.9 561.2 L 542.5 527.2" />
+      <path d="M 58.8 115.1 L 281.2 138.6" />
+      <path d="M 58.8 115.1 L 524.3 312.8" />
+    </g>
+
+    <!-- Central Median Striping (Yellow Dashed Centerline) -->
+    <g stroke="#eab308" stroke-width="1.5" stroke-dasharray="7,7" stroke-linecap="round" fill="none" opacity="0.85">
+      <path d="M 461.9 650 L 461.9 561.2" />
+      <path d="M 461.9 561.2 L 542.5 527.2" />
+      <path d="M 58.8 115.1 L 281.2 138.6" />
+      <path d="M 58.8 115.1 L 524.3 312.8" />
+    </g>
+
+    <!-- D. Traffic Roundabouts & Plaza Junctions -->
+    <!-- Main Gate Roundabout (N038) -->
+    <circle cx="461.9" cy="561.2" r="16" fill="#1e293b" stroke="#475569" stroke-width="2" />
+    <circle cx="461.9" cy="561.2" r="7" fill="#0d9488" stroke="#14b8a6" stroke-width="1" />
+
+    <!-- Academic Core Plaza Roundabout (N039) -->
+    <circle cx="677.9" cy="505.0" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3" />
+    <circle cx="677.9" cy="505.0" r="6" fill="#0369a1" />
+
+    <!-- Sports Complex Junction (N040) -->
+    <circle cx="1003.8" cy="529.4" r="12" fill="#1e293b" stroke="#10b981" stroke-width="1.5" />
+
+    <!-- Hostel Road Junction (N041) -->
+    <circle cx="281.2" cy="138.6" r="13" fill="#1e293b" stroke="#eab308" stroke-width="1.5" />
+    <circle cx="281.2" cy="138.6" r="5" fill="#ca8a04" />
   </g>
 
-  <!-- Dynamic Graph Layers (Edges and Nodes injected/rendered here by JavaScript) -->
+  <!-- ========================================== -->
+  <!-- 4. SPORTS COMPLEX DETAILED ARENA & COURTS  -->
+  <!-- ========================================== -->
+  <g id="sportsComplexArena">
+    <!-- A. 400m Olympic Running Track & Inner Football Field (N017) -->
+    <g id="runningTrackFacility" filter="url(#bldgShadow)">
+      <!-- Red Clay Outer Track -->
+      <rect x="1003.8" y="585.9" width="170" height="116" rx="58" fill="url(#runningTrackGrad)" stroke="#b91c1c" stroke-width="2" />
+
+      <!-- Concentric White Running Lanes (6 Lanes) -->
+      <g stroke="#f8fafc" stroke-width="0.75" fill="none" opacity="0.65">
+        <rect x="1009.8" y="591.9" width="158" height="104" rx="52" />
+        <rect x="1015.8" y="597.9" width="146" height="92" rx="46" />
+        <rect x="1021.8" y="603.9" width="134" height="80" rx="40" />
+        <rect x="1027.8" y="609.9" width="122" height="68" rx="34" />
+      </g>
+
+      <!-- Inner Green Football Turf -->
+      <rect x="1033.8" y="615.9" width="110" height="56" rx="10" fill="url(#turfPitchGrad)" stroke="#22c55e" stroke-width="1.2" />
+
+      <!-- Football Pitch Lines -->
+      <g stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.7">
+        <line x1="1088.8" y1="615.9" x2="1088.8" y2="671.9" />
+        <circle cx="1088.8" cy="643.9" r="9" />
+        <!-- Goal Penalty Boxes -->
+        <rect x="1033.8" y="627.9" width="14" height="32" />
+        <rect x="1129.8" y="627.9" width="14" height="32" />
+      </g>
+    </g>
+
+    <!-- B. Cricket Ground & Pavilion (N018) -->
+    <g id="cricketGroundFacility">
+      <!-- Outfield Oval Boundary -->
+      <ellipse cx="1140.1" cy="481.0" rx="54" ry="46" fill="#14532d" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="5,3" filter="url(#bldgShadow)" />
+
+      <!-- Inner Mowing Ring -->
+      <ellipse cx="1140.1" cy="481.0" rx="40" ry="34" fill="none" stroke="#16a34a" stroke-width="0.75" opacity="0.4" />
+
+      <!-- 22-Yard Clay Wicket Pitch Strip -->
+      <rect x="1135.1" y="470.0" width="10" height="22" fill="#d97706" rx="1" stroke="#f59e0b" stroke-width="0.5" />
+      <line x1="1134.1" y1="472.0" x2="1146.1" y2="472.0" stroke="#ffffff" stroke-width="0.8" opacity="0.8" />
+      <line x1="1134.1" y1="490.0" x2="1146.1" y2="490.0" stroke="#ffffff" stroke-width="0.8" opacity="0.8" />
+    </g>
+
+    <!-- C. Basketball Court (N019) -->
+    <g id="basketballFacility" filter="url(#bldgShadow)">
+      <rect x="964.4" y="475.4" width="50" height="34" rx="3" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5" />
+      <g stroke="#ffffff" stroke-width="0.75" fill="none" opacity="0.85">
+        <line x1="989.4" y1="475.4" x2="989.4" y2="509.4" />
+        <circle cx="989.4" cy="492.4" r="5" />
+        <!-- Free throw keys -->
+        <rect x="964.4" y="487.4" width="8" height="10" />
+        <rect x="1006.4" y="487.4" width="8" height="10" />
+        <!-- 3-Point Arcs -->
+        <path d="M 964.4 480 A 12 12 0 0 1 964.4 504.8" />
+        <path d="M 1014.4 480 A 12 12 0 0 0 1014.4 504.8" />
+      </g>
+    </g>
+
+    <!-- D. Volleyball Court (N020) -->
+    <g id="volleyballFacility" filter="url(#bldgShadow)">
+      <rect x="982.0" y="519.6" width="44" height="28" rx="2" fill="#0d9488" stroke="#2dd4bf" stroke-width="1.5" />
+      <line x1="1004.0" y1="519.6" x2="1004.0" y2="547.6" stroke="#ffffff" stroke-width="1.5" opacity="0.9" />
+      <line x1="996.0" y1="519.6" x2="996.0" y2="547.6" stroke="#ffffff" stroke-width="0.6" stroke-dasharray="2,2" opacity="0.7" />
+      <line x1="1012.0" y1="519.6" x2="1012.0" y2="547.6" stroke="#ffffff" stroke-width="0.6" stroke-dasharray="2,2" opacity="0.7" />
+    </g>
+
+    <!-- E. Lawn Tennis Courts (N021) -->
+    <g id="tennisFacility" filter="url(#bldgShadow)">
+      <rect x="1013.5" y="556.9" width="60" height="42" rx="3" fill="#15803d" stroke="#4ade80" stroke-width="1.5" />
+      <g stroke="#ffffff" stroke-width="0.75" fill="none" opacity="0.85">
+        <!-- Perimeter Court Inset -->
+        <rect x="1017.5" y="560.9" width="52" height="34" />
+        <!-- Center Net -->
+        <line x1="1043.5" y1="556.9" x2="1043.5" y2="598.9" stroke="#ffffff" stroke-width="1.5" />
+        <!-- Service Boxes -->
+        <line x1="1025.5" y1="565.9" x2="1061.5" y2="565.9" />
+        <line x1="1025.5" y1="589.9" x2="1061.5" y2="589.9" />
+        <line x1="1025.5" y1="577.9" x2="1061.5" y2="577.9" />
+      </g>
+    </g>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 5. REALISTIC ARCHITECTURAL FOOTPRINTS      -->
+  <!-- ========================================== -->
+  <g id="architecturalFootprintsLayer">
+
+    <!-- ADMIN & DIRECTORATE (B001 - N003) -->
+    <g id="bldg-B001" class="bldg-shape" filter="url(#bldgShadow)">
+      <!-- Main Administrative Palace -->
+      <rect x="500.5" y="501.2" width="84" height="52" rx="5" fill="url(#adminGrad)" stroke="#6366f1" stroke-width="2" />
+      <!-- Grand Entrance Colonnade Portico -->
+      <rect x="526.5" y="547.2" width="32" height="9" rx="2" fill="#312e81" stroke="#818cf8" stroke-width="1" />
+      <!-- Interior Atrium Lightwell -->
+      <rect x="524.5" y="513.2" width="36" height="24" rx="3" fill="#131226" stroke="#6366f1" stroke-dasharray="2,2" stroke-width="1" />
+    </g>
+
+    <!-- BLOCK 6: OLD ACADEMIC BLOCK (B004 - N006) -->
+    <g id="bldg-B004" class="bldg-shape" filter="url(#bldgShadow)">
+      <!-- Flagship Quadrangle Outer Perimeter -->
+      <rect x="604.7" y="408.1" width="100" height="66" rx="6" fill="url(#academicGrad)" stroke="#3b82f6" stroke-width="2" />
+      <!-- Central Open Quadrangle Court -->
+      <rect x="629.7" y="423.1" width="50" height="36" rx="3" fill="#090f1d" stroke="#1d4ed8" stroke-dasharray="3,3" stroke-width="1" />
+      <!-- Connecting Bridge Corridors -->
+      <line x1="654.7" y1="408.1" x2="654.7" y2="423.1" stroke="#3b82f6" stroke-width="2" />
+      <line x1="654.7" y1="459.1" x2="654.7" y2="474.1" stroke="#3b82f6" stroke-width="2" />
+    </g>
+
+    <!-- BLOCK 4: CSE DEPARTMENT (B002 - N004) -->
+    <g id="bldg-B002" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="593.1" y="519.4" width="70" height="46" rx="5" fill="url(#academicGrad)" stroke="#3b82f6" stroke-width="2" />
+      <!-- High-Tech Server Annex Wing -->
+      <rect x="643.1" y="511.4" width="22" height="16" rx="3" fill="#172554" stroke="#3b82f6" stroke-width="1.2" />
+    </g>
+
+    <!-- BLOCK 8A: CONNECTING WING (B005 - N007) -->
+    <g id="bldg-B005" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="668.7" y="534.8" width="54" height="26" rx="4" fill="url(#academicGrad)" stroke="#60a5fa" stroke-width="1.8" />
+      <!-- Corridor Grid Windows -->
+      <line x1="676" y1="547.8" x2="714" y2="547.8" stroke="#38bdf8" stroke-width="1" stroke-dasharray="4,2" />
+    </g>
+
+    <!-- BLOCK 5: ECE & ICE DEPARTMENT (B003 - N005) -->
+    <g id="bldg-B003" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="713.0" y="484.3" width="70" height="46" rx="5" fill="url(#academicGrad)" stroke="#3b82f6" stroke-width="2" />
+      <!-- Electronics Cleanroom Rooftop Unit -->
+      <rect x="728.0" y="494.3" width="30" height="20" rx="2" fill="#172554" stroke="#60a5fa" stroke-width="1" />
+    </g>
+
+    <!-- NEW ACADEMIC BLOCK: F-TECH (B006 - N008) -->
+    <g id="bldg-B006" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="778.2" y="305.0" width="94" height="60" rx="6" fill="url(#academicGrad)" stroke="#3b82f6" stroke-width="2" />
+      <!-- Glass Central Atrium Skylight -->
+      <rect x="805.2" y="318.0" width="40" height="34" rx="3" fill="#0284c7" fill-opacity="0.25" stroke="#38bdf8" stroke-width="1.2" />
+    </g>
+
+    <!-- APJ ABDUL KALAM AUDITORIUM (B007 - N009) -->
+    <g id="bldg-B007" class="bldg-shape" filter="url(#bldgShadow)">
+      <!-- Fan-Shaped Auditorium Hall Polygon -->
+      <polygon points="502,284 573,284 562,234 513,234" fill="url(#academicGrad)" stroke="#3b82f6" stroke-width="2" />
+      <!-- Grand Glass Foyer Entrance -->
+      <rect x="514" y="278" width="47" height="12" rx="3" fill="#1d4ed8" fill-opacity="0.3" stroke="#60a5fa" stroke-width="1.2" />
+    </g>
+
+    <!-- CENTRAL LIBRARY & SAC COMPLEX (B010 - N012) -->
+    <g id="bldg-B010" class="bldg-shape" filter="url(#bldgShadow)">
+      <!-- Circular Library Reading Rotunda -->
+      <circle cx="802" cy="465" r="23" fill="url(#libraryGrad)" stroke="#8b5cf6" stroke-width="2" />
+      <circle cx="802" cy="465" r="11" fill="#3b0764" fill-opacity="0.35" stroke="#c084fc" stroke-width="1" />
+      <!-- SAC Recreation & Gymnasium Wing -->
+      <rect x="818" y="446" width="46" height="42" rx="5" fill="url(#libraryGrad)" stroke="#8b5cf6" stroke-width="2" />
+    </g>
+
+    <!-- STUDENT CENTRE & CANTEEN (B011 - N013) -->
+    <g id="bldg-B011" class="bldg-shape" filter="url(#bldgShadow)">
+      <!-- Octagonal Dining Pavilion -->
+      <polygon points="506,295 542,295 554,307 554,321 542,333 506,333 494,321 494,307" fill="#2b1a08" stroke="#f59e0b" stroke-width="2" />
+      <!-- Outdoor Patio Umbrellas -->
+      <circle cx="488" cy="302" r="3" fill="#fbbf24" opacity="0.8" />
+      <circle cx="488" cy="324" r="3" fill="#fbbf24" opacity="0.8" />
+      <circle cx="560" cy="302" r="3" fill="#fbbf24" opacity="0.8" />
+      <circle cx="560" cy="324" r="3" fill="#fbbf24" opacity="0.8" />
+    </g>
+
+    <!-- AMENITY KIOSKS: SAFAL, MOTHER DAIRY, NESCAFE -->
+    <!-- Safal Store (B012 - N014) -->
+    <g id="bldg-B012" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="430.3" y="232.7" width="36" height="24" rx="4" fill="#1e293b" stroke="#f59e0b" stroke-width="1.8" />
+      <line x1="430.3" y1="238.7" x2="466.3" y2="238.7" stroke="#10b981" stroke-width="1.5" />
+    </g>
+
+    <!-- Mother Dairy (B013 - N015) -->
+    <g id="bldg-B013" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="409.4" y="249.2" width="36" height="24" rx="4" fill="#1e293b" stroke="#f59e0b" stroke-width="1.8" />
+      <line x1="409.4" y1="255.2" x2="445.4" y2="255.2" stroke="#06b6d4" stroke-width="1.5" />
+    </g>
+
+    <!-- Nescafe Kiosk (B014 - N016) -->
+    <g id="bldg-B014" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="474.8" y="468.6" width="32" height="26" rx="6" fill="#38230b" stroke="#f59e0b" stroke-width="1.8" />
+      <circle cx="490.8" cy="481.6" r="4" fill="#f59e0b" opacity="0.6" />
+    </g>
+
+    <!-- DEPARTMENT OF DESIGN (B008 - N010) -->
+    <g id="bldg-B008" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="36.6" y="28.0" width="70" height="44" rx="5" fill="url(#academicGrad)" stroke="#3b82f6" stroke-width="2" />
+    </g>
+
+    <!-- TRAINING & PLACEMENT BUILDING (B009 - N011) -->
+    <g id="bldg-B009" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="871.4" y="660.5" width="75" height="46" rx="5" fill="url(#academicGrad)" stroke="#3b82f6" stroke-width="2" />
+      <rect x="888" y="670" width="42" height="24" rx="2" fill="#1e3a8a" fill-opacity="0.3" stroke="#60a5fa" stroke-width="1" />
+    </g>
+
+    <!-- HOSTEL RESIDENCES (B020 - B027) -->
+    <!-- Aryabhata Hostel BH-1 (B020 - N022) -->
+    <g id="bldg-B020" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="248" y="161" width="58" height="48" rx="5" fill="url(#hostelGrad)" stroke="#eab308" stroke-width="1.8" />
+      <rect x="262" y="171" width="30" height="28" rx="2" fill="#0d1424" stroke="#eab308" stroke-dasharray="2,2" stroke-width="0.8" />
+    </g>
+
+    <!-- Ramanujan Hostel BH-2 (B021 - N023) -->
+    <g id="bldg-B021" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="218" y="114" width="56" height="46" rx="5" fill="url(#hostelGrad)" stroke="#eab308" stroke-width="1.8" />
+    </g>
+
+    <!-- J.C. Bose Hostel BH-3 (B022 - N024) -->
+    <g id="bldg-B022" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="128" y="38" width="58" height="44" rx="5" fill="url(#hostelGrad)" stroke="#eab308" stroke-width="1.8" />
+    </g>
+
+    <!-- Raman Hostel BH-4 (B023 - N025) -->
+    <g id="bldg-B023" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="258" y="83" width="58" height="46" rx="5" fill="url(#hostelGrad)" stroke="#eab308" stroke-width="1.8" />
+    </g>
+
+    <!-- Bhaskara Hostel BH-5 (B024 - N026) -->
+    <g id="bldg-B024" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="307" y="152" width="58" height="46" rx="5" fill="url(#hostelGrad)" stroke="#eab308" stroke-width="1.8" />
+    </g>
+
+    <!-- Saraswati Girls Hostel GH-1 (B025 - N027) -->
+    <g id="bldg-B025" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="880" y="802" width="58" height="45" rx="5" fill="url(#hostelGrad)" stroke="#eab308" stroke-width="1.8" />
+      <rect x="894" y="812" width="30" height="25" rx="2" fill="#0d1424" stroke="#eab308" stroke-dasharray="2,2" stroke-width="0.8" />
+    </g>
+
+    <!-- Alaknanda Girls Hostel GH-2 (B026 - N028) -->
+    <g id="bldg-B026" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="880" y="724" width="58" height="45" rx="5" fill="url(#hostelGrad)" stroke="#eab308" stroke-width="1.8" />
+      <rect x="894" y="734" width="30" height="25" rx="2" fill="#0d1424" stroke="#eab308" stroke-dasharray="2,2" stroke-width="0.8" />
+    </g>
+
+    <!-- Kaveri Girls Hostel GH-3 (B027 - N029) -->
+    <g id="bldg-B027" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="676" y="16" width="60" height="44" rx="5" fill="url(#hostelGrad)" stroke="#eab308" stroke-width="1.8" />
+    </g>
+
+    <!-- MEDICAL CENTRE (B028 - N030) -->
+    <g id="bldg-B028" class="bldg-shape" filter="url(#bldgShadow)">
+      <rect x="740" y="282" width="50" height="36" rx="5" fill="#2d1518" stroke="#ef4444" stroke-width="1.8" />
+      <!-- Medical Red Cross Emblem -->
+      <path d="M 764.8 293 v 14 M 757.8 300 h 14" stroke="#ef4444" stroke-width="3" stroke-linecap="square" class="emergency-beacon" />
+    </g>
+
+    <!-- SEWAGE TREATMENT PLANT STP (B033 - N035) -->
+    <g id="bldg-B033" class="bldg-shape">
+      <rect x="826" y="258" width="54" height="36" rx="4" fill="#1b232c" stroke="#64748b" stroke-width="1.5" />
+      <!-- Circular Clarifier Tanks -->
+      <circle cx="841" cy="276" r="9" fill="#0f172a" stroke="#10b981" stroke-width="1.2" />
+      <circle cx="865" cy="276" r="9" fill="#0f172a" stroke="#10b981" stroke-width="1.2" />
+    </g>
+
+    <!-- MAIN ELECTRIC SUBSTATION (B034 - N036) -->
+    <g id="bldg-B034" class="bldg-shape">
+      <rect x="1064" y="774" width="52" height="38" rx="4" fill="#1c1917" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,2" />
+      <!-- High Voltage Hazard Lightning Icon -->
+      <polygon points="1090,782 1086,793 1091,793 1088,802 1096,791 1091,791" fill="#f59e0b" />
+    </g>
+
+    <!-- ELECTRIC SUBSTATION 2 (B035 - N037) -->
+    <g id="bldg-B035" class="bldg-shape">
+      <rect x="692" y="294" width="40" height="30" rx="3" fill="#1c1917" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="3,2" />
+    </g>
+
+    <!-- FACULTY HOUSING RESIDENCES (B029, B030, B031) -->
+    <g id="facultyHousingComplex" stroke="#94a3b8" stroke-width="1.2">
+      <!-- FH-1 (N031) -->
+      <rect x="416" y="840" width="52" height="30" rx="3" fill="#1e2230" />
+      <!-- FH-2 (N032) -->
+      <rect x="414" y="805" width="52" height="28" rx="3" fill="#1e2230" />
+      <!-- FH-3 (N033) -->
+      <rect x="488" y="768" width="52" height="30" rx="3" fill="#1e2230" />
+    </g>
+
+    <!-- CAMPUS NURSERY & BOTANICAL GREENHOUSE (B032 - N034) -->
+    <g id="bldg-B032">
+      <rect x="714" y="844" width="50" height="34" rx="8" fill="#064e3b" fill-opacity="0.35" stroke="#10b981" stroke-width="1.5" />
+      <!-- Greenhouse Glass Rib Lines -->
+      <line x1="724" y1="844" x2="724" y2="878" stroke="#10b981" stroke-width="0.8" opacity="0.6" />
+      <line x1="739" y1="844" x2="739" y2="878" stroke="#10b981" stroke-width="0.8" opacity="0.6" />
+      <line x1="754" y1="844" x2="754" y2="878" stroke="#10b981" stroke-width="0.8" opacity="0.6" />
+    </g>
+
+    <!-- MAIN GATE ARMORED PORTAL (N001 / N038) -->
+    <g id="mainGatePortal">
+      <!-- Pylons & Security Checkpoint -->
+      <rect x="442" y="555" width="10" height="18" rx="2" fill="#475569" stroke="#94a3b8" stroke-width="1.5" />
+      <rect x="472" y="555" width="10" height="18" rx="2" fill="#475569" stroke="#94a3b8" stroke-width="1.5" />
+      <rect x="440" y="552" width="44" height="6" rx="2" fill="#334155" stroke="#38bdf8" stroke-width="1.5" />
+      <rect x="457" y="565" width="10" height="10" rx="2" fill="#1e293b" stroke="#64748b" stroke-width="1" />
+      <!-- Pulsing Beacon Lights -->
+      <circle cx="447" cy="552" r="3.5" fill="#38bdf8" class="beacon-dot" filter="url(#glowBeacon)" />
+      <circle cx="477" cy="552" r="3.5" fill="#38bdf8" class="beacon-dot" filter="url(#glowBeacon)" />
+    </g>
+
+    <!-- NORTH GATE PORTAL (N002) -->
+    <g id="northGatePortal">
+      <rect x="48" y="106" width="22" height="18" rx="3" fill="#334155" stroke="#94a3b8" stroke-width="1.5" />
+      <line x1="59" y1="124" x2="80" y2="124" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2" />
+      <circle cx="59" cy="106" r="3" fill="#38bdf8" class="beacon-dot" filter="url(#glowBeacon)" />
+    </g>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 6. CARTOGRAPHIC ANNOTATIONS & LABELS       -->
+  <!-- ========================================== -->
+  <g id="cartographicLabelsLayer">
+    <!-- Main Gate (N001) -->
+    <text x="461.9" y="586.2" class="map-lbl-title">Main Gate</text>
+    <text x="461.9" y="597.2" class="map-lbl-code" fill="#94a3b8">GATE-1</text>
+
+    <!-- North Gate (N002) -->
+    <text x="58.8" y="139.1" class="map-lbl-title">North Gate</text>
+    <text x="58.8" y="150.1" class="map-lbl-code" fill="#94a3b8">GATE-2</text>
+
+    <!-- Admin Block (N003) -->
+    <text x="542.5" y="570.2" class="map-lbl-title">Admin Block / Directorate</text>
+    <text x="542.5" y="581.2" class="map-lbl-code" fill="#818cf8">DIR</text>
+
+    <!-- Block 4 (N004) -->
+    <text x="628.1" y="580.4" class="map-lbl-title">Block 4</text>
+    <text x="628.1" y="591.4" class="map-lbl-code" fill="#60a5fa">CSE</text>
+
+    <!-- Block 5 (N005) -->
+    <text x="748.0" y="545.3" class="map-lbl-title">Block 5</text>
+    <text x="748.0" y="556.3" class="map-lbl-code" fill="#60a5fa">ECE</text>
+
+    <!-- Block 6: OAB (N006) -->
+    <text x="654.7" y="489.1" class="map-lbl-title">Block 6 (Old Academic)</text>
+    <text x="654.7" y="500.1" class="map-lbl-code" fill="#60a5fa">OAB</text>
+
+    <!-- Block 8A (N007) -->
+    <text x="695.7" y="574.8" class="map-lbl-title">Block 8A</text>
+    <text x="695.7" y="585.8" class="map-lbl-code" fill="#60a5fa">CORRIDOR</text>
+
+    <!-- F-Tech Block (N008) -->
+    <text x="825.2" y="380.0" class="map-lbl-title">F-Tech Block</text>
+    <text x="825.2" y="391.0" class="map-lbl-code" fill="#60a5fa">NAB</text>
+
+    <!-- APJ Hall (N009) -->
+    <text x="537.6" y="299.2" class="map-lbl-title">APJ Kalam Auditorium</text>
+    <text x="537.6" y="310.2" class="map-lbl-code" fill="#60a5fa">AUDITORIUM</text>
+
+    <!-- Dept of Design (N010) -->
+    <text x="71.6" y="86.0" class="map-lbl-title">Dept of Design</text>
+    <text x="71.6" y="97.0" class="map-lbl-code" fill="#60a5fa">DOD</text>
+
+    <!-- T&P Building (N011) -->
+    <text x="908.9" y="721.5" class="map-lbl-title">Training &amp; Placement</text>
+    <text x="908.9" y="732.5" class="map-lbl-code" fill="#60a5fa">TNP</text>
+
+    <!-- Central Library & SAC (N012) -->
+    <text x="817.6" y="505.6" class="map-lbl-title">Central Library &amp; SAC</text>
+    <text x="817.6" y="516.6" class="map-lbl-code" fill="#c084fc">LIBRARY</text>
+
+    <!-- Student Centre (N013) -->
+    <text x="524.3" y="347.8" class="map-lbl-title">Student Centre</text>
+    <text x="524.3" y="358.8" class="map-lbl-code" fill="#fbbf24">CANTEEN</text>
+
+    <!-- Safal (N014) -->
+    <text x="448.3" y="268.7" class="map-lbl-title">Safal</text>
+    <text x="448.3" y="278.7" class="map-lbl-code" fill="#fbbf24">SFL</text>
+
+    <!-- Mother Dairy (N015) -->
+    <text x="427.4" y="285.2" class="map-lbl-title">Mother Dairy</text>
+    <text x="427.4" y="295.2" class="map-lbl-code" fill="#fbbf24">MD</text>
+
+    <!-- Nescafe (N016) -->
+    <text x="490.8" y="507.6" class="map-lbl-title">Nescafé</text>
+    <text x="490.8" y="517.6" class="map-lbl-code" fill="#fbbf24">NES</text>
+
+    <!-- Running Track (N017) -->
+    <text x="1088.8" y="716.9" class="map-lbl-title">400m Athletic Track</text>
+    <text x="1088.8" y="727.9" class="map-lbl-code" fill="#4ade80">ARENA</text>
+
+    <!-- Cricket Ground (N018) -->
+    <text x="1140.1" y="540.0" class="map-lbl-title">Cricket Oval</text>
+    <text x="1140.1" y="551.0" class="map-lbl-code" fill="#4ade80">CRK</text>
+
+    <!-- Courts: Basketball, Volleyball, Tennis -->
+    <text x="989.4" y="468.4" class="map-lbl-title">Basketball</text>
+    <text x="1004.0" y="561.6" class="map-lbl-title">Volleyball</text>
+    <text x="1043.5" y="612.9" class="map-lbl-title">Lawn Tennis</text>
+
+    <!-- Hostels -->
+    <text x="277.3" y="222.0" class="map-lbl-title">Aryabhata (BH-1)</text>
+    <text x="245.9" y="173.8" class="map-lbl-title">Ramanujan (BH-2)</text>
+    <text x="156.8" y="96.5" class="map-lbl-title">J.C. Bose (BH-3)</text>
+    <text x="286.8" y="142.9" class="map-lbl-title">Raman (BH-4)</text>
+    <text x="335.9" y="211.1" class="map-lbl-title">Bhaskara (BH-5)</text>
+    <text x="909.4" y="860.4" class="map-lbl-title">Saraswati (GH-1)</text>
+    <text x="909.5" y="782.2" class="map-lbl-title">Alaknanda (GH-2)</text>
+    <text x="705.7" y="73.5" class="map-lbl-title">Kaveri (GH-3)</text>
+
+    <!-- Facilities -->
+    <text x="764.8" y="331.2" class="map-lbl-title">Medical Centre</text>
+    <text x="764.8" y="342.2" class="map-lbl-code" fill="#f87171">MED</text>
+
+    <text x="441.4" y="884.7" class="map-lbl-title">Faculty Housing 1</text>
+    <text x="439.1" y="845.9" class="map-lbl-title">Faculty Housing 2</text>
+    <text x="513.1" y="812.8" class="map-lbl-title">Faculty Housing 3</text>
+    <text x="738.4" y="892.8" class="map-lbl-title">Botanical Nursery</text>
+    <text x="852.7" y="307.8" class="map-lbl-title">STP Plant</text>
+    <text x="1089.8" y="825.6" class="map-lbl-title">Main Substation</text>
+    <text x="712.2" y="337.8" class="map-lbl-title">Substation 2</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 7. CARTOGRAPHIC ORNAMENTS & NORTH ARROW    -->
+  <!-- ========================================== -->
+  <g id="mapOrnamentsLayer">
+    <!-- Campus Watermark Header -->
+    <text x="45" y="48" font-family="'Inter', sans-serif" font-size="12" font-weight="800" fill="#f8fafc" letter-spacing="0.12em" opacity="0.85">NETAJI SUBHAS UNIVERSITY OF TECHNOLOGY</text>
+    <text x="45" y="62" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="600" fill="#38bdf8" letter-spacing="0.15em">DWARKA, NEW DELHI • SPATIAL CAMPUS GRAPH</text>
+
+    <!-- Calibrated Graphic Metric Scale Bar (100m) -->
+    <g id="metricScaleBar" transform="translate(45, 840)">
+      <rect x="0" y="0" width="120" height="24" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1" opacity="0.85" />
+      <line x1="10" y1="14" x2="110" y2="14" stroke="#e2e8f0" stroke-width="2" />
+      <line x1="10" y1="9" x2="10" y2="19" stroke="#e2e8f0" stroke-width="2" />
+      <line x1="60" y1="10" x2="60" y2="18" stroke="#e2e8f0" stroke-width="1.5" />
+      <line x1="110" y1="9" x2="110" y2="19" stroke="#e2e8f0" stroke-width="2" />
+      <text x="10" y="7" font-family="'JetBrains Mono', monospace" font-size="7" fill="#94a3b8">0</text>
+      <text x="60" y="7" font-family="'JetBrains Mono', monospace" font-size="7" fill="#94a3b8" text-anchor="middle">50m</text>
+      <text x="110" y="7" font-family="'JetBrains Mono', monospace" font-size="7" fill="#94a3b8" text-anchor="end">100m</text>
+    </g>
+
+    <!-- Precision Compass Rose (North Arrow) -->
+    <g id="compassRose" transform="translate(1140, 60)">
+      <circle cx="0" cy="0" r="24" fill="#0f172a" stroke="#334155" stroke-width="1.5" opacity="0.9" />
+      <circle cx="0" cy="0" r="21" fill="none" stroke="#1e3a5f" stroke-width="0.75" stroke-dasharray="2,2" />
+      <!-- North Pointer (Cyan) -->
+      <polygon points="0,-18 5,-2 0,0" fill="#06b6d4" />
+      <polygon points="0,-18 -5,-2 0,0" fill="#0891b2" />
+      <!-- South Pointer (Slate) -->
+      <polygon points="0,18 4,2 0,0" fill="#64748b" />
+      <polygon points="0,18 -4,2 0,0" fill="#475569" />
+      <!-- East / West Pointers -->
+      <polygon points="18,0 2,-4 0,0" fill="#475569" />
+      <polygon points="-18,0 -2,-4 0,0" fill="#64748b" />
+      <!-- Cardinal Letter -->
+      <text x="0" y="-22" font-family="'Inter', sans-serif" font-size="9" font-weight="900" fill="#38bdf8" text-anchor="middle">N</text>
+      <circle cx="0" cy="0" r="2" fill="#f8fafc" />
+    </g>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- 8. DYNAMIC GRAPH RUNTIME LAYERS (MANDATORY TERMINAL GROUPS)     -->
+  <!-- Dynamic graph pathways and node vertices injected by app.js   -->
+  <!-- ============================================================== -->
   <g id="graphEdgesLayer"></g>
   <g id="graphNodesLayer"></g>
 </svg>

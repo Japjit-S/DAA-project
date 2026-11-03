@@ -1,0 +1,57 @@
+{
+  "source": "Local OpenStreetMap Standard exports supplied for this project",
+  "attribution": "© OpenStreetMap contributors",
+  "projection": "EPSG:3857 Web Mercator; north-up; GPS is projected before conversion to the registered raster plane",
+  "registrationMethod": "Feature-match the same-scale detail PNG overlaps with SIFT/RANSAC, then anchor the detail mosaic to the supplied approximate northwest panel center. Register the overview to the detail mosaic with a robust similarity transform.",
+  "detailScale": {
+    "zoomLabel": 17,
+    "projectedMetersPerPixel": 0.56034,
+    "anchor": {
+      "image": "map (2).png",
+      "lat": 28.6125,
+      "lng": 77.034502,
+      "pixelX": 1371,
+      "pixelY": 719.5,
+      "confidence": "Approximate export center supplied by user"
+    }
+  },
+  "detailPanels": [
+    { "file": "map (2).png", "asset": "map-nw.png", "coverage": "northwest / hostels and academic core", "width": 2742, "height": 1439, "mosaicX": 0, "mosaicY": 0, "centerLat": 28.6125, "centerLng": 77.034502, "zoom": 17 },
+    { "file": "map (3).png", "asset": "map-ne.png", "coverage": "northeast / eastern campus and sports edge", "width": 2742, "height": 1439, "mosaicX": 1191.75, "mosaicY": -0.61, "centerLat": 28.612503, "centerLng": 77.040499, "zoom": 17 },
+    { "file": "map (4).png", "asset": "map-sw.png", "coverage": "southwest / academic core and west approach", "width": 2742, "height": 1439, "mosaicX": 0.01, "mosaicY": 1131.25, "centerLat": 28.607502, "centerLng": 77.034502, "zoom": 17 },
+    { "file": "map (5).png", "asset": "map-se.png", "coverage": "southeast / sports complex and southern campus", "width": 2742, "height": 1439, "mosaicX": 1191.95, "mosaicY": 1131.2, "centerLat": 28.607502, "centerLng": 77.040499, "zoom": 17 }
+  ],
+  "excludedDuplicate": {
+    "file": "map (6).png",
+    "reason": "Near-duplicate of map (2).png; feature fit scale 1.00005, translation about (0.0, -1.5) pixels. Preserved in the project root but not drawn over the same coverage."
+  },
+  "overview": {
+    "file": "map.png",
+    "asset": "map-overview.png",
+    "width": 2759,
+    "height": 1328,
+    "centerLat": 28.60971,
+    "centerLng": 77.03811,
+    "zoom": 15,
+    "detailToOverviewTransform": {
+      "scale": 0.252007,
+      "translateX": 853.4,
+      "translateY": 323.64,
+      "matchedFeatures": 192,
+      "ransacInliers": 32,
+      "medianResidualPixels": 0.6,
+      "p95ResidualPixels": 1.438
+    }
+  },
+  "detailOverlapChecks": [
+    { "images": ["map (2).png", "map (3).png"], "scale": 1.000018, "translationPixels": [-1191.75, 0.61], "ransacInliers": 1007, "matches": 1406, "medianResidualPixels": 0.166, "p95ResidualPixels": 0.769 },
+    { "images": ["map (2).png", "map (4).png"], "scale": 0.99998, "translationPixels": [-0.01, -1131.25], "ransacInliers": 486, "matches": 892, "medianResidualPixels": 0.139, "p95ResidualPixels": 0.672 },
+    { "images": ["map (2).png", "map (5).png"], "scale": 1.000035, "translationPixels": [-1191.95, -1131.2], "ransacInliers": 301, "matches": 710, "medianResidualPixels": 0.172, "p95ResidualPixels": 0.735 }
+  ],
+  "gpsValidation": {
+    "pointsReviewed": ["N002 North Gate", "N004 Block 4", "N005 Block 5", "N006 Block 6", "N007 Block 8A", "N017 Running Track", "N018 Cricket Ground", "N019 Basketball Court", "N020 Volleyball Court", "N021 Lawn Tennis Courts", "N025 Raman Hostel", "N026 Bhaskara Hostel", "N034 Nursery"],
+    "result": "Visual sanity check against labels and footprints across the hostel, academic, gate, and sports areas. No independent survey pixels were supplied, so no GPS residual is claimed.",
+    "uncertainty": "Panel centers are approximate. Main Gate and some building-center-to-entrance offsets remain approximate; preserve the supplied GPS coordinates and review access links against the map."
+  },
+  "initialViewBox": { "x": 900, "y": 250, "width": 2600, "height": 1733, "fitBehavior": "Expanded to the map viewport aspect ratio while preserving square Web Mercator pixels." }
+}

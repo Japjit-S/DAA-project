@@ -1,6 +1,8 @@
 package com.campus.model;
 
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Generic Edge representing a pathway, road, or corridor connecting two nodes.
@@ -13,6 +15,8 @@ public class Edge {
     private double weight;
     private boolean bidirectional;
     private String type;
+    private List<GeoPoint> geometry = new ArrayList<>();
+    private String confidence;
 
     public Edge() {
         this.bidirectional = true;
@@ -75,6 +79,24 @@ public class Edge {
         this.type = type;
     }
 
+    /** Ordered GPS points describing the visible road or walkway between the graph endpoints. */
+    public List<GeoPoint> getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(List<GeoPoint> geometry) {
+        this.geometry = geometry == null ? new ArrayList<>() : geometry;
+    }
+
+    /** Confidence of the map trace, especially for paths and facility access points. */
+    public String getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(String confidence) {
+        this.confidence = confidence;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,6 +119,8 @@ public class Edge {
                 ", weight=" + weight +
                 ", bidirectional=" + bidirectional +
                 ", type='" + type + '\'' +
+                ", geometry=" + geometry +
+                ", confidence='" + confidence + '\'' +
                 '}';
     }
 }

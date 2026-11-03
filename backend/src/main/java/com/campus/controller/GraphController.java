@@ -7,6 +7,7 @@ import com.campus.model.Edge;
 import com.campus.model.Graph;
 import com.campus.model.Node;
 import com.campus.service.GraphService;
+import com.campus.validation.ValidationReport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,27 @@ public class GraphController {
     }
 
     /**
+     * Retrieves a single edge by edge ID.
+     */
+    @GetMapping("/edges/{id}")
+    public ResponseEntity<?> getEdgeById(@PathVariable String id) {
+        return graphService.getEdgeById(id)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error("Edge not found with id: " + id)));
+    }
+
+    /**
+     * Retrieves the campus graph data validation report.
+     */
+    @GetMapping("/validation")
+    public ResponseEntity<ApiResponse<ValidationReport>> getValidationReport() {
+        return ResponseEntity.ok(ApiResponse.success(
+                graphService.getValidationReport(),
+                "Graph validation report"));
+    }
+
+    /**
      * Runs Breadth-First Search (BFS) between startNodeId and optional endNodeId.
      */
     @GetMapping("/bfs")
@@ -74,6 +96,13 @@ public class GraphController {
             @RequestParam(required = false) String endNodeId,
             @RequestParam(defaultValue = "false") boolean accessibleOnly,
             @RequestParam(required = false) List<String> blockedEdges) {
+
+        if (startNodeId == null || startNodeId.isBlank() || graphService.getNodeById(startNodeId).isEmpty()) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Start node not found with id: " + startNodeId));
+        }
+        if (endNodeId != null && !endNodeId.isBlank() && graphService.getNodeById(endNodeId).isEmpty()) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("End node not found with id: " + endNodeId));
+        }
 
         Set<String> blocked = blockedEdges != null ? new HashSet<>(blockedEdges) : Collections.emptySet();
         AlgorithmResult result = graphService.runBfs(startNodeId, endNodeId, blocked, accessibleOnly);
@@ -91,6 +120,13 @@ public class GraphController {
             @RequestParam(defaultValue = "false") boolean iterative,
             @RequestParam(required = false) List<String> blockedEdges) {
 
+        if (startNodeId == null || startNodeId.isBlank() || graphService.getNodeById(startNodeId).isEmpty()) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Start node not found with id: " + startNodeId));
+        }
+        if (endNodeId != null && !endNodeId.isBlank() && graphService.getNodeById(endNodeId).isEmpty()) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("End node not found with id: " + endNodeId));
+        }
+
         Set<String> blocked = blockedEdges != null ? new HashSet<>(blockedEdges) : Collections.emptySet();
         AlgorithmResult result = graphService.runDfs(startNodeId, endNodeId, blocked, accessibleOnly, iterative);
         return ResponseEntity.ok(ApiResponse.success(result, "DFS executed successfully"));
@@ -107,6 +143,13 @@ public class GraphController {
             @RequestParam(defaultValue = "false") boolean accessibleOnly,
             @RequestParam(required = false) List<String> blockedEdges) {
 
+        if (startNodeId == null || startNodeId.isBlank() || graphService.getNodeById(startNodeId).isEmpty()) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Start node not found with id: " + startNodeId));
+        }
+        if (endNodeId == null || endNodeId.isBlank() || graphService.getNodeById(endNodeId).isEmpty()) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("End node not found with id: " + endNodeId));
+        }
+
         Set<String> blocked = blockedEdges != null ? new HashSet<>(blockedEdges) : Collections.emptySet();
         AlgorithmResult result = graphService.runDijkstra(startNodeId, endNodeId, blocked, accessibleOnly);
         return ResponseEntity.ok(ApiResponse.success(result, "Shortest path calculated successfully"));
@@ -121,6 +164,10 @@ public class GraphController {
             @RequestParam(required = false) String startNodeId,
             @RequestParam(defaultValue = "false") boolean accessibleOnly,
             @RequestParam(required = false) List<String> blockedEdges) {
+
+        if (startNodeId != null && !startNodeId.isBlank() && graphService.getNodeById(startNodeId).isEmpty()) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Start node not found with id: " + startNodeId));
+        }
 
         Set<String> blocked = blockedEdges != null ? new HashSet<>(blockedEdges) : Collections.emptySet();
         AlgorithmResult result = graphService.runPrimsMst(startNodeId, blocked, accessibleOnly);
@@ -145,7 +192,10 @@ public class GraphController {
      * POST endpoint accepting a GraphRequest body for ANY algorithm (BFS, DFS, DIJKSTRA, PRIMS, KRUSKALS).
      */
     @PostMapping("/execute")
-    public ResponseEntity<ApiResponse<AlgorithmResult>> executeAlgorithm(@RequestBody GraphRequest request) {
+    public ResponseEntity<ApiResponse<AlgorithmResult>> executeAlgorithm(@RequestBody(required = false) GraphRequest request) {
+        if (request == null) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Graph request body cannot be null"));
+        }
         try {
             AlgorithmResult result = graphService.executeTraversalRequest(request);
             return ResponseEntity.ok(ApiResponse.success(result, result.getAlgorithm() + " executed successfully"));

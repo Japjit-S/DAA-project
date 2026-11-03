@@ -11,6 +11,7 @@ import com.campus.model.Edge;
 import com.campus.model.Graph;
 import com.campus.model.Node;
 import com.campus.repository.JsonDataRepository;
+import com.campus.validation.ValidationReport;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -58,6 +59,14 @@ public class GraphService {
 
     public List<Edge> getAllEdges() {
         return repository.findAllEdges();
+    }
+
+    public Optional<Edge> getEdgeById(String id) {
+        return repository.findEdgeById(id);
+    }
+
+    public ValidationReport getValidationReport() {
+        return repository.getLatestValidationReport();
     }
 
     /**
@@ -140,36 +149,76 @@ public class GraphService {
      * Unified dispatcher for GraphRequest payloads.
      */
     public AlgorithmResult executeTraversalRequest(GraphRequest request) {
+        if (request == null) {
+            throw new IllegalArgumentException("Graph request body cannot be null");
+        }
+
+        String algo = request.getAlgorithm() != null ? request.getAlgorithm().trim().toUpperCase() : "BFS";
         Set<String> blocked = request.getBlockedEdgeIds() != null
                 ? new HashSet<>(request.getBlockedEdgeIds())
                 : Collections.emptySet();
-        String algo = request.getAlgorithm() != null ? request.getAlgorithm().trim().toUpperCase() : "BFS";
+
+        String startId = request.getStartNodeId();
+        String endId = request.getEndNodeId();
+
+        // 1. Validate required node IDs per algorithm
+        switch (algo) {
+            case "DIJKSTRA" -> {
+                if (startId == null || startId.isBlank()) {
+                    throw new IllegalArgumentException("Start node ID is required for Dijkstra algorithm");
+                }
+                if (endId == null || endId.isBlank()) {
+                    throw new IllegalArgumentException("End node ID is required for Dijkstra algorithm");
+                }
+            }
+            case "BFS", "DFS", "DFS_ITERATIVE" -> {
+                if (startId == null || startId.isBlank()) {
+                    throw new IllegalArgumentException("Start node ID is required for " + algo + " algorithm");
+                }
+            }
+            case "PRIMS", "PRIMS_MST", "KRUSKALS", "KRUSKALS_MST" -> {
+                // startNodeId is optional for Prim's, not required for Kruskal's
+            }
+            default -> throw new IllegalArgumentException("Unsupported algorithm: " + algo);
+        }
+
+        // 2. Validate node existence in canonical repository
+        if (startId != null && !startId.isBlank()) {
+            if (repository.findNodeById(startId).isEmpty()) {
+                throw new IllegalArgumentException("Start node not found with id: " + startId);
+            }
+        }
+        if (endId != null && !endId.isBlank()) {
+            if (repository.findNodeById(endId).isEmpty()) {
+                throw new IllegalArgumentException("End node not found with id: " + endId);
+            }
+        }
 
         return switch (algo) {
             case "BFS" -> runBfs(
-                    request.getStartNodeId(),
-                    request.getEndNodeId(),
+                    startId,
+                    endId,
                     blocked,
                     request.isWheelchairAccessibleOnly());
             case "DFS" -> runDfs(
-                    request.getStartNodeId(),
-                    request.getEndNodeId(),
+                    startId,
+                    endId,
                     blocked,
                     request.isWheelchairAccessibleOnly(),
                     false);
             case "DFS_ITERATIVE" -> runDfs(
-                    request.getStartNodeId(),
-                    request.getEndNodeId(),
+                    startId,
+                    endId,
                     blocked,
                     request.isWheelchairAccessibleOnly(),
                     true);
             case "DIJKSTRA" -> runDijkstra(
-                    request.getStartNodeId(),
-                    request.getEndNodeId(),
+                    startId,
+                    endId,
                     blocked,
                     request.isWheelchairAccessibleOnly());
             case "PRIMS", "PRIMS_MST" -> runPrimsMst(
-                    request.getStartNodeId(),
+                    startId,
                     blocked,
                     request.isWheelchairAccessibleOnly());
             case "KRUSKALS", "KRUSKALS_MST" -> runKruskalsMst(
