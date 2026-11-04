@@ -60,10 +60,12 @@ The canonical dataset contains 135 node records (124 routable path and access po
   - Moved `N061` ("F-Tech Front Road East") to the physical road junction with Library Parking Road at `x=2345.0, y=930.0` (`lat=28.6115698, lng=77.0394047`).
   - F-Tech Front Road (`E259`, `N179 -- N061`) follows the front road through `(2300, 930)` to meet `N061` at the junction (61.12 m).
   - Library Parking Road (`E260`, `N061 -- N181`) follows the road straight south through `(2340, 1050)` to `N181` (112.59 m), eliminating diagonal lawn chords.
-  - Connector road (`E240`, `N181 -- N040`) follows the curved pavement through `(2345, 1200)`, `(2355, 1260)`, and `(2368, 1305)` to meet `N040` (114.77 m).
-- **Sports Perimeter Geometry (`E018`, `E019`)**:
-  - `E018` (`N040 -- N055`) curves along the paved northern path through `(2390, 1260)`, `(2420, 1235)`, and `(2450, 1215)` (98.66 m).
-  - `E019` (`N040 -- N056`) follows the road through `(2420, 1335)`, `(2450, 1345)`, `(2470, 1395)`, and `(2485, 1435)` (92.51 m).
+  - Relocated Sports Complex West Junction `N040` from the lawn to the paved road centerline at `x=2448.0, y=1330.0` (`lat=28.6098022, lng=77.0399232`).
+  - Connector road (`E240`, `N181 -- N040`) follows the parking road and curved pavement through `(2345, 1200)`, `(2360, 1250)`, `(2400, 1260)`, and `(2435, 1290)` to `N040` (123.72 m).
+- **Sports Perimeter Geometry (`E018`, `E019`, `E101`)**:
+  - `E018` (`N040 -- N055`) curves north along the paved road through `(2440, 1280)` and `(2450, 1240)` to `N055` (62.87 m).
+  - `E019` (`N040 -- N056`) follows the road south through `(2465, 1380)` and `(2480, 1420)` to `N056` (59.39 m).
+  - `E101` (`N040 -- N150`) connects `N040` directly to the Volleyball Court entrance spur (16.48 m).
 
 ### Preserved hostel spine network
 

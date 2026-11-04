@@ -411,11 +411,11 @@
     "id": "N040",
     "name": "Sports Complex West Junction",
     "type": "JUNCTION",
-    "x": 2373.86,
-    "y": 1330.5,
+    "x": 2448.0,
+    "y": 1330.0,
     "accessible": true,
-    "lat": 28.6098,
-    "lng": 77.03955
+    "lat": 28.6098022,
+    "lng": 77.0399232
   },
   {
     "id": "N041",
