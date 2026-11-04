@@ -23,7 +23,7 @@ The canonical dataset contains 135 node records (124 routable path and access po
 
 - **Central Library Footprint Bypass (`E239`)**:
   - Re-routed `E239` completely clear of the Central Library (`B010` / `N012`) building footprint.
-  - Follows visible pavement from the library north plaza junction `N051` (`2170.0, 1255.0`) north-east around the building perimeter via `(2205.0, 1215.0)` and `(2315.0, 1165.0)` to meet Library Parking at `N181` (`2340.0, 1130.0`).
+  - Follows visible pavement from the library north plaza junction `N051` (`2170.0, 1255.0`) north-east around the building perimeter via `(2205.0, 1215.0)` and `(2315.0, 1140.0)` to meet Library Parking Road Junction at `N181` (`2350.0, 1110.0`).
 - **Block 6 (Old Academic Block)**:
   - Relocated building node `N006` from the outer south wall to the central/northeast position inside the hexagonal courtyard (`x=2045.0, y=1180.0`).
   - Approach from Central Fountain (`N039`) connects via southeast plaza approach `N193` directly into the open courtyard entrance without cutting through outer building walls.
@@ -59,9 +59,10 @@ The canonical dataset contains 135 node records (124 routable path and access po
 - **Sports Complex West Junction (`N040`) to Library Parking Road (`N181`) and F-Tech Front Road East (`N061`)**:
   - Moved `N061` ("F-Tech Front Road East") to the physical road junction with Library Parking Road at `x=2345.0, y=930.0` (`lat=28.6115698, lng=77.0394047`).
   - F-Tech Front Road (`E259`, `N179 -- N061`) follows the front road through `(2300, 930)` to meet `N061` at the junction (61.12 m).
-  - Library Parking Road (`E260`, `N061 -- N181`) follows the road straight south through `(2340, 1050)` to `N181` (112.59 m), eliminating diagonal lawn chords.
+  - Relocated Library Parking Road Junction `N181` to the paved road centerline at `x=2350.0, y=1110.0` (`lat=28.6107744, lng=77.0394299`).
+  - Library Parking Road (`E260`, `N061 -- N181`) follows the road south via `(2345, 1000)` and `(2360, 1050)` to `N181` (89.94 m), running completely on the road.
   - Relocated Sports Complex West Junction `N040` from the lawn to the paved road centerline at `x=2448.0, y=1330.0` (`lat=28.6098022, lng=77.0399232`).
-  - Connector road (`E240`, `N181 -- N040`) follows the parking road and curved pavement through `(2345, 1200)`, `(2360, 1250)`, `(2400, 1260)`, and `(2435, 1290)` to `N040` (123.72 m).
+  - Connector road (`E240`, `N181 -- N040`) follows the paved road along the east of Library Parking through `(2375, 1110)`, `(2395, 1130)`, `(2405, 1180)`, `(2415, 1220)`, and `(2430, 1270)` to `N040` (127.93 m).
 - **Sports Perimeter Geometry (`E018`, `E019`, `E101`)**:
   - `E018` (`N040 -- N055`) curves north along the paved road through `(2440, 1280)` and `(2450, 1240)` to `N055` (62.87 m).
   - `E019` (`N040 -- N056`) follows the road south through `(2465, 1380)` and `(2480, 1420)` to `N056` (59.39 m).
