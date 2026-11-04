@@ -16,6 +16,7 @@ public class Node {
     private boolean accessible;
     private Double lat;
     private Double lng;
+    private boolean routable = true;
 
     public Node() {
     }
@@ -99,6 +100,9 @@ public class Node {
         this.lng = lng;
     }
 
+    public boolean isRoutable() { return routable; }
+    public void setRoutable(boolean routable) { this.routable = routable; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,6 +127,7 @@ public class Node {
                 ", accessible=" + accessible +
                 ", lat=" + lat +
                 ", lng=" + lng +
+                ", routable=" + routable +
                 '}';
     }
 }

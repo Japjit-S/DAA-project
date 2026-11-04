@@ -12,7 +12,9 @@
       "Registrar",
       "Exam Section",
       "Accounts"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access via eastern administrative foyer entrance off Auditorium walkway."
   },
   {
     "id": "B002",
@@ -27,7 +29,9 @@
       "Faculty Rooms",
       "Research Lab",
       "Classrooms"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access via north entrance plaza facing Connecting Block."
   },
   {
     "id": "B003",
@@ -43,7 +47,9 @@
       "Power Lab",
       "Control Lab",
       "Faculty Rooms"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access via north entrance spur facing Central Library plaza."
   },
   {
     "id": "B004",
@@ -58,7 +64,9 @@
       "Seminar Hall",
       "Faculty Rooms",
       "Physics & Chemistry Labs"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access via south entrance foyer facing Central Fountain."
   },
   {
     "id": "B005",
@@ -72,7 +80,9 @@
       "Tutorial Rooms",
       "Connecting Corridors",
       "Faculty Offices"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access via north entrance facing Central Fountain plaza."
   },
   {
     "id": "B006",
@@ -87,11 +97,13 @@
       "Project Labs",
       "Seminar Halls",
       "Faculty Rooms"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct pedestrian access via supported rear/west walkway entrance."
   },
   {
     "id": "B007",
-    "name": "APJ Hall",
+    "name": "Dr APJ Abdul Kalam Lecture Theatre Complex",
     "code": "APJ",
     "category": "ACADEMIC",
     "nodeId": "N009",
@@ -102,14 +114,16 @@
       "Acoustic Hall",
       "Convocation Center",
       "Green Rooms"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access via north entrance foyer off Kalam complex road."
   },
   {
     "id": "B008",
     "name": "Department of Design",
     "code": "DOD",
     "category": "ACADEMIC",
-    "nodeId": "N010",
+    "nodeId": "N042",
     "description": "Creative hub of NSUT featuring industrial design studios, ergonomics labs, rapid prototyping, and digital media suites.",
     "floors": 3,
     "facilities": [
@@ -117,14 +131,16 @@
       "Prototyping Lab",
       "Exhibition Gallery",
       "Faculty Offices"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to Department of Design access lane."
   },
   {
     "id": "B009",
     "name": "Training and Placement Building",
     "code": "TNP",
     "category": "ACADEMIC",
-    "nodeId": "N011",
+    "nodeId": "N145",
     "description": "Dedicated corporate engagement facility hosting university placement drives, pre-placement talks, and executive interviews.",
     "floors": 2,
     "facilities": [
@@ -132,7 +148,10 @@
       "Group Discussion Rooms",
       "T&P Cell",
       "Auditorium"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to paved access road east of TNP building.",
+    "referenceNodeId": "N011"
   },
   {
     "id": "B010",
@@ -149,7 +168,9 @@
       "Reprographics",
       "Student Activity Center",
       "Gymnasium"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access via main western entrance plaza facing Block 5."
   },
   {
     "id": "B011",
@@ -164,7 +185,9 @@
       "Food Stalls",
       "Seating Area",
       "Stationery Kiosk"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access via canteen entrance door off student walkway."
   },
   {
     "id": "B012",
@@ -178,7 +201,9 @@
       "Fresh Produce",
       "Daily Essentials",
       "Grocery Counter"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access at Safal store front."
   },
   {
     "id": "B013",
@@ -192,48 +217,56 @@
       "Dairy Products",
       "Ice Cream",
       "Beverages"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access at Mother Dairy booth."
   },
   {
     "id": "B014",
-    "name": "Nescafé Kiosk",
+    "name": "Nescaf\u00e9 Kiosk",
     "code": "NES",
     "category": "AMENITY",
-    "nodeId": "N016",
+    "nodeId": "N047",
     "description": "Popular open-air coffee hub near the administrative lawn serving brewed coffee, iced drinks, and quick snacks.",
     "floors": 1,
     "facilities": [
       "Coffee & Snacks",
       "Outdoor Seating"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Connected at Students' Centre Road Junction on pedestrian concourse."
   },
   {
     "id": "B015",
     "name": "Running Track",
     "code": "TRK",
     "category": "SPORTS",
-    "nodeId": "N017",
+    "nodeId": "N056",
     "description": "Standard 400m synthetic running track enclosing the central athletic field and fitness conditioning zone.",
     "floors": 1,
     "facilities": [
       "400m Synthetic Track",
       "Athletic Field",
       "Jogging Lane"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Access via Sports perimeter road southern gate to 400m running track."
   },
   {
     "id": "B016",
     "name": "Cricket Ground",
     "code": "CRK",
     "category": "SPORTS",
-    "nodeId": "N018",
+    "nodeId": "N055",
     "description": "Full-size university cricket pavilion featuring turf pitch, boundary seating, and practice net cages.",
     "floors": 1,
     "facilities": [
       "Cricket Pitch",
       "Pavilion",
       "Cricket Nets"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Access via Sports north road approach to Cricket Pavilion / Oval."
   },
   {
     "id": "B017",
@@ -247,41 +280,49 @@
       "Basketball Court",
       "Floodlights",
       "Spectator Stands"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access at Basketball Court perimeter."
   },
   {
     "id": "B018",
     "name": "Volleyball Court",
     "code": "VB",
     "category": "SPORTS",
-    "nodeId": "N020",
+    "nodeId": "N150",
     "description": "Outdoor regulation volleyball courts with sand and hard court surfaces.",
     "floors": 1,
     "facilities": [
       "Volleyball Courts",
       "Sand Pitch",
       "Practice Zone"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Access spur connected to Sports west road entrance for Volleyball Courts.",
+    "referenceNodeId": "N020"
   },
   {
     "id": "B019",
     "name": "Lawn Tennis Courts",
     "code": "TC",
     "category": "SPORTS",
-    "nodeId": "N021",
+    "nodeId": "N151",
     "description": "All-weather synthetic tennis courts equipped with training wall and perimeter fencing.",
     "floors": 1,
     "facilities": [
       "Synthetic Tennis Courts",
       "Practice Wall"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Access spur connected to Sports west road entrance for Lawn Tennis Courts.",
+    "referenceNodeId": "N021"
   },
   {
     "id": "B020",
     "name": "Aryabhata Hostel",
     "code": "BH-1",
     "category": "HOSTEL",
-    "nodeId": "N022",
+    "nodeId": "N066",
     "description": "Boys residence hall named after the great astronomer Aryabhata, housing undergraduate students.",
     "floors": 5,
     "facilities": [
@@ -289,14 +330,17 @@
       "Common Room",
       "Wi-Fi",
       "Laundry"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to central hostel spine south plaza.",
+    "referenceNodeId": "N022"
   },
   {
     "id": "B021",
     "name": "Ramanujan Hostel",
     "code": "BH-2",
     "category": "HOSTEL",
-    "nodeId": "N023",
+    "nodeId": "N097",
     "description": "Boys residence hall honoring mathematician Srinivasa Ramanujan, featuring reading halls and recreational amenities.",
     "floors": 5,
     "facilities": [
@@ -304,14 +348,17 @@
       "Common Room",
       "Wi-Fi",
       "Laundry"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to central hostel spine crossroads.",
+    "referenceNodeId": "N023"
   },
   {
     "id": "B022",
     "name": "J. C. Bose Hostel",
     "code": "BH-3",
     "category": "HOSTEL",
-    "nodeId": "N024",
+    "nodeId": "N098",
     "description": "Boys residence hall honoring physicist and biologist Jagadish Chandra Bose.",
     "floors": 5,
     "facilities": [
@@ -319,42 +366,51 @@
       "Common Room",
       "Wi-Fi",
       "Laundry"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to north road access lane for J. C. Bose Hostel.",
+    "referenceNodeId": "N024"
   },
   {
     "id": "B023",
     "name": "Raman Hostel",
     "code": "BH-4",
     "category": "HOSTEL",
-    "nodeId": "N025",
+    "nodeId": "N136",
     "description": "Boys residence hall honoring Nobel laureate C. V. Raman, offering quiet residential suites.",
     "floors": 5,
     "facilities": [
       "Mess",
       "Common Room",
       "Wi-Fi"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to north road access lane for Raman Hostel.",
+    "referenceNodeId": "N025"
   },
   {
     "id": "B024",
     "name": "Bhaskara Hostel",
     "code": "BH-5",
     "category": "HOSTEL",
-    "nodeId": "N026",
+    "nodeId": "N099",
     "description": "Boys residence hall named after mathematician-astronomer Bhaskara II.",
     "floors": 5,
     "facilities": [
       "Mess",
       "Common Room",
       "Wi-Fi"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to central hostel spine south plaza.",
+    "referenceNodeId": "N026"
   },
   {
     "id": "B025",
     "name": "Saraswati Hostel",
     "code": "GH-1",
     "category": "HOSTEL",
-    "nodeId": "N027",
+    "nodeId": "N118",
     "description": "Premier girls residence hall with landscaped gardens, indoor dining mess, and round-the-clock security.",
     "floors": 5,
     "facilities": [
@@ -363,28 +419,34 @@
       "Wi-Fi",
       "Laundry",
       "Garden"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to paved access road for Saraswati Hostel.",
+    "referenceNodeId": "N027"
   },
   {
     "id": "B026",
     "name": "Alaknanda Hostel",
     "code": "GH-2",
     "category": "HOSTEL",
-    "nodeId": "N028",
+    "nodeId": "N100",
     "description": "Girls hostel named after the sacred river Alaknanda, providing quiet study spaces and recreational lounge.",
     "floors": 5,
     "facilities": [
       "Mess",
       "Common Room",
       "Wi-Fi"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to paved access road for Alaknanda Hostel.",
+    "referenceNodeId": "N028"
   },
   {
     "id": "B027",
     "name": "Kaveri Hostel",
     "code": "GH-3",
     "category": "HOSTEL",
-    "nodeId": "N029",
+    "nodeId": "N143",
     "description": "Modern girls residence hall located on the north-east residential campus sector.",
     "floors": 4,
     "facilities": [
@@ -392,7 +454,10 @@
       "Common Room",
       "Wi-Fi",
       "Study Room"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Entrance spur connected to Kaveri access road east of residential area.",
+    "referenceNodeId": "N029"
   },
   {
     "id": "B028",
@@ -407,60 +472,70 @@
       "Pharmacy",
       "First Aid",
       "Ambulance Bay"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access via south entrance gate off rear walkway."
   },
   {
     "id": "B029",
     "name": "Faculty Housing area 1",
     "code": "FH-1",
     "category": "FACILITY",
-    "nodeId": "N031",
+    "nodeId": "N057",
     "description": "Residential quarters for faculty members and university administrative staff located near the southwest gate.",
     "floors": 3,
     "facilities": [
       "Residential Apartments",
       "Parking Area"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Access at Faculty Housing western boulevard junction."
   },
   {
     "id": "B030",
     "name": "Faculty Housing area 2",
     "code": "FH-2",
     "category": "FACILITY",
-    "nodeId": "N032",
+    "nodeId": "N057",
     "description": "Senior faculty apartments set amidst green groves in the residential enclave.",
     "floors": 3,
     "facilities": [
       "Residential Apartments",
       "Play Area"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Access at Faculty Housing northern road junction."
   },
   {
     "id": "B031",
     "name": "Faculty Housing area 3",
     "code": "FH-3",
     "category": "FACILITY",
-    "nodeId": "N033",
+    "nodeId": "N057",
     "description": "Staff and faculty residential units bordering the campus nursery sector.",
     "floors": 3,
     "facilities": [
       "Residential Apartments",
       "Community Hall"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Access at Faculty Housing central residential path."
   },
   {
     "id": "B032",
     "name": "Nursery",
     "code": "NUR",
     "category": "FACILITY",
-    "nodeId": "N034",
+    "nodeId": "N058",
     "description": "Campus flora conservation center, plant nursery, and organic composting facility maintaining university green cover.",
     "floors": 1,
     "facilities": [
       "Greenhouse",
       "Plant Nursery",
       "Compost Facility"
-    ]
+    ],
+    "accessConfidence": "MEDIUM",
+    "accessNote": "Access at Nursery road junction."
   },
   {
     "id": "B033",
@@ -474,7 +549,9 @@
       "Water Recycling",
       "Filtration Beds",
       "Pumping Station"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Service access off north road past Pump House."
   },
   {
     "id": "B034",
@@ -488,7 +565,9 @@
       "Power Transformers",
       "Switchyard",
       "Control Room"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Direct access at Main Electric Substation."
   },
   {
     "id": "B035",
@@ -501,6 +580,38 @@
     "facilities": [
       "Substation Transformers",
       "Backup Generators"
-    ]
+    ],
+    "accessConfidence": "HIGH",
+    "accessNote": "Utility access spur off F-Tech rear pathway."
+  },
+  {
+    "id": "B036",
+    "name": "Guest House",
+    "code": "GST-HSE",
+    "category": "FACILITY",
+    "nodeId": "N190",
+    "referenceNodeId": null,
+    "accessConfidence": "HIGH",
+    "accessNote": "Main entrance accessed via the south campus road connecting walkway."
+  },
+  {
+    "id": "B037",
+    "name": "Smart Class",
+    "code": "SMR-CLS",
+    "category": "ACADEMIC",
+    "nodeId": "N191",
+    "referenceNodeId": null,
+    "accessConfidence": "HIGH",
+    "accessNote": "Main entrance accessed from the east ring road parking plaza."
+  },
+  {
+    "id": "B038",
+    "name": "Shopping Complex",
+    "code": "SHP-CMP",
+    "category": "AMENITY",
+    "nodeId": "N192",
+    "referenceNodeId": null,
+    "accessConfidence": "HIGH",
+    "accessNote": "Stationery, copy shops and student amenities accessed via the northern ring loop and hostel connector road."
   }
 ]

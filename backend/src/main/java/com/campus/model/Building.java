@@ -14,6 +14,9 @@ public class Building {
     private String code;
     private String category;
     private String nodeId;
+    private String referenceNodeId;
+    private String accessConfidence;
+    private String accessNote;
     private String description;
     private int floors;
     private List<String> facilities = new ArrayList<>();
@@ -72,6 +75,13 @@ public class Building {
     public void setNodeId(String nodeId) {
         this.nodeId = nodeId;
     }
+
+    public String getReferenceNodeId() { return referenceNodeId; }
+    public void setReferenceNodeId(String referenceNodeId) { this.referenceNodeId = referenceNodeId; }
+    public String getAccessConfidence() { return accessConfidence; }
+    public void setAccessConfidence(String accessConfidence) { this.accessConfidence = accessConfidence; }
+    public String getAccessNote() { return accessNote; }
+    public void setAccessNote(String accessNote) { this.accessNote = accessNote; }
 
     public String getDescription() {
         return description;

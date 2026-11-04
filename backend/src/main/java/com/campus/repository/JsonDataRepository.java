@@ -136,7 +136,8 @@ public class JsonDataRepository {
             }
 
             // 4. Compose in-memory Graph directly from canonical nodes and edges
-            this.graph = new Graph("NSUT_MAIN_GRAPH", false, new ArrayList<>(nodes), new ArrayList<>(edges));
+            List<Node> routableNodes = nodes.stream().filter(Node::isRoutable).toList();
+            this.graph = new Graph("NSUT_MAIN_GRAPH", false, new ArrayList<>(routableNodes), new ArrayList<>(edges));
             logger.info("Composed in-memory graph '{}' from canonical nodes ({}) and edges ({})",
                     graph.getGraphId(), graph.getNodeCount(), graph.getEdgeCount());
 
@@ -184,12 +185,13 @@ public class JsonDataRepository {
     }
 
     public List<Node> findAllNodes() {
-        return Collections.unmodifiableList(nodes);
+        return graph.getNodes();
     }
 
     public Optional<Node> findNodeById(String id) {
         if (id == null) return Optional.empty();
-        return Optional.ofNullable(nodeMap.get(id));
+        Node node = nodeMap.get(id);
+        return node != null && node.isRoutable() ? Optional.of(node) : Optional.empty();
     }
 
     public List<Edge> findAllEdges() {

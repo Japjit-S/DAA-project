@@ -3,435 +3,150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Campus Navigation &amp; Resource Optimizer</title>
+  <meta name="theme-color" content="#0b0f19">
+  <title>NSUT Campus Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-  <!-- Top Navigation / Application Header -->
   <header class="app-header">
-    <div class="brand-section">
-      <div class="brand-icon" aria-hidden="true">🏛️</div>
-      <div class="brand-title">
-        <h1>Smart Campus Navigation and Resource Optimizer</h1>
-        <div class="brand-subtitle">DAA Algorithm Testbed &amp; Spatial Graph Foundation</div>
-      </div>
-    </div>
-
-    <div class="header-status-group">
-      <!-- Live Metrics Badges -->
-      <div class="metrics-pills">
-        <div class="metric-badge">
-          <span>Nodes:</span> <strong id="nodeCountBadge">-</strong>
-        </div>
-        <div class="metric-badge">
-          <span>Edges:</span> <strong id="edgeCountBadge">-</strong>
-        </div>
-        <div class="metric-badge">
-          <span>Buildings:</span> <strong id="buildingCountBadge">-</strong>
-        </div>
-      </div>
-
-      <!-- Live Spring Boot Connection Health Status -->
-      <div id="statusPill" class="status-pill offline" title="Backend Health Status">
-        <div class="pulse-dot"></div>
-        <span id="statusText">Connecting...</span>
-      </div>
-    </div>
+    <a class="brand" href="#" aria-label="NSUT Campus Map home">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span><strong>NSUT</strong><small>Campus map</small></span>
+    </a>
+    <div class="header-center"><span class="campus-label">DWARKA CAMPUS</span><span class="header-divider"></span><span>Explore places and walking routes</span></div>
+    <div id="statusPill" class="status-pill offline" title="Campus data connection"><span class="pulse-dot"></span><span id="statusText">Connecting</span></div>
   </header>
 
-  <!-- Mobile View Switcher (Visible on narrow viewports <= 900px) -->
-  <div class="mobile-view-tabs" role="tablist" aria-label="Mobile View Switcher">
-    <button id="tabDirectoryBtn" class="mobile-tab-btn active" role="tab" aria-selected="true" aria-controls="sidebarPanel">
-      📁 Facilities (<span id="mobileCountBadge">35</span>)
-    </button>
-    <button id="tabRouteBtn" class="mobile-tab-btn" role="tab" aria-selected="false" aria-controls="sidebarPanel">
-      🧭 Route Finder
-    </button>
-    <button id="tabMapBtn" class="mobile-tab-btn" role="tab" aria-selected="false" aria-controls="mapWorkspace">
-      🗺️ Campus Map
-    </button>
+  <div class="mobile-view-tabs" role="tablist" aria-label="Choose view">
+    <button id="tabDirectoryBtn" class="mobile-tab-btn active" role="tab" aria-selected="true" aria-controls="sidebarPanel">Places</button>
+    <button id="tabRouteBtn" class="mobile-tab-btn" role="tab" aria-selected="false" aria-controls="sidebarPanel">Directions</button>
+    <button id="tabAlgorithmsBtn" class="mobile-tab-btn" role="tab" aria-selected="false" aria-controls="sidebarPanel">Algorithms</button>
+    <button id="tabMapBtn" class="mobile-tab-btn" role="tab" aria-selected="false" aria-controls="mapWorkspace">Map</button>
+    <span id="mobileCountBadge" hidden>35</span>
   </div>
 
-  <!-- Main Body Grid: Sidebar & Map Visualization -->
-  <div class="app-container" id="appContainer">
-    
-    <!-- Left Sidebar: Building Catalog, Search, Route Finder, and Details -->
-    <aside class="sidebar" id="sidebarPanel" role="region" aria-label="Campus Navigation and Facilities">
-      <!-- Sidebar Navigation Mode Tabs -->
-      <div class="sidebar-mode-nav" role="tablist" aria-label="Sidebar Mode">
-        <button id="modeDirectoryBtn" class="mode-tab-btn active" role="tab" aria-selected="true" aria-controls="directoryModeContainer">
-          📁 Facilities Directory
-        </button>
-        <button id="modeRouteBtn" class="mode-tab-btn" role="tab" aria-selected="false" aria-controls="routeModeContainer">
-          🧭 Route Finder
-        </button>
-      </div>
+  <main class="app-container" id="appContainer">
+    <aside class="sidebar" id="sidebarPanel" aria-label="Campus places and directions">
+      <nav class="sidebar-mode-nav" role="tablist" aria-label="Explore campus">
+        <button id="modeDirectoryBtn" class="mode-tab-btn active" role="tab" aria-selected="true" aria-controls="directoryModeContainer"><span class="nav-icon">⌕</span>Places</button>
+        <button id="modeRouteBtn" class="mode-tab-btn" role="tab" aria-selected="false" aria-controls="routeModeContainer"><span class="nav-icon">↗</span>Directions</button>
+        <button id="modeAlgorithmBtn" class="mode-tab-btn" role="tab" aria-selected="false" aria-controls="algorithmModeContainer"><span class="nav-icon">⌘</span>Algorithms</button>
+      </nav>
 
-      <!-- Mode 1: Directory Search & Catalog -->
-      <div id="directoryModeContainer" class="mode-container active">
-        <!-- Search Input & Status -->
+      <section id="directoryModeContainer" class="mode-container active" aria-label="Campus places">
+        <div class="sidebar-heading"><div><p class="eyebrow">EXPLORE</p><h1>Campus places</h1></div><span id="facilityCountBadge" class="count-badge">35 places</span></div>
         <div class="sidebar-search-box">
-          <div class="search-input-wrapper">
-            <span class="search-icon" aria-hidden="true">🔍</span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search facilities, labs, hostels, sports..." aria-label="Search campus facilities" />
-            <button id="clearSearchBtn" class="clear-search-btn" title="Clear search" aria-label="Clear search text" style="display:none;">✕</button>
-          </div>
-          <div class="search-status-bar">
-            <span id="facilityCountBadge" class="facility-count-label">Showing 35 facilities</span>
-            <button id="clearFiltersBtn" class="clear-filters-link" style="display:none;" aria-label="Reset all search and category filters">Reset filters</button>
-          </div>
+          <div class="search-input-wrapper"><span class="search-icon" aria-hidden="true">⌕</span><input id="searchInput" class="search-input" type="search" placeholder="Search buildings and facilities" aria-label="Search campus places"><button id="clearSearchBtn" class="clear-search-btn" title="Clear search" aria-label="Clear search" style="display:none">×</button></div>
+          <div class="search-status-bar"><span id="searchStatusText">Browse the campus</span><button id="clearFiltersBtn" class="clear-filters-link" style="display:none">Clear filters</button></div>
         </div>
-
-        <!-- Category Filter Chips -->
-        <div class="category-filter-chips" role="tablist" aria-label="Filter facilities by category">
-          <button class="filter-chip active" data-category="ALL" role="tab" aria-selected="true">All</button>
-          <button class="filter-chip" data-category="ACADEMIC" role="tab" aria-selected="false">Academic</button>
-          <button class="filter-chip" data-category="ADMINISTRATIVE" role="tab" aria-selected="false">Admin</button>
-          <button class="filter-chip" data-category="LIBRARY" role="tab" aria-selected="false">Library</button>
-          <button class="filter-chip" data-category="HOSTEL" role="tab" aria-selected="false">Hostels</button>
-          <button class="filter-chip" data-category="SPORTS" role="tab" aria-selected="false">Sports</button>
-          <button class="filter-chip" data-category="FACILITY" role="tab" aria-selected="false">Facilities</button>
-          <button class="filter-chip" data-category="AMENITY" role="tab" aria-selected="false">Amenities</button>
+        <div class="category-filter-chips" role="tablist" aria-label="Filter places">
+          <button class="filter-chip active" data-category="ALL" role="tab" aria-selected="true">All</button><button class="filter-chip" data-category="ACADEMIC" role="tab" aria-selected="false">Academic</button><button class="filter-chip" data-category="ADMINISTRATIVE" role="tab" aria-selected="false">Admin</button><button class="filter-chip" data-category="LIBRARY" role="tab" aria-selected="false">Library</button><button class="filter-chip" data-category="HOSTEL" role="tab" aria-selected="false">Hostels</button><button class="filter-chip" data-category="SPORTS" role="tab" aria-selected="false">Sports</button><button class="filter-chip" data-category="FACILITY" role="tab" aria-selected="false">Facilities</button><button class="filter-chip" data-category="AMENITY" role="tab" aria-selected="false">Dining</button>
         </div>
+        <div class="sidebar-scroll-area"><div id="buildingList" class="building-list"></div></div>
+      </section>
 
-        <!-- Scrollable Building Catalog -->
-        <div class="sidebar-scroll-area">
-          <div class="section-label">Campus Locations</div>
-          <div id="buildingList" style="display:flex; flex-direction:column; gap:0.5rem;">
-            <!-- Dynamically populated via app.js -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Mode 2: Route Finder Panel -->
-      <div id="routeModeContainer" class="mode-container" style="display:none;">
+      <section id="routeModeContainer" class="mode-container" aria-label="Walking directions" style="display:none">
+        <div class="sidebar-heading"><div><p class="eyebrow">GET AROUND</p><h1>Walking route</h1></div></div>
         <div class="route-finder-panel">
-          <div class="route-header">
-            <h3>Find Walking Route</h3>
-            <p class="route-subtitle">Select origin and destination to calculate walking paths along campus roads and walkways.</p>
-          </div>
-
-          <!-- Endpoints Selection Form -->
           <div class="route-form">
-            <div class="route-input-group">
-              <label for="routeStartSelect" class="route-label">
-                <span class="route-pin-icon start" aria-hidden="true">🟢</span> Start Location:
-              </label>
-              <select id="routeStartSelect" class="route-select" aria-label="Select start location">
-                <option value="">-- Choose Origin --</option>
-              </select>
-            </div>
-
-            <div class="route-swap-row">
-              <button id="routeSwapBtn" class="btn-swap-endpoints" title="Swap start and destination" aria-label="Swap origin and destination">
-                ⇅ Swap Start &amp; Destination
-              </button>
-            </div>
-
-            <div class="route-input-group">
-              <label for="routeEndSelect" class="route-label">
-                <span class="route-pin-icon end" aria-hidden="true">🎯</span> Destination:
-              </label>
-              <select id="routeEndSelect" class="route-select" aria-label="Select destination location">
-                <option value="">-- Choose Destination --</option>
-              </select>
-            </div>
-
-            <!-- Algorithm Selection -->
-            <div class="algorithm-selection-section">
-              <span class="route-label">Pathfinding Algorithm:</span>
-              <div class="algorithm-options" role="radiogroup" aria-label="Select pathfinding algorithm">
-                <label class="algorithm-option active" id="algoOptDijkstra">
-                  <input type="radio" name="routeAlgorithm" value="DIJKSTRA" checked />
-                  <div class="algo-option-content">
-                    <div class="algo-title-row">
-                      <strong class="algo-name">Dijkstra's Algorithm</strong>
-                      <span class="algo-badge recommended">Shortest Path</span>
-                    </div>
-                    <div class="algo-desc">Minimizes walking distance in meters along actual path geometry.</div>
-                  </div>
-                </label>
-
-                <label class="algorithm-option" id="algoOptBfs">
-                  <input type="radio" name="routeAlgorithm" value="BFS" />
-                  <div class="algo-option-content">
-                    <div class="algo-title-row">
-                      <strong class="algo-name">Breadth-First Search (BFS)</strong>
-                      <span class="algo-badge">Fewest Hops</span>
-                    </div>
-                    <div class="algo-desc">Minimizes pathway segment transitions. <em>Note: Does not minimize physical distance on weighted graphs.</em></div>
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            <!-- Accessibility Option -->
-            <div class="accessible-option-row">
-              <label class="checkbox-label" for="wheelchairOnlyCheck">
-                <input type="checkbox" id="wheelchairOnlyCheck" />
-                <span>Wheelchair accessible pathways only</span>
-              </label>
-            </div>
-
-            <!-- Demo Pair Shortcut -->
-            <div class="demo-pair-shortcut">
-              <button id="btnLoadDemoPair" type="button" class="btn-demo-link" title="Load classic DAA demonstration pair: Main Gate to Block 5">
-                💡 Load Demo: Main Gate → Block 5 (Divergent Routes)
-              </button>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="route-actions-row">
-              <button id="btnFindRoute" class="btn-route-action primary" aria-label="Calculate walking route">
-                🚀 Find Route
-              </button>
-              <button id="btnCompareRoute" class="btn-route-action compare" aria-label="Compare BFS and Dijkstra side-by-side">
-                ⚖️ Compare BFS &amp; Dijkstra
-              </button>
-            </div>
-            <div class="route-reset-row">
-              <button id="btnClearRoute" class="btn-route-action secondary" style="width: 100%;" aria-label="Reset route selection">
-                ↺ Reset Route
-              </button>
-            </div>
+            <div class="route-input-group"><label for="routeStartSelect" class="route-label"><span class="endpoint-dot origin"></span>Start</label><select id="routeStartSelect" class="route-select"><option value="">Choose a starting place</option></select></div>
+            <button id="routeSwapBtn" class="btn-swap-endpoints" title="Swap start and destination" aria-label="Swap start and destination">⇅</button>
+            <div class="route-input-group"><label for="routeEndSelect" class="route-label"><span class="endpoint-dot destination"></span>Destination</label><select id="routeEndSelect" class="route-select"><option value="">Choose a destination</option></select></div>
+            <div class="algorithm-selection-section"><span class="route-label">Route preference</span><div class="algorithm-options" role="radiogroup" aria-label="Route preference">
+              <label class="algorithm-option active" id="algoOptDijkstra"><input type="radio" name="routeAlgorithm" value="DIJKSTRA" checked><span class="algo-name">Shortest distance</span><span class="algo-hint">Dijkstra</span></label>
+              <label class="algorithm-option" id="algoOptBfs"><input type="radio" name="routeAlgorithm" value="BFS"><span class="algo-name">Fewest segments</span><span class="algo-hint">BFS</span></label>
+            </div></div>
+            <label class="accessible-option-row"><input type="checkbox" id="wheelchairOnlyCheck"><span class="checkmark"></span><span>Accessible paths only</span></label>
+            <div class="route-action-row"><button id="btnFindRoute" class="btn-route-action primary">Show route</button><button id="btnCompareRoute" class="btn-route-action compare" title="Compare shortest distance and fewest turns">Compare</button></div>
+            <button id="btnLoadDemoPair" class="btn-demo-pair">Try a sample route</button><button id="btnClearRoute" class="btn-route-action secondary">Clear route</button>
+            <div id="routeAlertBox" class="route-alert" role="alert" style="display:none"></div>
           </div>
-
-          <!-- Alert / Validation Banner -->
-          <div id="routeAlertBox" class="route-alert" role="alert" style="display:none;"></div>
-
-          <!-- Route Result Card & Directions -->
-          <div id="routeResultCard" class="route-result-card" style="display:none;">
-            <div class="route-result-header">
-              <h4 id="routeResultTitle">Route Summary</h4>
-              <span id="routeAlgoBadge" class="algo-pill">DIJKSTRA</span>
-            </div>
-
-            <!-- Metrics Grid -->
-            <div class="route-metrics-grid">
-              <div class="metric-cell">
-                <span class="metric-lbl">Total Distance</span>
-                <span class="metric-val" id="metricDistance">0 m</span>
-              </div>
-              <div class="metric-cell">
-                <span class="metric-lbl">Transitions (Hops)</span>
-                <span class="metric-val" id="metricHops">0</span>
-              </div>
-              <div class="metric-cell">
-                <span class="metric-lbl">Explored Nodes</span>
-                <span class="metric-val" id="metricVisited">0</span>
-              </div>
-              <div class="metric-cell">
-                <span class="metric-lbl">Compute Time</span>
-                <span class="metric-val" id="metricTime">0 ms</span>
-              </div>
-            </div>
-
-            <!-- Low-Confidence Advisory -->
-            <div id="routeConfidenceWarning" class="route-advisory" style="display:none;">
-              ⚠️ <strong>Notice:</strong> This route includes approximate walkway access connections. Survey verification is pending.
-            </div>
-
-            <!-- Turn-by-Turn Waypoints -->
-            <div class="route-steps-section">
-              <div class="steps-heading">Turn-by-Turn Waypoints:</div>
-              <ol id="routeStepsList" class="route-steps-list">
-                <!-- Dynamically populated via app.js -->
-              </ol>
-            </div>
-          </div>
-
-          <!-- Comparison Result Card (Phase 7: BFS vs Dijkstra Demonstration) -->
-          <div id="routeCompareCard" class="route-compare-card" style="display:none;">
-            <div class="compare-header">
-              <div class="compare-title-row">
-                <h4 id="compareTitle">Algorithm Comparison</h4>
-                <span class="compare-badge">DAA Analysis</span>
-              </div>
-              <p class="compare-lead">
-                Comparing unweighted level-order traversal (fewest path edges) against weighted shortest path (minimum ground distance).
-              </p>
-            </div>
-
-            <!-- Layer Visibility Filter Chips -->
-            <div class="compare-map-filter" role="tablist" aria-label="Comparison Map Layer Filter">
-              <button id="filterBothRoutes" class="map-filter-chip active" role="tab" aria-selected="true">
-                👁️ Both Routes Overlay
-              </button>
-              <button id="filterDijkstraOnly" class="map-filter-chip dijkstra" role="tab" aria-selected="false">
-                🔵 Dijkstra Only
-              </button>
-              <button id="filterBfsOnly" class="map-filter-chip bfs" role="tab" aria-selected="false">
-                🟠 BFS Only
-              </button>
-            </div>
-
-            <!-- Side-by-Side Algorithm Columns -->
-            <div class="compare-cards-grid">
-              <!-- Dijkstra Column -->
-              <div class="algo-compare-column dijkstra-column" id="dijkstraCompareCol">
-                <div class="algo-col-header">
-                  <div class="algo-col-title">
-                    <span class="algo-col-dot dijkstra"></span>
-                    <h5>Dijkstra Pathfinder</h5>
-                  </div>
-                  <span class="col-pill dijkstra" id="dijkstraHighlightBadge">Shortest Dist</span>
-                </div>
-                <div class="algo-col-concept">
-                  Optimizes: <strong>Minimum ground distance (m)</strong> using surveyed road weights.
-                </div>
-                <div class="algo-col-metrics">
-                  <div class="col-metric-row">
-                    <span class="col-metric-label">Walking Distance:</span>
-                    <strong class="col-metric-val dijkstra" id="dijkstraDistVal">-</strong>
-                  </div>
-                  <div class="col-metric-row">
-                    <span class="col-metric-label">Route Hops (Edges):</span>
-                    <strong class="col-metric-val" id="dijkstraHopsVal">-</strong>
-                  </div>
-                  <div class="col-metric-row">
-                    <span class="col-metric-label">Nodes Explored:</span>
-                    <strong class="col-metric-val" id="dijkstraExploredVal">-</strong>
-                  </div>
-                  <div class="col-metric-row">
-                    <span class="col-metric-label">Execution Time:</span>
-                    <strong class="col-metric-val" id="dijkstraTimeVal">-</strong>
-                  </div>
-                </div>
-                <div class="col-time-note">*Illustrative timing; varies per execution.</div>
-                <div id="dijkstraAdvisory" class="route-advisory" style="display:none;">
-                  ⚠️ Traverses approximate access walkway
-                </div>
-                <details class="algo-steps-details">
-                  <summary class="algo-steps-summary">Turn Waypoints (<span id="dijkstraStepCount">0</span>)</summary>
-                  <ol id="dijkstraStepsList" class="compare-steps-list"></ol>
-                </details>
-              </div>
-
-              <!-- BFS Column -->
-              <div class="algo-compare-column bfs-column" id="bfsCompareCol">
-                <div class="algo-col-header">
-                  <div class="algo-col-title">
-                    <span class="algo-col-dot bfs"></span>
-                    <h5>BFS Traversal</h5>
-                  </div>
-                  <span class="col-pill bfs" id="bfsHighlightBadge">Fewest Hops</span>
-                </div>
-                <div class="algo-col-concept">
-                  Optimizes: <strong>Fewest path transitions (hops)</strong>. Treats all edges as unit cost (1).
-                </div>
-                <div class="algo-col-metrics">
-                  <div class="col-metric-row">
-                    <span class="col-metric-label">Walking Distance:</span>
-                    <strong class="col-metric-val bfs" id="bfsDistVal">-</strong>
-                  </div>
-                  <div class="col-metric-row">
-                    <span class="col-metric-label">Route Hops (Edges):</span>
-                    <strong class="col-metric-val" id="bfsHopsVal">-</strong>
-                  </div>
-                  <div class="col-metric-row">
-                    <span class="col-metric-label">Nodes Explored:</span>
-                    <strong class="col-metric-val" id="bfsExploredVal">-</strong>
-                  </div>
-                  <div class="col-metric-row">
-                    <span class="col-metric-label">Execution Time:</span>
-                    <strong class="col-metric-val" id="bfsTimeVal">-</strong>
-                  </div>
-                </div>
-                <div class="col-time-note">*Illustrative timing; varies per execution.</div>
-                <div id="bfsAdvisory" class="route-advisory" style="display:none;">
-                  ⚠️ Traverses approximate access walkway
-                </div>
-                <details class="algo-steps-details">
-                  <summary class="algo-steps-summary">Turn Waypoints (<span id="bfsStepCount">0</span>)</summary>
-                  <ol id="bfsStepsList" class="compare-steps-list"></ol>
-                </details>
-              </div>
-            </div>
-
-            <!-- Key Algorithmic Insight Box -->
-            <div class="compare-takeaway-box" id="compareTakeawayBox">
-              <!-- Dynamically populated analysis takeaway -->
-            </div>
-          </div>
+          <section id="routeResultCard" class="route-result-card" style="display:none">
+            <div class="result-heading"><div><p class="eyebrow">YOUR ROUTE</p><h2 id="routeResultTitle">Walking route</h2></div><span id="routeAlgoBadge" class="route-algo-badge"></span></div>
+            <div class="route-metrics"><div><span>Distance</span><strong id="metricDistance">—</strong></div><div><span>Segments</span><strong id="metricHops">—</strong></div><div><span>Places checked</span><strong id="metricVisited">—</strong></div><div><span>Time</span><strong id="metricTime">—</strong></div></div>
+            <div id="routeConfidenceWarning" class="route-confidence-warning" style="display:none"></div>
+            <details class="steps-details"><summary>Walking directions</summary><ol id="routeStepsList" class="route-steps-list"></ol></details>
+          </section>
+          <section id="routeCompareCard" class="route-compare-card" style="display:none">
+            <div class="result-heading"><div><p class="eyebrow">SIDE BY SIDE</p><h2 id="compareTitle">Route comparison</h2></div></div>
+            <div class="comparison-filter" role="tablist" aria-label="Routes shown on map"><button id="filterBothRoutes" class="map-filter-chip active" role="tab" aria-selected="true">Both</button><button id="filterDijkstraOnly" class="map-filter-chip" role="tab" aria-selected="false">Shortest</button><button id="filterBfsOnly" class="map-filter-chip" role="tab" aria-selected="false">Fewest segments</button></div>
+            <div class="comparison-cards">
+              <article class="comparison-card dijkstra-card"><header><span class="route-swatch dijkstra"></span><strong>Shortest distance</strong><span id="dijkstraHighlightBadge" class="route-card-badge"></span></header><div class="route-metrics"><div><span>Distance</span><strong id="dijkstraDistVal">—</strong></div><div><span>Segments</span><strong id="dijkstraHopsVal">—</strong></div><div><span>Places checked</span><strong id="dijkstraExploredVal">—</strong></div><div><span>Time</span><strong id="dijkstraTimeVal">—</strong></div></div><div id="dijkstraAdvisory" class="route-confidence-warning" style="display:none"></div><details class="steps-details"><summary><span id="dijkstraStepCount">Route details</span></summary><ol id="dijkstraStepsList" class="route-steps-list"></ol></details></article>
+              <article class="comparison-card bfs-card"><header><span class="route-swatch bfs"></span><strong>Fewest segments</strong><span id="bfsHighlightBadge" class="route-card-badge"></span></header><div class="route-metrics"><div><span>Distance</span><strong id="bfsDistVal">—</strong></div><div><span>Segments</span><strong id="bfsHopsVal">—</strong></div><div><span>Places checked</span><strong id="bfsExploredVal">—</strong></div><div><span>Time</span><strong id="bfsTimeVal">—</strong></div></div><div id="bfsAdvisory" class="route-confidence-warning" style="display:none"></div><details class="steps-details"><summary><span id="bfsStepCount">Route details</span></summary><ol id="bfsStepsList" class="route-steps-list"></ol></details></article>
+            </div><div class="compare-takeaway-box" id="compareTakeawayBox"></div>
+          </section>
         </div>
-      </div>
-
-      <!-- Selected Location Information Card -->
-      <div class="detail-view-panel" id="detailPanel">
-        <h3 id="detailTitle">Location Information</h3>
-        <div id="detailContent">
-          <p style="font-size: 0.78rem; color: var(--text-muted);">
-            Select any building from the list or click a vertex node on the campus map to inspect its connectivity, coordinates, and facility attributes.
-          </p>
+      </section>
+      <section id="algorithmModeContainer" class="mode-container" aria-label="Algorithm demonstrations" style="display:none">
+        <div class="sidebar-heading"><div><p class="eyebrow">NETWORK STUDIES</p><h1>Algorithms</h1></div></div>
+        <div class="algorithm-demo-panel">
+          <section class="algorithm-demo-card">
+            <p class="eyebrow">TRAVERSAL</p><h2>Depth-first search</h2>
+            <p>Explore reachable road and walkway points from a chosen start. This shows traversal order, not a walking route.</p>
+            <label class="route-label" for="dfsStartSelect">Start at</label><select id="dfsStartSelect" class="route-select"><option value="">Choose a starting place</option></select>
+            <button id="btnRunDfs" class="btn-route-action primary">Run DFS traversal</button>
+                        <div id="dfsPlaybackControls" class="playback-toolbar" style="display:none">
+              <div class="playback-row">
+                <div class="playback-btn-group">
+                  <button id="dfsBtnReset" class="playback-btn" title="Reset animation">↺</button>
+                  <button id="dfsBtnPrev" class="playback-btn" title="Step backward">⏮</button>
+                  <button id="dfsBtnPlayPause" class="playback-btn play-pause-btn" title="Play / Pause">▶</button>
+                  <button id="dfsBtnNext" class="playback-btn" title="Step forward">⏭</button>
+                </div>
+                <div class="speed-pill-group" id="dfsSpeedGroup">
+                  <button class="speed-pill active" data-speed="1">1x</button>
+                  <button class="speed-pill" data-speed="2">2x</button>
+                  <button class="speed-pill" data-speed="5">5x</button>
+                </div>
+              </div>
+              <div class="playback-slider-wrap">
+                <input type="range" id="dfsSlider" class="playback-slider" min="0" max="100" value="0">
+                <span id="dfsStepBadge" class="playback-step-badge">Step 0/0</span>
+              </div>
+              <div id="dfsStatusMsg" class="playback-status-msg">Ready to traverse.</div>
+            </div>
+            <div id="dfsResult" class="algorithm-result" style="display:none"></div>
+          </section>
+          <section class="algorithm-demo-card">
+            <p class="eyebrow">NETWORK SPAN</p><h2>Minimum spanning tree</h2>
+            <p>Compare ways to connect the mapped network with minimum total path length. This is a network view, not directions.</p>
+            <label class="route-label" for="mstAlgorithmSelect">Method</label><select id="mstAlgorithmSelect" class="route-select"><option value="PRIMS">Prim's algorithm</option><option value="KRUSKALS">Kruskal's algorithm</option></select>
+            <label class="route-label" for="mstStartSelect">Prim's start point</label><select id="mstStartSelect" class="route-select"><option value="">Main Gate</option></select>
+            <button id="btnRunMst" class="btn-route-action primary">Build spanning tree</button>
+                        <div id="mstPlaybackControls" class="playback-toolbar" style="display:none">
+              <div class="playback-row">
+                <div class="playback-btn-group">
+                  <button id="mstBtnReset" class="playback-btn" title="Reset animation">↺</button>
+                  <button id="mstBtnPrev" class="playback-btn" title="Step backward">⏮</button>
+                  <button id="mstBtnPlayPause" class="playback-btn play-pause-btn" title="Play / Pause">▶</button>
+                  <button id="mstBtnNext" class="playback-btn" title="Step forward">⏭</button>
+                </div>
+                <div class="speed-pill-group" id="mstSpeedGroup">
+                  <button class="speed-pill active" data-speed="1">1x</button>
+                  <button class="speed-pill" data-speed="2">2x</button>
+                  <button class="speed-pill" data-speed="5">5x</button>
+                </div>
+              </div>
+              <div class="playback-slider-wrap">
+                <input type="range" id="mstSlider" class="playback-slider" min="0" max="100" value="0">
+                <span id="mstStepBadge" class="playback-step-badge">Step 0/0</span>
+              </div>
+              <div id="mstStatusMsg" class="playback-status-msg">Ready to build tree.</div>
+            </div>
+            <div id="mstResult" class="algorithm-result" style="display:none"></div>
+          </section>
         </div>
-      </div>
+      </section>
+      <section class="detail-view-panel" id="detailPanel" style="display:none"><div class="detail-header"><button id="detailBackBtn" class="detail-back-btn" aria-label="Back to places">←</button><div><p class="eyebrow">PLACE DETAILS</p><h2 id="detailTitle">Place</h2></div><button id="closeDetailBtn" class="detail-close-btn" aria-label="Close details">×</button></div><div class="detail-content" id="detailContent"></div></section>
     </aside>
 
-    <!-- Right Workspace: Interactive SVG Map Canvas -->
-    <main class="map-workspace" id="mapWorkspace" role="region" aria-label="Interactive Campus Map">
-      <!-- Floating Map Toolbar & Legend -->
-      <div class="map-toolbar">
-        <div class="map-legend" role="region" aria-label="Map Legend">
-          <div class="legend-title" title="Campus landmark and path types">Legend:</div>
-          <div class="legend-item" title="Academic departments, lecture blocks, labs">
-            <span class="legend-dot" style="background:#3b82f6;"></span> Academic
-          </div>
-          <div class="legend-item" title="Administrative headquarters, Director's office">
-            <span class="legend-dot" style="background:#6366f1;"></span> Admin
-          </div>
-          <div class="legend-item" title="Central Library, Student Activity Centre, Gym">
-            <span class="legend-dot" style="background:#a855f7;"></span> Library &amp; SAC
-          </div>
-          <div class="legend-item" title="Boys &amp; Girls Hostels">
-            <span class="legend-dot" style="background:#eab308;"></span> Hostels
-          </div>
-          <div class="legend-item" title="Sports complex: track, cricket ground, courts">
-            <span class="legend-dot" style="background:#22c55e;"></span> Sports
-          </div>
-          <div class="legend-item" title="Canteens, Nescafe, Mother Dairy, Safal">
-            <span class="legend-dot" style="background:#f59e0b;"></span> Amenities
-          </div>
-          <div class="legend-item" title="Medical Centre, faculty housing, campus utilities">
-            <span class="legend-dot" style="background:#10b981;"></span> Facilities
-          </div>
-          <div class="legend-item" title="Main Gate and North Gate access">
-            <span class="legend-dot" style="background:#94a3b8;"></span> Gates
-          </div>
-          <div class="legend-item" title="Road &amp; walkway path intersections">
-            <span class="legend-dot" style="background:#06b6d4;"></span> Junctions
-          </div>
-          <div class="legend-item" title="Walking connections (numbers indicate distance in meters)">
-            <span class="legend-line" style="background:#17324d;"></span> Walking Path
-          </div>
-          <div class="legend-item" id="legendRouteItem" style="display:none;" title="Currently computed navigation path">
-            <span class="legend-line" style="background:#38bdf8; height:4px; box-shadow:0 0 6px #38bdf8;"></span> Active Route
-          </div>
-          <div class="legend-item" id="legendCompareDijkstra" style="display:none;" title="Dijkstra shortest physical distance path">
-            <span class="legend-line" style="background:#38bdf8; height:4px; box-shadow:0 0 6px #38bdf8;"></span> Dijkstra (Shortest)
-          </div>
-          <div class="legend-item" id="legendCompareBfs" style="display:none;" title="BFS fewest hops path">
-            <span class="legend-line" style="background:#f59e0b; height:4px; border-bottom: 2px dashed #f59e0b; box-shadow:0 0 6px #f59e0b;"></span> BFS (Fewest Hops)
-          </div>
-          <div class="legend-item" id="legendCompareShared" style="display:none;" title="Pathway segments shared by both Dijkstra and BFS">
-            <span class="legend-line" style="background:linear-gradient(90deg, #38bdf8 50%, #f59e0b 50%); height:4px;"></span> Shared Segments
-          </div>
-        </div>
-
-        <div class="map-controls-group" role="toolbar" aria-label="Map Navigation Controls">
-          <button id="clearRouteMapBtn" class="btn-ctrl" title="Clear current route" aria-label="Clear active route" style="display:none; color:var(--accent-rose); border-color:rgba(244,63,94,0.4);">✕ Clear Route</button>
-          <button id="zoomInBtn" class="btn-ctrl" title="Zoom in" aria-label="Zoom in">+</button>
-          <button id="zoomOutBtn" class="btn-ctrl" title="Zoom out" aria-label="Zoom out">−</button>
-          <button id="fitCampusBtn" class="btn-ctrl" title="Show whole campus" aria-label="Fit whole campus view">Fit campus</button>
-          <button id="resetHighlightsBtn" class="btn-ctrl" title="Reset map selection" aria-label="Reset map selection">↺ Reset Selection</button>
-          <button id="reloadMapBtn" class="btn-ctrl" title="Reload data from backend" aria-label="Reload datasets from server">↻ Refresh Data</button>
-        </div>
-      </div>
-
-      <!-- SVG Map Viewport -->
-      <div class="map-canvas-container">
-        <!-- Embed SVG Map -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="900 250 2600 1733" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" id="campusMapSvg" role="img" aria-label="OpenStreetMap of the NSUT campus with walking routes and facilities">
+    <section class="map-workspace" id="mapWorkspace" aria-label="Campus map">
+      <div class="map-topline"><div><span class="map-title">NSUT, Dwarka</span><span class="map-subtitle">New Delhi, India</span></div><div class="map-actions"><button id="mapToneBtn" class="map-control tone-control" title="Use the dark map colors">Darken map</button><button id="reloadMapBtn" class="map-control refresh-control" title="Refresh campus places" aria-label="Refresh campus places">↻</button><button id="zoomOutBtn" class="map-control" title="Zoom out" aria-label="Zoom out">−</button><button id="zoomInBtn" class="map-control" title="Zoom in" aria-label="Zoom in">+</button><button id="fitCampusBtn" class="map-control fit-control" title="Fit campus in view">Fit campus</button><button id="resetHighlightsBtn" class="map-control" title="Clear map selection" aria-label="Clear selection">×</button></div></div>
+      <div class="map-canvas-container original-map">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="900 250 2600 1733" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" id="campusMapSvg" role="img" aria-label="Map of the NSUT campus with facilities and walking paths">
   <defs>
     <!-- Background & Canvas Gradients -->
     <radialGradient id="campusBgGrad" cx="50%" cy="50%" r="70%">
@@ -1274,56 +989,18 @@
   <!-- Dynamic graph pathways and node vertices injected by app.js   -->
   <!-- ============================================================== -->
   <g id="mapRasterLayer"></g>
+  <g id="vectorGroundLayer"></g>
+  <g id="vectorRoadLayer"></g>
+  <g id="vectorFootprintsLayer"></g>
+  <g id="vectorLabelsLayer"></g>
   <g id="graphEdgesLayer"></g>
   <g id="graphNodesLayer"></g>
 </svg>
-
-        <div class="map-attribution">© OpenStreetMap contributors</div>
-
       </div>
-
-      <!-- DAA Algorithms Readiness Banner -->
-      <div class="daa-hooks-banner">
-        <div>
-          <strong style="color:#a5b4fc;">DAA Foundation Ready:</strong>
-          <span style="color:#94a3b8; margin-left:0.4rem;">Graph data model structured for seamless algorithm integration.</span>
-        </div>
-        <div class="daa-hook-badges">
-          <span class="daa-tag">BFS</span>
-          <span class="daa-tag">DFS</span>
-          <span class="daa-tag">Dijkstra</span>
-          <span class="daa-tag">Prim's</span>
-          <span class="daa-tag">Kruskal's</span>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Collapsible Live REST API Inspector Drawer -->
-  <div class="api-inspector-drawer" id="apiInspectorDrawer">
-    <div class="drawer-header" id="drawerToggle">
-      <div class="drawer-title">
-        <div class="terminal-dot"></div>
-        <span>REST API Communication Inspector</span>
-      </div>
-      <div style="font-size:0.75rem; color:var(--text-muted);">
-        Click to Expand / Minimize â–¾
-      </div>
-    </div>
-    <div class="drawer-content">
-      <div class="api-logs-list" id="apiLogsList">
-        <!-- Intercepted requests listed here -->
-      </div>
-      <div class="api-json-viewer" id="jsonViewer">
-        // Real-time backend JSON response viewer
-      </div>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script src="js/calibration.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/app.js"></script>
+      <div class="map-legend" aria-label="Map legend"><span><i class="legend-line"></i>Roads &amp; paths</span><span><i class="legend-line route"></i>Shortest route</span><span><i class="legend-line bfs"></i>Fewest segments</span></div>
+      <div class="map-credit">Map data © OpenStreetMap contributors</div>
+    </section>
+  </main>
+  <script src="js/calibration.js"></script><script src="js/api.js"></script><script src="js/app.js"></script>
 </body>
 </html>
-

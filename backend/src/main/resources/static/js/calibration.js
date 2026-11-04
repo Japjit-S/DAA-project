@@ -1,7 +1,6 @@
 /**
- * NSUT map registration in an EPSG:3857 (Web Mercator) coordinate plane.
- * Raster panel placement comes from feature-matched overlaps; geographic scale
- * is anchored by the supplied detail-panel centers.
+ * NSUT campus coordinates and local map panels in an EPSG:3857 (Web Mercator) plane.
+ * Geographic scale is anchored by the registered detail-panel control point.
  */
 const CampusCalibration = (() => {
   'use strict';
@@ -16,7 +15,6 @@ const CampusCalibration = (() => {
     { id: 'southeast', href: '/assets/maps/map-se.png', x: 1191.95, y: 1131.20, width: 2742, height: 1439 }
   ];
   const OVERVIEW_TO_DETAIL = {
-    scale: 1 / 0.252007,
     x: -853.4 / 0.252007,
     y: -323.64 / 0.252007,
     width: 2759 / 0.252007,
@@ -82,15 +80,11 @@ const CampusCalibration = (() => {
     return distance(lat1, lng1, lat2, lng2);
   }
 
-  function imageLayout() {
+  function imageLayout(theme = 'original') {
+    const suffix = theme === 'dark' ? '-dark.png' : '.png';
     return [
-      {
-        id: 'overview', href: '/assets/maps/map-overview.png',
-        x: OVERVIEW_TO_DETAIL.x, y: OVERVIEW_TO_DETAIL.y,
-        width: OVERVIEW_TO_DETAIL.width, height: OVERVIEW_TO_DETAIL.height,
-        preserveAspectRatio: 'none'
-      },
-      ...DETAIL_PANELS.map((panel) => ({ ...panel, preserveAspectRatio: 'none' }))
+      { id: 'overview', href: `/assets/maps/map-overview${suffix}`, ...OVERVIEW_TO_DETAIL, preserveAspectRatio: 'none' },
+      ...DETAIL_PANELS.map(panel => ({ ...panel, href: panel.href.replace(/\.png$/, suffix), preserveAspectRatio: 'none' }))
     ];
   }
 

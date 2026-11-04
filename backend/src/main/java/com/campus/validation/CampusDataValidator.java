@@ -46,7 +46,7 @@ public class CampusDataValidator {
         List<Edge> safeEdges = edges != null ? edges : Collections.emptyList();
         List<Building> safeBuildings = buildings != null ? buildings : Collections.emptyList();
 
-        report.setNodeCount(safeNodes.size());
+        report.setNodeCount((int) safeNodes.stream().filter(Objects::nonNull).filter(Node::isRoutable).count());
         report.setEdgeCount(safeEdges.size());
         report.setBuildingCount(safeBuildings.size());
 
@@ -212,6 +212,10 @@ public class CampusDataValidator {
                     ValidationIssue.EntityType.EDGE, id, "target",
                     "Edge target node does not exist in nodes dataset", target));
         }
+        if ((sourceExists && !nodeMap.get(source).isRoutable()) || (targetExists && !nodeMap.get(target).isRoutable())) {
+            report.addIssue(ValidationIssue.error(ValidationIssue.EntityType.EDGE, id, "routableEndpoints",
+                    "Edges must connect routable path nodes", source + " -> " + target));
+        }
 
         if (source != null && source.equals(target)) {
             report.addIssue(ValidationIssue.error(
@@ -370,12 +374,35 @@ public class CampusDataValidator {
 
         String nodeId = building.getNodeId();
         if (nodeId == null || nodeId.isBlank()) {
-            report.addIssue(ValidationIssue.error(
-                    ValidationIssue.EntityType.BUILDING, id, "nodeId", "Building nodeId cannot be null or blank", nodeId));
-        } else if (!nodeMap.containsKey(nodeId)) {
+            boolean accessUnresolved = "UNRESOLVED".equalsIgnoreCase(building.getAccessConfidence());
+            boolean hasAccessNote = building.getAccessNote() != null && !building.getAccessNote().isBlank();
+            if (!accessUnresolved || !hasAccessNote) {
+                report.addIssue(ValidationIssue.error(
+                        ValidationIssue.EntityType.BUILDING, id, "nodeId",
+                        "A missing route node must be explicitly marked UNRESOLVED with an access note", nodeId));
+            } else {
+                report.addIssue(ValidationIssue.info(
+                        ValidationIssue.EntityType.BUILDING, id, "access",
+                        "No routable building access is claimed because the supplied map does not support one",
+                        building.getAccessConfidence()));
+            }
+        } else if (!nodeMap.containsKey(nodeId) || !nodeMap.get(nodeId).isRoutable()) {
             report.addIssue(ValidationIssue.error(
                     ValidationIssue.EntityType.BUILDING, id, "nodeId",
-                    "Building nodeId refers to non-existent node: " + nodeId, nodeId));
+                    "Building nodeId must refer to a routable access node: " + nodeId, nodeId));
+        } else if (building.getAccessNote() == null || building.getAccessNote().isBlank()) {
+            report.addIssue(ValidationIssue.error(
+                    ValidationIssue.EntityType.BUILDING, id, "accessNote",
+                    "Mapped building access must explain its confidence and any entrance uncertainty", building.getAccessNote()));
+        }
+
+        String referenceNodeId = building.getReferenceNodeId();
+        if (referenceNodeId != null && !referenceNodeId.isBlank()) {
+            Node reference = nodeMap.get(referenceNodeId);
+            if (reference == null || reference.isRoutable()) {
+                report.addIssue(ValidationIssue.error(ValidationIssue.EntityType.BUILDING, id, "referenceNodeId",
+                        "referenceNodeId must refer to a preserved non-routable landmark: " + referenceNodeId, referenceNodeId));
+            }
         }
     }
 
@@ -384,20 +411,23 @@ public class CampusDataValidator {
             List<Edge> edges,
             ValidationReport report) {
 
-        if (nodeMap.isEmpty()) {
+        Map<String, Node> routableNodes = new HashMap<>();
+        nodeMap.forEach((id, node) -> { if (node.isRoutable()) routableNodes.put(id, node); });
+        if (routableNodes.isEmpty()) {
             report.setConnectedComponentCount(0);
             return;
         }
 
         Map<String, List<String>> adj = new HashMap<>();
-        for (String nid : nodeMap.keySet()) {
+        for (String nid : routableNodes.keySet()) {
             adj.put(nid, new ArrayList<>());
         }
 
         for (Edge e : edges) {
             String u = e.getSource();
             String v = e.getTarget();
-            if (adj.containsKey(u) && adj.containsKey(v)) {
+            if (adj.containsKey(u) && adj.containsKey(v)
+                    && routableNodes.containsKey(u) && routableNodes.containsKey(v)) {
                 adj.get(u).add(v);
                 adj.get(v).add(u);
             }
@@ -406,7 +436,7 @@ public class CampusDataValidator {
         Set<String> visited = new HashSet<>();
         List<List<String>> components = new ArrayList<>();
 
-        for (String nid : nodeMap.keySet()) {
+        for (String nid : routableNodes.keySet()) {
             if (!visited.contains(nid)) {
                 List<String> component = new ArrayList<>();
                 Queue<String> queue = new ArrayDeque<>();

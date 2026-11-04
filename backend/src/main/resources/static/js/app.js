@@ -14,8 +14,9 @@
     selectedNodeId: null,
     searchQuery: '',
     selectedCategory: 'ALL',
-    currentSidebarMode: 'directory', // 'directory' | 'route'
-    currentMobileTab: 'directory',   // 'directory' | 'route' | 'map'
+    currentSidebarMode: 'directory', // 'directory' | 'route' | 'algorithms'
+    currentMobileTab: 'directory',   // 'directory' | 'route' | 'algorithms' | 'map'
+    algorithmDemo: { type: '', result: null },
     route: {
       startNodeId: '',
       endNodeId: '',
@@ -31,7 +32,6 @@
       loading: false,
       error: null
     },
-    apiLogs: []
   };
   let mapIsFit = true;
 
@@ -73,8 +73,10 @@
     // Sidebar navigation tabs & containers
     modeDirectoryBtn: document.getElementById('modeDirectoryBtn'),
     modeRouteBtn: document.getElementById('modeRouteBtn'),
+    modeAlgorithmBtn: document.getElementById('modeAlgorithmBtn'),
     directoryModeContainer: document.getElementById('directoryModeContainer'),
     routeModeContainer: document.getElementById('routeModeContainer'),
+    algorithmModeContainer: document.getElementById('algorithmModeContainer'),
 
     // Directory Search & Filters
     searchInput: document.getElementById('searchInput'),
@@ -98,6 +100,35 @@
     wheelchairOnlyCheck: document.getElementById('wheelchairOnlyCheck'),
     btnFindRoute: document.getElementById('btnFindRoute'),
     btnCompareRoute: document.getElementById('btnCompareRoute'),
+    dfsStartSelect: document.getElementById('dfsStartSelect'),
+    btnRunDfs: document.getElementById('btnRunDfs'),
+    dfsResult: document.getElementById('dfsResult'),
+    mstAlgorithmSelect: document.getElementById('mstAlgorithmSelect'),
+    mstStartSelect: document.getElementById('mstStartSelect'),
+    btnRunMst: document.getElementById('btnRunMst'),
+    mstResult: document.getElementById('mstResult'),
+
+    // DFS Playback Controls
+    dfsPlaybackControls: document.getElementById('dfsPlaybackControls'),
+    dfsBtnReset: document.getElementById('dfsBtnReset'),
+    dfsBtnPrev: document.getElementById('dfsBtnPrev'),
+    dfsBtnPlayPause: document.getElementById('dfsBtnPlayPause'),
+    dfsBtnNext: document.getElementById('dfsBtnNext'),
+    dfsSpeedGroup: document.getElementById('dfsSpeedGroup'),
+    dfsSlider: document.getElementById('dfsSlider'),
+    dfsStepBadge: document.getElementById('dfsStepBadge'),
+    dfsStatusMsg: document.getElementById('dfsStatusMsg'),
+
+    // MST Playback Controls
+    mstPlaybackControls: document.getElementById('mstPlaybackControls'),
+    mstBtnReset: document.getElementById('mstBtnReset'),
+    mstBtnPrev: document.getElementById('mstBtnPrev'),
+    mstBtnPlayPause: document.getElementById('mstBtnPlayPause'),
+    mstBtnNext: document.getElementById('mstBtnNext'),
+    mstSpeedGroup: document.getElementById('mstSpeedGroup'),
+    mstSlider: document.getElementById('mstSlider'),
+    mstStepBadge: document.getElementById('mstStepBadge'),
+    mstStatusMsg: document.getElementById('mstStatusMsg'),
     btnClearRoute: document.getElementById('btnClearRoute'),
     clearRouteMapBtn: document.getElementById('clearRouteMapBtn'),
     routeAlertBox: document.getElementById('routeAlertBox'),
@@ -150,11 +181,6 @@
     edgesLayer: null,
     nodesLayer: null,
 
-    // API Inspector Drawer
-    apiLogsList: document.getElementById('apiLogsList'),
-    jsonViewer: document.getElementById('jsonViewer'),
-    inspectorDrawer: document.getElementById('apiInspectorDrawer'),
-    drawerToggle: document.getElementById('drawerToggle'),
 
     // Map Controls
     resetBtn: document.getElementById('resetHighlightsBtn'),
@@ -162,10 +188,12 @@
     zoomInBtn: document.getElementById('zoomInBtn'),
     zoomOutBtn: document.getElementById('zoomOutBtn'),
     fitCampusBtn: document.getElementById('fitCampusBtn'),
+    mapToneBtn: document.getElementById('mapToneBtn'),
 
     // Mobile Switcher Tabs
     tabDirectoryBtn: document.getElementById('tabDirectoryBtn'),
     tabRouteBtn: document.getElementById('tabRouteBtn'),
+    tabAlgorithmsBtn: document.getElementById('tabAlgorithmsBtn'),
     tabMapBtn: document.getElementById('tabMapBtn'),
     legendItems: document.querySelectorAll('.map-legend .legend-item')
   };
@@ -174,11 +202,11 @@
    * Initializes the application.
    */
   async function init() {
-    setupApiInspector();
     setupMobileTabs();
     setupSidebarModeNav();
     setupRouteFinder();
     setupComparisonControls();
+    setupAlgorithmDemos();
     bindEvents();
 
     try {
@@ -188,6 +216,7 @@
       renderMapElements();
       renderBuildingList();
       populateRouteSelectors();
+      populateAlgorithmSelectors();
     } catch (err) {
       console.error('Initialization error:', err);
       showOfflineStatus();
@@ -248,183 +277,81 @@
     return { x: node.x || 0, y: node.y || 0 };
   }
 
-  /**
-   * Render SVG Background, Edges, and Nodes
-   */
+  /** Render saved campus map panels and the calibrated campus paths. */
   function renderMapElements() {
     dom.edgesLayer = document.getElementById('graphEdgesLayer');
     dom.nodesLayer = document.getElementById('graphNodesLayer');
     dom.rasterLayer = document.getElementById('mapRasterLayer');
-
-    if (!dom.edgesLayer || !dom.nodesLayer || !dom.rasterLayer) {
-      console.warn('SVG layers not ready');
-      return;
-    }
-
-    dom.edgesLayer.innerHTML = '';
-    dom.nodesLayer.innerHTML = '';
-    dom.rasterLayer.innerHTML = '';
-
-    // Render registered raster panels
-    if (typeof CampusCalibration !== 'undefined' && CampusCalibration.imageLayout) {
-      CampusCalibration.imageLayout().forEach((panel) => {
+    const roadLayer = document.getElementById('vectorRoadLayer');
+    const groundLayer = document.getElementById('vectorGroundLayer');
+    const footprintLayer = document.getElementById('vectorFootprintsLayer');
+    const labelLayer = document.getElementById('vectorLabelsLayer');
+    if (!dom.edgesLayer || !dom.nodesLayer || !dom.rasterLayer || !roadLayer || !groundLayer || !footprintLayer || !labelLayer) return;
+    dom.edgesLayer.innerHTML = ''; dom.nodesLayer.innerHTML = ''; dom.rasterLayer.innerHTML = ''; roadLayer.innerHTML = ''; groundLayer.innerHTML = ''; footprintLayer.innerHTML = ''; labelLayer.innerHTML = '';
+    const isOriginal = dom.mapCanvasContainer ? dom.mapCanvasContainer.classList.contains('original-map') : true;
+    if (typeof CampusCalibration.imageLayout === 'function') {
+      CampusCalibration.imageLayout(isOriginal ? 'original' : 'dark').forEach(panel => {
         const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
         image.setAttribute('href', panel.href);
-        image.setAttribute('x', panel.x);
-        image.setAttribute('y', panel.y);
-        image.setAttribute('width', panel.width);
-        image.setAttribute('height', panel.height);
+        image.setAttribute('x', panel.x); image.setAttribute('y', panel.y);
+        image.setAttribute('width', panel.width); image.setAttribute('height', panel.height);
         image.setAttribute('preserveAspectRatio', panel.preserveAspectRatio);
         image.setAttribute('data-map-panel', panel.id);
+        image.setAttribute('class', 'map-panel');
         const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        title.textContent = `OpenStreetMap ${panel.id} map panel`;
+        title.textContent = `NSUT campus map · ${panel.id}`;
         image.appendChild(title);
         dom.rasterLayer.appendChild(image);
       });
     }
-
-    // Build coordinate map for graph nodes
-    const nodeCoordMap = new Map();
-    state.graph.nodes.forEach((n) => {
-      const pt = getNodePoint(n);
-      nodeCoordMap.set(n.id, { x: pt.x, y: pt.y, name: n.name, type: n.type, lat: n.lat, lng: n.lng });
+    const nodeMap = new Map(state.graph.nodes.map(node => [node.id, node]));
+    const xy = node => getNodePoint(node);
+    const geometryFor = edge => {
+      const coords = Array.isArray(edge.geometry) && edge.geometry.length > 1 ? edge.geometry.map(point => CampusCalibration.project(point.lat, point.lng)) : [xy(nodeMap.get(edge.source)), xy(nodeMap.get(edge.target))];
+      return coords.filter(point => point && Number.isFinite(point.x) && Number.isFinite(point.y));
+    };
+    const pathD = points => points.map((point, i) => `${i ? 'L' : 'M'} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join(' ');
+    state.graph.edges.forEach(edge => {
+      const source=nodeMap.get(edge.source), target=nodeMap.get(edge.target), points=geometryFor(edge);
+      if(!source||!target||points.length<2)return;
+      const d=pathD(points);
+      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d',d);path.setAttribute('class','graph-edge');path.setAttribute('data-id',edge.id);path.setAttribute('data-source',edge.source);path.setAttribute('data-target',edge.target);path.setAttribute('data-road',edge.type||'WALKWAY');path.setAttribute('data-confidence',edge.confidence||'HIGH');path.setAttribute('tabindex','0');path.setAttribute('role','button');path.setAttribute('aria-label',`Walking path between ${source.name} and ${target.name}`);
+      const title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=`${source.name} to ${target.name} · ${Math.round(edge.weight)} m`;path.appendChild(title);
+      const showEdge=()=>{displayEdgeDetails(edge,source,target);if(dom.detailPanel)dom.detailPanel.style.display='block';};path.addEventListener('click',showEdge);path.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();showEdge();}});roadLayer.appendChild(path);
     });
-
-    // 1. Render Edges (Walking paths along geometry)
-    if (state.graph.edges) {
-      state.graph.edges.forEach((edge) => {
-        const u = nodeCoordMap.get(edge.source);
-        const v = nodeCoordMap.get(edge.target);
-        if (!u || !v) return;
-
-        const routePoints = Array.isArray(edge.geometry) && edge.geometry.length >= 2
-          ? edge.geometry.map((point) => CampusCalibration.project(point.lat, point.lng))
-          : [u, v];
-
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', routePoints.map((point, index) =>
-          `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' '));
-        path.setAttribute('class', 'graph-edge');
-        path.setAttribute('data-id', edge.id);
-        path.setAttribute('data-source', edge.source);
-        path.setAttribute('data-target', edge.target);
-        path.setAttribute('tabindex', '0');
-        path.setAttribute('role', 'button');
-        path.setAttribute('aria-label', `Path ${edge.id}: ${u.name} to ${v.name}, ${edge.weight} meters`);
-
-        const middle = routePoints[Math.floor(routePoints.length / 2)];
-
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', middle.x);
-        text.setAttribute('y', middle.y - 5);
-        text.setAttribute('class', 'edge-weight-label');
-        text.textContent = `${edge.weight}m`;
-
-        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        title.textContent = `${edge.id}: ${u.name} ↔ ${v.name} (${edge.weight}m, ${edge.type}${edge.confidence ? `, ${edge.confidence} confidence` : ''})`;
-        path.appendChild(title);
-
-        const onEdgeSelect = () => {
-          displayEdgeDetails(edge, u, v);
-        };
-        path.addEventListener('click', onEdgeSelect);
-        path.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onEdgeSelect();
-          }
-        });
-
-        dom.edgesLayer.appendChild(path);
-        dom.edgesLayer.appendChild(text);
-      });
-    }
-
-    // 2. Render Nodes (Facility landmarks & walking junctions)
-    if (state.graph.nodes) {
-      state.graph.nodes.forEach((node) => {
-        const pt = nodeCoordMap.get(node.id) || { x: node.x, y: node.y };
-        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        group.setAttribute('class', 'graph-node');
-        group.setAttribute('data-id', node.id);
-        group.setAttribute('data-type', node.type);
-        group.setAttribute('tabindex', '0');
-        group.setAttribute('role', 'button');
-        group.setAttribute('aria-label', `${node.name} (${node.type})`);
-        group.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
-
-        const color = TYPE_COLORS[node.type] || '#3b82f6';
-        const isJunction = node.type === 'JUNCTION';
-
-        // Outer pulsing selection ring (visible when active or in route)
-        const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        ring.setAttribute('r', isJunction ? '8' : '10');
-        ring.setAttribute('class', 'node-selection-ring');
-        ring.setAttribute('fill', 'none');
-        ring.setAttribute('stroke', color);
-        ring.setAttribute('stroke-width', '2');
-        ring.setAttribute('opacity', '0');
-        ring.setAttribute('pointer-events', 'none');
-
-        // Node circle
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('r', isJunction ? '5' : '7.5');
-        circle.setAttribute('class', 'node-core');
-        circle.setAttribute('stroke', color);
-
-        // Inner pip
-        const innerDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        innerDot.setAttribute('r', isJunction ? '2' : '3');
-        innerDot.setAttribute('fill', color);
-
-        // Readable label
-        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', '10');
-        label.setAttribute('y', '-9');
-        label.setAttribute('class', 'node-label');
-        label.textContent = node.name;
-
-        // Tooltip
-        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        title.textContent = `[${node.id}] ${node.name}
-Type: ${node.type}
-Accessible: ${node.accessible ? 'Yes' : 'No'}`;
-        group.appendChild(title);
-
-        group.appendChild(ring);
-        group.appendChild(circle);
-        group.appendChild(innerDot);
-        group.appendChild(label);
-
-        group.addEventListener('click', () => {
-          handleNodeClick(node.id);
-        });
-        group.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleNodeClick(node.id);
-          }
-        });
-
-        dom.nodesLayer.appendChild(group);
-      });
-    }
-
-    // Re-render active route if comparison or single route exists
-    if (state.route.compareResult && state.route.compareResult.active) {
-      renderComparisonOnMap(
-        state.route.compareResult.dijkstra,
-        state.route.compareResult.bfs,
-        state.route.compareResult.activeFilter
-      );
-    } else if (state.route.result) {
-      renderRouteOnMap(state.route.result);
-    }
+    state.graph.nodes.forEach(node=>{
+      const pt=xy(node),group=document.createElementNS('http://www.w3.org/2000/svg','g');
+      group.setAttribute('class','graph-node');group.setAttribute('data-id',node.id);group.setAttribute('data-type',node.type);group.setAttribute('tabindex','0');group.setAttribute('role','button');group.setAttribute('aria-label',`${node.name} (${node.type})`);group.setAttribute('transform',`translate(${pt.x}, ${pt.y})`);
+      const color=TYPE_COLORS[node.type]||'#94a3b8',junction=node.type==='JUNCTION';
+      const ring=document.createElementNS('http://www.w3.org/2000/svg','circle');ring.setAttribute('r',junction?'11':'14');ring.setAttribute('class','node-selection-ring');ring.setAttribute('stroke',color);
+      const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');dot.setAttribute('r',junction?'4.5':'5.5');dot.setAttribute('class','node-core');dot.setAttribute('stroke',color);
+      const inner=document.createElementNS('http://www.w3.org/2000/svg','circle');inner.setAttribute('r','2.4');inner.setAttribute('fill',color);
+      const label=document.createElementNS('http://www.w3.org/2000/svg','text');label.setAttribute('x','12');label.setAttribute('y','-12');label.setAttribute('class','node-label');label.textContent=node.name.length>24?`${node.name.slice(0,21).trim()}…`:node.name;
+      const title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=`${node.name} · ${node.id}`;group.append(title,ring,dot,inner,label);
+      group.addEventListener('click',()=>handleNodeClick(node.id));group.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();handleNodeClick(node.id);}});dom.nodesLayer.appendChild(group);
+    });
+    if(state.route.compareResult?.active)renderComparisonOnMap(state.route.compareResult.dijkstra,state.route.compareResult.bfs,state.route.compareResult.activeFilter);
+    else if(state.route.result)renderRouteOnMap(state.route.result);
+    else if(state.algorithmDemo.result)renderAlgorithmDemo();
+    if (mapIsFit) fitCampus();
   }
 
   /**
    * Render Searchable & Filterable Building List
    */
+  function updateMapRasterTheme(theme) {
+    if (!dom.rasterLayer || typeof CampusCalibration.imageLayout !== 'function') return;
+    const layout = CampusCalibration.imageLayout(theme);
+    const layoutMap = new Map(layout.map(p => [p.id, p.href]));
+    dom.rasterLayer.querySelectorAll('image[data-map-panel]').forEach(img => {
+      const id = img.getAttribute('data-map-panel');
+      if (layoutMap.has(id)) {
+        img.setAttribute('href', layoutMap.get(id));
+      }
+    });
+  }
+
   function renderBuildingList() {
     if (!dom.buildingList) return;
     dom.buildingList.innerHTML = '';
@@ -489,17 +416,28 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       card.setAttribute('tabindex', '0');
       card.setAttribute('role', 'button');
       card.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
-      card.setAttribute('aria-label', `${bldg.name}, ${bldg.category}, Node ${bldg.nodeId}`);
+      card.setAttribute('aria-label', `${bldg.name}, ${bldg.category}, ${bldg.nodeId ? `mapped access ${bldg.nodeId}` : 'walking access not mapped'}`);
 
       const tagClass = (bldg.category || 'academic').toLowerCase();
+      const cardAccent = ({ ACADEMIC: '#38bdf8', ADMINISTRATIVE: '#818cf8', LIBRARY: '#c084fc', HOSTEL: '#f59e0b', SPORTS: '#34d399', AMENITY: '#fb923c', FACILITY: '#6bc6a4' })[bldg.category] || '#94a3b8';
+      card.style.setProperty('--card-accent', cardAccent);
 
       card.innerHTML = `
         <div class="bldg-card-header">
           <div class="bldg-card-title">${escapeHtml(bldg.name)}</div>
           <span class="bldg-tag ${tagClass}">${escapeHtml(bldg.code)}</span>
         </div>
-        <p class="bldg-desc-snippet">${escapeHtml(bldg.description || 'Campus facility at NSUT.')}</p>
       `;
+
+      const marker = document.querySelector(`#graphNodesLayer .graph-node[data-id="${bldg.nodeId}"]`);
+      const setHover = active => {
+        card.classList.toggle('hovered', active);
+        if (marker) marker.classList.toggle('highlighted', active);
+      };
+      card.addEventListener('pointerenter', () => setHover(true));
+      card.addEventListener('pointerleave', () => setHover(false));
+      card.addEventListener('focus', () => setHover(true));
+      card.addEventListener('blur', () => setHover(false));
 
       card.addEventListener('click', () => {
         handleBuildingSelect(bldg.id);
@@ -528,7 +466,8 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       let html = '<option value="">-- Choose Location --</option>';
 
       // 1. Campus Facilities & Buildings (Alphabetical)
-      const sortedBldgs = [...state.buildings].sort((a, b) => a.name.localeCompare(b.name));
+      const sortedBldgs = state.buildings.filter(b => b.nodeId && state.graph.nodes.some(n => n.id === b.nodeId))
+        .sort((a, b) => a.name.localeCompare(b.name));
       if (sortedBldgs.length > 0) {
         html += '<optgroup label="Campus Facilities &amp; Buildings">';
         sortedBldgs.forEach((b) => {
@@ -550,7 +489,8 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       }
 
       // 3. Road & Walkway Waypoints / Junctions
-      const waypoints = state.graph.nodes.filter((n) => n.type === 'JUNCTION' || (n.type !== 'GATE' && !state.buildings.some(b => b.nodeId === n.id)));
+      const buildingAccessIds = new Set(state.buildings.map((building) => building.nodeId));
+      const waypoints = state.graph.nodes.filter((n) => n.type !== 'GATE' && !buildingAccessIds.has(n.id));
       if (waypoints.length > 0) {
         html += '<optgroup label="Road &amp; Walkway Junctions">';
         waypoints.forEach((w) => {
@@ -568,6 +508,594 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
 
     state.route.startNodeId = prevStart;
     state.route.endNodeId = prevEnd;
+  }
+
+  function populateAlgorithmSelectors() {
+    const locations = [];
+    const used = new Set();
+    [...state.buildings].filter(building => building.nodeId && state.graph.nodes.some(node => node.id === building.nodeId))
+      .sort((a, b) => a.name.localeCompare(b.name)).forEach(building => {
+      if (!used.has(building.nodeId)) {
+        locations.push({ id: building.nodeId, label: `${building.name} (${building.code})` });
+        used.add(building.nodeId);
+      }
+    });
+    state.graph.nodes.filter(node => node.type === 'GATE' || node.type === 'JUNCTION')
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach(node => {
+        if (!used.has(node.id)) {
+          locations.push({ id: node.id, label: `${node.name} [${node.id}]` });
+          used.add(node.id);
+        }
+      });
+    const fill = (select, placeholder, selected) => {
+      if (!select) return;
+      select.innerHTML = `<option value="">${placeholder}</option>` + locations.map(item =>
+        `<option value="${item.id}" ${item.id === selected ? 'selected' : ''}>${escapeHtml(item.label)}</option>`
+      ).join('');
+    };
+    fill(dom.dfsStartSelect, 'Choose a starting place', dom.dfsStartSelect?.value || 'N001');
+    fill(dom.mstStartSelect, 'Main Gate', dom.mstStartSelect?.value || 'N001');
+  }
+
+  function setupAlgorithmDemos() {
+    dom.btnRunDfs?.addEventListener('click', runDfsDemo);
+    dom.btnRunMst?.addEventListener('click', runMstDemo);
+
+    // Setup animation controller event listeners
+    setupPlaybackControls('dfs');
+    setupPlaybackControls('mst');
+  }
+
+  // Animation player state
+  const animState = {
+    activeType: null, // 'dfs' | 'mst'
+    steps: [],
+    stepIndex: -1,
+    isPlaying: false,
+    speed: 1, // 1x = 600ms, 2x = 300ms, 5x = 120ms
+    timer: null
+  };
+
+  function getIntervalMs() {
+    return Math.round(600 / animState.speed);
+  }
+
+  function setupPlaybackControls(type) {
+    const isDfs = type === 'dfs';
+    const btnReset = isDfs ? dom.dfsBtnReset : dom.mstBtnReset;
+    const btnPrev = isDfs ? dom.dfsBtnPrev : dom.mstBtnPrev;
+    const btnPlayPause = isDfs ? dom.dfsBtnPlayPause : dom.mstBtnPlayPause;
+    const btnNext = isDfs ? dom.dfsBtnNext : dom.mstBtnNext;
+    const speedGroup = isDfs ? dom.dfsSpeedGroup : dom.mstSpeedGroup;
+    const slider = isDfs ? dom.dfsSlider : dom.mstSlider;
+
+    btnPlayPause?.addEventListener('click', () => {
+      if (animState.activeType !== type) return;
+      if (animState.isPlaying) {
+        pauseAnimation();
+      } else {
+        playAnimation();
+      }
+    });
+
+    btnReset?.addEventListener('click', () => {
+      if (animState.activeType !== type) return;
+      pauseAnimation();
+      seekStep(0);
+    });
+
+    btnPrev?.addEventListener('click', () => {
+      if (animState.activeType !== type) return;
+      pauseAnimation();
+      stepBackward();
+    });
+
+    btnNext?.addEventListener('click', () => {
+      if (animState.activeType !== type) return;
+      pauseAnimation();
+      stepForward();
+    });
+
+    slider?.addEventListener('input', (e) => {
+      if (animState.activeType !== type) return;
+      pauseAnimation();
+      seekStep(parseInt(e.target.value, 10));
+    });
+
+    speedGroup?.querySelectorAll('.speed-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        speedGroup.querySelectorAll('.speed-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        animState.speed = parseFloat(btn.dataset.speed) || 1;
+        if (animState.isPlaying) {
+          clearInterval(animState.timer);
+          animState.timer = setInterval(stepForward, getIntervalMs());
+        }
+      });
+    });
+  }
+
+  function playAnimation() {
+    if (animState.isPlaying || animState.steps.length === 0) return;
+    if (animState.stepIndex >= animState.steps.length - 1) {
+      animState.stepIndex = -1;
+    }
+    animState.isPlaying = true;
+    updatePlayPauseButton();
+    animState.timer = setInterval(stepForward, getIntervalMs());
+  }
+
+  function pauseAnimation() {
+    animState.isPlaying = false;
+    if (animState.timer) {
+      clearInterval(animState.timer);
+      animState.timer = null;
+    }
+    updatePlayPauseButton();
+  }
+
+  function updatePlayPauseButton() {
+    const isDfs = animState.activeType === 'dfs';
+    const btn = isDfs ? dom.dfsBtnPlayPause : dom.mstBtnPlayPause;
+    if (btn) {
+      btn.textContent = animState.isPlaying ? '⏸' : '▶';
+      btn.title = animState.isPlaying ? 'Pause' : 'Play';
+    }
+  }
+
+  function stepForward() {
+    if (animState.stepIndex < animState.steps.length - 1) {
+      seekStep(animState.stepIndex + 1);
+    } else {
+      pauseAnimation();
+    }
+  }
+
+  function stepBackward() {
+    if (animState.stepIndex > 0) {
+      seekStep(animState.stepIndex - 1);
+    }
+  }
+
+  function seekStep(index) {
+    if (index < 0 || index >= animState.steps.length) return;
+    animState.stepIndex = index;
+    renderCurrentAnimationStep();
+  }
+
+  function startAnimation(type, steps) {
+    pauseAnimation();
+    animState.activeType = type;
+    animState.steps = steps;
+    animState.stepIndex = 0;
+
+    const isDfs = type === 'dfs';
+    const toolbar = isDfs ? dom.dfsPlaybackControls : dom.mstPlaybackControls;
+    const slider = isDfs ? dom.dfsSlider : dom.mstSlider;
+
+    if (toolbar) toolbar.style.display = 'flex';
+    if (slider) {
+      slider.max = steps.length - 1;
+      slider.value = 0;
+    }
+
+    renderCurrentAnimationStep();
+    playAnimation();
+  }
+
+  /* ---------------------------------------------------------
+     DFS STEP GENERATOR
+     --------------------------------------------------------- */
+  function generateDfsSteps(startNodeId) {
+    const steps = [];
+    const nodeMap = new Map(state.graph.nodes.map(n => [n.id, n]));
+    const adj = new Map();
+    state.graph.nodes.forEach(n => adj.set(n.id, []));
+
+    state.graph.edges.forEach(e => {
+      if (adj.has(e.source) && adj.has(e.target)) {
+        adj.get(e.source).push({ target: e.target, edge: e });
+        adj.get(e.target).push({ target: e.source, edge: e });
+      }
+    });
+
+    const visitedSet = new Set();
+    const traversedEdges = [];
+    const callStack = [];
+
+    function dfs(u, parent, viaEdge) {
+      visitedSet.add(u);
+      callStack.push(u);
+      if (viaEdge) traversedEdges.push(viaEdge);
+
+      const uNode = nodeMap.get(u);
+      const uName = uNode ? uNode.name : u;
+
+      steps.push({
+        type: 'DFS',
+        subType: 'VISIT',
+        activeNode: u,
+        visitedNodes: new Set(visitedSet),
+        traversedEdges: [...traversedEdges],
+        stack: [...callStack],
+        msg: `<span class="status-tag visiting">Visiting</span> Exploring <strong>${escapeHtml(uName)}</strong> (${visitedSet.size} of ${state.graph.nodes.length} points reached)`
+      });
+
+      const neighbors = adj.get(u) || [];
+      for (const { target: v, edge } of neighbors) {
+        if (!visitedSet.has(v)) {
+          dfs(v, u, edge);
+
+          // Backtrack step
+          steps.push({
+            type: 'DFS',
+            subType: 'BACKTRACK',
+            activeNode: u,
+            visitedNodes: new Set(visitedSet),
+            traversedEdges: [...traversedEdges],
+            stack: [...callStack],
+            msg: `<span class="status-tag backtrack">Backtrack</span> Backtracking to <strong>${escapeHtml(uName)}</strong>`
+          });
+        }
+      }
+
+      callStack.pop();
+    }
+
+    dfs(startNodeId, null, null);
+
+    steps.push({
+      type: 'DFS',
+      subType: 'COMPLETE',
+      activeNode: null,
+      visitedNodes: new Set(visitedSet),
+      traversedEdges: [...traversedEdges],
+      stack: [],
+      msg: `<span class="status-tag complete">Complete</span> Depth-First Search complete! Visited ${visitedSet.size} nodes.`
+    });
+
+    return steps;
+  }
+
+  /* ---------------------------------------------------------
+     KRUSKAL MST STEP GENERATOR
+     --------------------------------------------------------- */
+  function generateKruskalSteps() {
+    const steps = [];
+    const nodeMap = new Map(state.graph.nodes.map(n => [n.id, n]));
+    const sortedEdges = state.graph.edges.slice().sort((a, b) => a.weight - b.weight);
+
+    // DSU structure
+    const parent = new Map();
+    state.graph.nodes.forEach(n => parent.set(n.id, n.id));
+
+    function find(i) {
+      if (parent.get(i) === i) return i;
+      const root = find(parent.get(i));
+      parent.set(i, root);
+      return root;
+    }
+
+    function union(i, j) {
+      const rootI = find(i);
+      const rootJ = find(j);
+      if (rootI !== rootJ) {
+        parent.set(rootI, rootJ);
+        return true;
+      }
+      return false;
+    }
+
+    const acceptedEdges = [];
+    const rejectedEdgeMap = new Map();
+    let totalWeight = 0;
+
+    for (const edge of sortedEdges) {
+      const sName = nodeMap.get(edge.source)?.name || edge.source;
+      const tName = nodeMap.get(edge.target)?.name || edge.target;
+      const w = Math.round(edge.weight);
+
+      // 1. Consideration step
+      steps.push({
+        type: 'MST',
+        subType: 'CONSIDER',
+        activeEdge: edge,
+        acceptedEdges: [...acceptedEdges],
+        totalWeight,
+        msg: `<span class="status-tag considering">Evaluating</span> Segment <strong>${edge.id}</strong>: ${escapeHtml(sName)} ↔ ${escapeHtml(tName)} (${w} m)`
+      });
+
+      const rootS = find(edge.source);
+      const rootT = find(edge.target);
+
+      if (rootS === rootT) {
+        // Cycle detected!
+        rejectedEdgeMap.set(edge.id, edge);
+        steps.push({
+          type: 'MST',
+          subType: 'REJECT',
+          activeEdge: edge,
+          acceptedEdges: [...acceptedEdges],
+          totalWeight,
+          msg: `<span class="status-tag rejected">Cycle Detected</span> Discarding <strong>${edge.id}</strong> (${w} m) — creates a redundant cycle!`
+        });
+      } else {
+        union(edge.source, edge.target);
+        acceptedEdges.push(edge);
+        totalWeight += edge.weight;
+
+        steps.push({
+          type: 'MST',
+          subType: 'ACCEPT',
+          activeEdge: edge,
+          acceptedEdges: [...acceptedEdges],
+          totalWeight,
+          msg: `<span class="status-tag accepted">Added to Tree</span> Accepted <strong>${edge.id}</strong> (${w} m). Spanning tree: ${acceptedEdges.length} edges, ${Math.round(totalWeight)} m`
+        });
+      }
+    }
+
+    steps.push({
+      type: 'MST',
+      subType: 'COMPLETE',
+      activeEdge: null,
+      acceptedEdges: [...acceptedEdges],
+      totalWeight,
+      msg: `<span class="status-tag complete">Complete</span> Kruskal's MST finished! ${acceptedEdges.length} edges spanning all components, total length ${Math.round(totalWeight)} m.`
+    });
+
+    return steps;
+  }
+
+  /* ---------------------------------------------------------
+     PRIM MST STEP GENERATOR
+     --------------------------------------------------------- */
+  function generatePrimSteps(startNodeId) {
+    const steps = [];
+    const nodeMap = new Map(state.graph.nodes.map(n => [n.id, n]));
+    const inTree = new Set([startNodeId]);
+    const acceptedEdges = [];
+    let totalWeight = 0;
+
+    const startName = nodeMap.get(startNodeId)?.name || startNodeId;
+    steps.push({
+      type: 'MST',
+      subType: 'START',
+      activeEdge: null,
+      inTreeNodes: new Set(inTree),
+      acceptedEdges: [],
+      totalWeight: 0,
+      msg: `<span class="status-tag visiting">Root</span> Prim's tree seeded at <strong>${escapeHtml(startName)}</strong>`
+    });
+
+    // Run Prim until no more cut edges can be chosen
+    while (true) {
+      let minEdge = null;
+      let minTarget = null;
+      const candidateCutEdges = [];
+
+      for (const e of state.graph.edges) {
+        const uIn = inTree.has(e.source);
+        const vIn = inTree.has(e.target);
+        if ((uIn && !vIn) || (!uIn && vIn)) {
+          candidateCutEdges.push(e);
+          if (!minEdge || e.weight < minEdge.weight) {
+            minEdge = e;
+            minTarget = uIn ? e.target : e.source;
+          }
+        }
+      }
+
+      if (!minEdge) break;
+
+      const tName = nodeMap.get(minTarget)?.name || minTarget;
+      const w = Math.round(minEdge.weight);
+
+      steps.push({
+        type: 'MST',
+        subType: 'CONSIDER',
+        activeEdge: minEdge,
+        candidateCutEdges: [...candidateCutEdges],
+        inTreeNodes: new Set(inTree),
+        acceptedEdges: [...acceptedEdges],
+        totalWeight,
+        msg: `<span class="status-tag considering">Min Cut</span> Smallest crossing edge is <strong>${minEdge.id}</strong> (${w} m) reaching ${escapeHtml(tName)}`
+      });
+
+      inTree.add(minTarget);
+      acceptedEdges.push(minEdge);
+      totalWeight += minEdge.weight;
+
+      steps.push({
+        type: 'MST',
+        subType: 'ACCEPT',
+        activeEdge: minEdge,
+        inTreeNodes: new Set(inTree),
+        acceptedEdges: [...acceptedEdges],
+        totalWeight,
+        msg: `<span class="status-tag accepted">Expanded</span> Tree grown to <strong>${escapeHtml(tName)}</strong> (${inTree.size} nodes, ${Math.round(totalWeight)} m)`
+      });
+    }
+
+    steps.push({
+      type: 'MST',
+      subType: 'COMPLETE',
+      activeEdge: null,
+      inTreeNodes: new Set(inTree),
+      acceptedEdges: [...acceptedEdges],
+      totalWeight,
+      msg: `<span class="status-tag complete">Complete</span> Prim's MST finished! ${acceptedEdges.length} edges, total length ${Math.round(totalWeight)} m.`
+    });
+
+    return steps;
+  }
+
+  /* ---------------------------------------------------------
+     RENDER ANIMATION STEP ON SVG & UI
+     --------------------------------------------------------- */
+  function renderCurrentAnimationStep() {
+    clearAlgorithmVisuals();
+    if (!animState.steps || animState.stepIndex < 0 || animState.stepIndex >= animState.steps.length) return;
+
+    const step = animState.steps[animState.stepIndex];
+    const isDfs = animState.activeType === 'dfs';
+    const badge = isDfs ? dom.dfsStepBadge : dom.mstStepBadge;
+    const slider = isDfs ? dom.dfsSlider : dom.mstSlider;
+    const statusMsg = isDfs ? dom.dfsStatusMsg : dom.mstStatusMsg;
+
+    if (badge) badge.textContent = `Step ${animState.stepIndex + 1} / ${animState.steps.length}`;
+    if (slider) slider.value = animState.stepIndex;
+    if (statusMsg) statusMsg.innerHTML = step.msg || '';
+
+    if (step.type === 'DFS') {
+      // 1. Highlight visited nodes
+      if (step.visitedNodes) {
+        dom.nodesLayer?.querySelectorAll('.graph-node').forEach(node => {
+          const id = node.getAttribute('data-id');
+          node.classList.toggle('dfs-visited', step.visitedNodes.has(id));
+          node.classList.toggle('dfs-active', id === step.activeNode);
+        });
+      }
+
+      // 2. Render traversed edges
+      (step.traversedEdges || []).forEach(edge => {
+        drawSvgEdge(edge, 'algorithm-visual algorithm-edge-traversed');
+      });
+    } else if (step.type === 'MST') {
+      // 1. Draw accepted tree edges
+      (step.acceptedEdges || []).forEach(edge => {
+        drawSvgEdge(edge, 'algorithm-visual mst-edge-accepted');
+      });
+
+      // 2. Draw candidate cut edges if in Prim's
+      (step.candidateCutEdges || []).forEach(edge => {
+        if (edge.id !== step.activeEdge?.id) {
+          drawSvgEdge(edge, 'algorithm-visual mst-candidate-cut');
+        }
+      });
+
+      // 3. Draw active edge (considering / rejected)
+      if (step.activeEdge) {
+        const cls = step.subType === 'REJECT'
+          ? 'algorithm-visual mst-edge-rejected'
+          : (step.subType === 'CONSIDER' ? 'algorithm-visual mst-edge-considering' : 'algorithm-visual mst-edge-accepted');
+        drawSvgEdge(step.activeEdge, cls);
+      }
+
+      // 4. Highlight tree nodes
+      if (step.inTreeNodes) {
+        dom.nodesLayer?.querySelectorAll('.graph-node').forEach(node => {
+          const id = node.getAttribute('data-id');
+          node.classList.toggle('mst-active', step.inTreeNodes.has(id));
+        });
+      }
+    }
+  }
+
+  function drawSvgEdge(edge, cssClass) {
+    if (!edge || !edge.geometry || edge.geometry.length < 2) return;
+    const points = edge.geometry.map(p => CampusCalibration.project(p.lat, p.lng));
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', points.map((p, i) => `${i ? 'L' : 'M'} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' '));
+    path.setAttribute('class', cssClass);
+    dom.edgesLayer?.appendChild(path);
+  }
+
+  async function runDfsDemo() {
+    const startNodeId = dom.dfsStartSelect?.value;
+    if (!startNodeId) {
+      showAlgorithmResult(dom.dfsResult, 'Choose a starting place to run DFS.', true);
+      return;
+    }
+    clearAlgorithmVisuals();
+    clearRoute();
+    if (dom.btnRunDfs) { dom.btnRunDfs.disabled = true; dom.btnRunDfs.textContent = 'Traversing…'; }
+    try {
+      const response = await ApiClient.executeAlgorithm({ algorithm: 'DFS', startNodeId, wheelchairAccessibleOnly: false });
+      if (!response?.success || !response.data) throw new Error(response?.message || 'DFS traversal failed.');
+      const result = response.data;
+      state.algorithmDemo = { type: 'DFS', result };
+
+      const names = new Map(state.graph.nodes.map(node => [node.id, node.name]));
+      const order = (result.visitedOrder || []).map(id => names.get(id) || id);
+
+      showAlgorithmResult(dom.dfsResult,
+        `<strong>Visited ${order.length} of ${state.graph.nodes.length} mapped points</strong> from ${escapeHtml(names.get(startNodeId) || startNodeId)}.<br>` +
+        `${result.connectedComponentsCount ?? '1'} connected component${result.connectedComponentsCount === 1 ? '' : 's'} • ${result.cycleDetected ? 'cycle found' : 'no cycle found'} • ${result.executionTimeMicros || 0} µs` +
+        `<details><summary>Traversal sequence (${order.length} points)</summary><ol>${order.map(name => `<li>${escapeHtml(name)}</li>`).join('')}</ol></details>`);
+
+      // Start step-by-step interactive animation
+      const steps = generateDfsSteps(startNodeId);
+      startAnimation('dfs', steps);
+    } catch (error) {
+      showAlgorithmResult(dom.dfsResult, error.message || 'DFS traversal failed.', true);
+    } finally {
+      if (dom.btnRunDfs) { dom.btnRunDfs.disabled = false; dom.btnRunDfs.textContent = 'Run DFS traversal'; }
+    }
+  }
+
+  async function runMstDemo() {
+    const algorithm = dom.mstAlgorithmSelect?.value || 'PRIMS';
+    const startNodeId = algorithm === 'PRIMS' ? (dom.mstStartSelect?.value || 'N001') : undefined;
+    clearAlgorithmVisuals();
+    clearRoute();
+    if (dom.btnRunMst) { dom.btnRunMst.disabled = true; dom.btnRunMst.textContent = 'Building…'; }
+    try {
+      const response = await ApiClient.executeAlgorithm({ algorithm, startNodeId, wheelchairAccessibleOnly: false });
+      if (!response?.success || !response.data) throw new Error(response?.message || 'Spanning tree calculation failed.');
+      state.algorithmDemo = { type: 'MST', result: response.data };
+
+      const result = response.data;
+      const count = (result.pathEdges || []).length;
+      const components = result.connectedComponentsCount || 1;
+      const label = components > 1 ? 'spanning forest' : 'spanning tree';
+      showAlgorithmResult(dom.mstResult,
+        `<strong>${escapeHtml(algorithm === 'PRIMS' ? "Prim's algorithm" : "Kruskal's algorithm")}: ${count} selected segments</strong><br>` +
+        `${Math.round(result.totalWeight || 0)} m total • ${components} connected component${components === 1 ? '' : 's'} • ${result.executionTimeMicros || 0} µs` +
+        `<div class="algorithm-result-note">The highlighted ${label} connects the road/walkway network with minimal path length.</div>`);
+
+      // Start step-by-step interactive animation
+      let steps;
+      if (algorithm === 'KRUSKALS') {
+        steps = generateKruskalSteps();
+      } else {
+        steps = generatePrimSteps(startNodeId || 'N001');
+      }
+      startAnimation('mst', steps);
+    } catch (error) {
+      showAlgorithmResult(dom.mstResult, error.message || 'Spanning tree calculation failed.', true);
+    } finally {
+      if (dom.btnRunMst) { dom.btnRunMst.disabled = false; dom.btnRunMst.textContent = 'Build spanning tree'; }
+    }
+  }
+
+  function showAlgorithmResult(target, html, isError = false) {
+    if (!target) return;
+    target.innerHTML = html;
+    target.classList.toggle('error', isError);
+    target.style.display = 'block';
+  }
+
+  function clearAlgorithmVisuals() {
+    dom.nodesLayer?.querySelectorAll('.graph-node').forEach(node => {
+      node.classList.remove('dfs-visited', 'dfs-active', 'mst-visited', 'mst-active');
+    });
+    dom.edgesLayer?.querySelectorAll('.algorithm-visual').forEach(path => path.remove());
+  }
+
+  function clearAlgorithmDemo() {
+    pauseAnimation();
+    state.algorithmDemo = { type: '', result: null };
+    clearAlgorithmVisuals();
+    if (dom.dfsPlaybackControls) dom.dfsPlaybackControls.style.display = 'none';
+    if (dom.mstPlaybackControls) dom.mstPlaybackControls.style.display = 'none';
+    if (dom.dfsResult) dom.dfsResult.style.display = 'none';
+    if (dom.mstResult) dom.mstResult.style.display = 'none';
+  }
+
+  function renderAlgorithmDemo() {
+    // Kept for initial API callback fallback
   }
 
   /**
@@ -690,10 +1218,14 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     if (dom.modeRouteBtn) {
       dom.modeRouteBtn.addEventListener('click', () => switchSidebarMode('route'));
     }
+    if (dom.modeAlgorithmBtn) {
+      dom.modeAlgorithmBtn.addEventListener('click', () => switchSidebarMode('algorithms'));
+    }
   }
 
   function switchSidebarMode(targetMode) {
     state.currentSidebarMode = targetMode;
+    if (dom.detailPanel) dom.detailPanel.style.display = 'none';
 
     if (dom.modeDirectoryBtn) {
       dom.modeDirectoryBtn.classList.toggle('active', targetMode === 'directory');
@@ -703,12 +1235,19 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       dom.modeRouteBtn.classList.toggle('active', targetMode === 'route');
       dom.modeRouteBtn.setAttribute('aria-selected', targetMode === 'route' ? 'true' : 'false');
     }
+    if (dom.modeAlgorithmBtn) {
+      dom.modeAlgorithmBtn.classList.toggle('active', targetMode === 'algorithms');
+      dom.modeAlgorithmBtn.setAttribute('aria-selected', targetMode === 'algorithms' ? 'true' : 'false');
+    }
 
     if (dom.directoryModeContainer) {
       dom.directoryModeContainer.style.display = targetMode === 'directory' ? 'flex' : 'none';
     }
     if (dom.routeModeContainer) {
       dom.routeModeContainer.style.display = targetMode === 'route' ? 'flex' : 'none';
+    }
+    if (dom.algorithmModeContainer) {
+      dom.algorithmModeContainer.style.display = targetMode === 'algorithms' ? 'flex' : 'none';
     }
   }
 
@@ -772,6 +1311,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
    * Main Route Calculation Workflow (Single Route)
    */
   async function findRoute() {
+    clearAlgorithmDemo();
     clearRouteAlert();
     if (dom.routeCompareCard) dom.routeCompareCard.style.display = 'none';
     state.route.compareResult.active = false;
@@ -785,7 +1325,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
 
     if (dom.btnFindRoute) {
       dom.btnFindRoute.disabled = true;
-      dom.btnFindRoute.innerHTML = '⏳ Calculating...';
+      dom.btnFindRoute.textContent = 'Finding route…';
     }
 
     try {
@@ -824,7 +1364,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     } finally {
       if (dom.btnFindRoute) {
         dom.btnFindRoute.disabled = false;
-        dom.btnFindRoute.innerHTML = '🚀 Find Route';
+        dom.btnFindRoute.textContent = 'Show route';
       }
     }
   }
@@ -833,6 +1373,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
    * Phase 7: Parallel BFS vs Dijkstra Algorithm Comparison
    */
   async function compareRoutes() {
+    clearAlgorithmDemo();
     clearRouteAlert();
     if (dom.routeResultCard) dom.routeResultCard.style.display = 'none';
     state.route.result = null;
@@ -845,7 +1386,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
 
     if (dom.btnCompareRoute) {
       dom.btnCompareRoute.disabled = true;
-      dom.btnCompareRoute.innerHTML = '⏳ Comparing...';
+      dom.btnCompareRoute.textContent = 'Comparing…';
     }
 
     try {
@@ -903,7 +1444,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     } finally {
       if (dom.btnCompareRoute) {
         dom.btnCompareRoute.disabled = false;
-        dom.btnCompareRoute.innerHTML = '⚖️ Compare BFS &amp; Dijkstra';
+        dom.btnCompareRoute.textContent = 'Compare';
       }
     }
   }
@@ -915,7 +1456,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     if (!dom.routeCompareCard) return;
 
     if (dom.compareTitle) {
-      dom.compareTitle.textContent = `${startNode.name} → ${endNode.name}`;
+      dom.compareTitle.textContent = `${placeNameForNode(startNode)} → ${placeNameForNode(endNode)}`;
     }
 
     // Reset filter chips
@@ -924,15 +1465,18 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     // 1. Populate Dijkstra Column
     if (dijkstra && dijkstra.reachable) {
       if (dom.dijkstraDistVal) dom.dijkstraDistVal.textContent = `${Math.round(dijkstra.totalWeight || 0)} m`;
-      if (dom.dijkstraHopsVal) dom.dijkstraHopsVal.textContent = `${dijkstra.hopCount || (dijkstra.pathEdges ? dijkstra.pathEdges.length : 0)} edges`;
+      if (dom.dijkstraHopsVal) dom.dijkstraHopsVal.textContent = `${dijkstra.hopCount || (dijkstra.pathEdges ? dijkstra.pathEdges.length : 0)} segments`;
       if (dom.dijkstraExploredVal) dom.dijkstraExploredVal.textContent = `${dijkstra.visitedOrder ? dijkstra.visitedOrder.length : (dijkstra.pathNodes ? dijkstra.pathNodes.length : 0)} nodes`;
       if (dom.dijkstraTimeVal) {
         const us = dijkstra.executionTimeMicros || 0;
         dom.dijkstraTimeVal.textContent = us >= 1000 ? `${(us / 1000).toFixed(2)} ms` : `${us} µs`;
       }
 
-      const hasLowConfDijk = Array.isArray(dijkstra.pathEdges) && dijkstra.pathEdges.some(e => e.confidence === 'LOW');
-      if (dom.dijkstraAdvisory) dom.dijkstraAdvisory.style.display = hasLowConfDijk ? 'block' : 'none';
+      const hasLowConfDijk = (Array.isArray(dijkstra.pathEdges) && dijkstra.pathEdges.some(e => e.confidence === 'LOW')) || routeHasApproxAccess(startNode, endNode);
+      if (dom.dijkstraAdvisory) {
+        dom.dijkstraAdvisory.textContent = routeHasApproxAccess(startNode, endNode) ? 'A destination uses the nearest mapped walkway point; the exact door is not shown.' : 'This route contains an approximate path segment.';
+        dom.dijkstraAdvisory.style.display = hasLowConfDijk ? 'block' : 'none';
+      }
 
       // Waypoints
       if (dom.dijkstraStepCount) dom.dijkstraStepCount.textContent = dijkstra.pathNodes.length;
@@ -965,15 +1509,18 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     // 2. Populate BFS Column
     if (bfs && bfs.reachable) {
       if (dom.bfsDistVal) dom.bfsDistVal.textContent = `${Math.round(bfs.totalWeight || 0)} m`;
-      if (dom.bfsHopsVal) dom.bfsHopsVal.textContent = `${bfs.hopCount || (bfs.pathEdges ? bfs.pathEdges.length : 0)} edges`;
+      if (dom.bfsHopsVal) dom.bfsHopsVal.textContent = `${bfs.hopCount || (bfs.pathEdges ? bfs.pathEdges.length : 0)} segments`;
       if (dom.bfsExploredVal) dom.bfsExploredVal.textContent = `${bfs.visitedOrder ? bfs.visitedOrder.length : (bfs.pathNodes ? bfs.pathNodes.length : 0)} nodes`;
       if (dom.bfsTimeVal) {
         const us = bfs.executionTimeMicros || 0;
         dom.bfsTimeVal.textContent = us >= 1000 ? `${(us / 1000).toFixed(2)} ms` : `${us} µs`;
       }
 
-      const hasLowConfBfs = Array.isArray(bfs.pathEdges) && bfs.pathEdges.some(e => e.confidence === 'LOW');
-      if (dom.bfsAdvisory) dom.bfsAdvisory.style.display = hasLowConfBfs ? 'block' : 'none';
+      const hasLowConfBfs = (Array.isArray(bfs.pathEdges) && bfs.pathEdges.some(e => e.confidence === 'LOW')) || routeHasApproxAccess(startNode, endNode);
+      if (dom.bfsAdvisory) {
+        dom.bfsAdvisory.textContent = routeHasApproxAccess(startNode, endNode) ? 'A destination uses the nearest mapped walkway point; the exact door is not shown.' : 'This route contains an approximate path segment.';
+        dom.bfsAdvisory.style.display = hasLowConfBfs ? 'block' : 'none';
+      }
 
       // Waypoints
       if (dom.bfsStepCount) dom.bfsStepCount.textContent = bfs.pathNodes.length;
@@ -1023,19 +1570,10 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
         }
         if (dom.bfsHighlightBadge) {
           dom.bfsHighlightBadge.className = 'col-pill bfs winner';
-          dom.bfsHighlightBadge.textContent = `Fewest Hops (-${hopDiff} hop)`;
+          dom.bfsHighlightBadge.textContent = `Fewest segments (-${hopDiff})`;
         }
 
-        takeawayHtml = `
-          <div class="takeaway-title">🎓 Key Algorithmic Insight:</div>
-          <div class="takeaway-text">
-            • <span class="hl-dijkstra">Dijkstra's Algorithm</span> prioritized metric edge weights, finding a path modeled at <strong>${distDiff} m shorter</strong> (${dDist} m vs ${bDist} m) by taking ${hopDiff} additional turn via intermediate walkway junction N039.<br>
-            • <span class="hl-bfs">BFS Traversal</span> prioritized graph hop count, finding a route with <strong>${hopDiff} fewer hop</strong> (${bHops} vs ${dHops}) via direct walkway E012 because unweighted BFS treats all edges as having unit cost.<br>
-            <div style="margin-top:6px; font-size:0.75rem; color:var(--text-muted); border-top:1px dashed var(--border-subtle); padding-top:4px;">
-              <em>Engineering Note: The modeled 0.8 m difference illustrates theoretical objective divergence on the campus graph; in practice, 0.8 m is within GPS and tracing tolerance rather than a perceptible pedestrian time saving.</em>
-            </div>
-          </div>
-        `;
+        takeawayHtml = `<strong>Route trade-off</strong><br>Shortest distance saves ${distDiff} m. Fewest segments takes ${hopDiff} fewer segment${hopDiff === 1 ? '' : 's'}.`;
       } else if (distDiff > 0.05) {
         if (dom.dijkstraHighlightBadge) {
           dom.dijkstraHighlightBadge.className = 'col-pill dijkstra winner';
@@ -1046,13 +1584,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
           dom.bfsHighlightBadge.textContent = `${bHops} Hops`;
         }
 
-        takeawayHtml = `
-          <div class="takeaway-title">🎓 Key Algorithmic Insight:</div>
-          <div class="takeaway-text">
-            • <span class="hl-dijkstra">Dijkstra's Algorithm</span> minimized ground walking distance by <strong>${distDiff} m</strong>.<br>
-            • Both algorithms took equal hops (${dHops}), but Dijkstra chose the lighter-weighted pathway segments.
-          </div>
-        `;
+        takeawayHtml = `<strong>Route trade-off</strong><br>Shortest distance is ${distDiff} m shorter; both routes use ${dHops} segments.`;
       } else {
         // Identical or near-identical metric route
         if (dom.dijkstraHighlightBadge) {
@@ -1064,12 +1596,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
           dom.bfsHighlightBadge.textContent = `${bDist} m (${bHops} hops)`;
         }
 
-        takeawayHtml = `
-          <div class="takeaway-title">🎓 Key Algorithmic Insight:</div>
-          <div class="takeaway-text">
-            • Both algorithms identified the <strong>same physical path</strong> (${dDist} m, ${dHops} hops). On this campus corridor, minimizing topological transitions aligns directly with minimizing physical distance.
-          </div>
-        `;
+        takeawayHtml = `<strong>Same route</strong><br>Both options use ${dHops} segments across ${dDist} m.`;
       }
 
       if (dom.compareTakeawayBox) {
@@ -1079,6 +1606,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     }
 
     dom.routeCompareCard.style.display = 'flex';
+    dom.routeCompareCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   /**
@@ -1217,14 +1745,22 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
   /**
    * Display Single Route Summary
    */
+  function placeNameForNode(node) {
+    return state.buildings.find(building => building.nodeId === node.id)?.name || node.name;
+  }
+
+  function routeHasApproxAccess(startNode, endNode) {
+    return [startNode, endNode].some(node => state.buildings.some(building => building.nodeId === node.id && building.accessConfidence === 'LOW'));
+  }
+
   function displayRouteResult(result, startNode, endNode) {
     if (!dom.routeResultCard) return;
 
     if (dom.routeResultTitle) {
-      dom.routeResultTitle.textContent = `${startNode.name} → ${endNode.name}`;
+      dom.routeResultTitle.textContent = `${placeNameForNode(startNode)} → ${placeNameForNode(endNode)}`;
     }
     if (dom.routeAlgoBadge) {
-      dom.routeAlgoBadge.textContent = result.algorithm || state.route.algorithm;
+      dom.routeAlgoBadge.textContent = (result.algorithm || state.route.algorithm) === 'BFS' ? 'Fewest segments' : 'Shortest distance';
     }
 
     if (dom.metricDistance) {
@@ -1241,8 +1777,12 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       dom.metricTime.textContent = micros >= 1000 ? `${(micros / 1000).toFixed(2)} ms` : `${micros} µs`;
     }
 
-    const hasLowConfidence = Array.isArray(result.pathEdges) && result.pathEdges.some(e => e.confidence === 'LOW');
+    const approximateAccess = routeHasApproxAccess(startNode, endNode);
+    const hasLowConfidence = approximateAccess || (Array.isArray(result.pathEdges) && result.pathEdges.some(e => e.confidence === 'LOW'));
     if (dom.routeConfidenceWarning) {
+      dom.routeConfidenceWarning.textContent = approximateAccess
+        ? 'A destination uses the nearest mapped walkway point; the exact door is not shown.'
+        : 'This route contains an approximate path segment.';
       dom.routeConfidenceWarning.style.display = hasLowConfidence ? 'block' : 'none';
     }
 
@@ -1276,8 +1816,8 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
         li.innerHTML = `
           <div class="step-left">
             <span class="step-badge ${stepBadgeClass}">${stepBadgeText}</span>
-            <div class="step-name" title="${escapeHtml(node.name)}">
-              ${escapeHtml(node.name)}
+            <div class="step-name" title="${escapeHtml(matchingBldg ? matchingBldg.name : node.name)}">
+              ${escapeHtml(matchingBldg ? matchingBldg.name : node.name)}
               ${matchingBldg ? `<span style="font-size:0.7rem; color:var(--accent-blue)"> [${escapeHtml(matchingBldg.code)}]</span>` : ''}
             </div>
           </div>
@@ -1305,6 +1845,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     }
 
     dom.routeResultCard.style.display = 'flex';
+    dom.routeResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   /**
@@ -1418,6 +1959,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
    * Reset / Clear Active Route and Comparison
    */
   function clearRoute() {
+    clearAlgorithmDemo();
     state.route.result = null;
     state.route.compareResult = {
       active: false,
@@ -1489,12 +2031,17 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     try {
       const bldg = await ApiClient.getBuildingById(buildingId);
       if (bldg) {
-        state.selectedNodeId = bldg.nodeId;
-        highlightNode(bldg.nodeId);
-        if (shouldFocusMap) {
+        state.selectedNodeId = bldg.nodeId || null;
+        if (bldg.nodeId) {
+          highlightNode(bldg.nodeId);
+        } else {
+          highlightNode(null);
+        }
+        if (shouldFocusMap && bldg.nodeId) {
           focusNodeOnMap(bldg.nodeId);
         }
         displayBuildingDetails(bldg);
+        if (dom.detailPanel) dom.detailPanel.style.display = 'block';
 
         if (window.innerWidth <= 900 && state.currentMobileTab !== 'map') {
           switchMobileTab('map');
@@ -1525,6 +2072,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
         card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
       displayBuildingDetails(matchingBuilding);
+      if (dom.detailPanel) dom.detailPanel.style.display = 'block';
     } else {
       state.selectedBuildingId = null;
       renderBuildingList();
@@ -1532,6 +2080,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       try {
         const node = await ApiClient.getNodeById(nodeId);
         displayNodeDetails(node);
+        if (dom.detailPanel) dom.detailPanel.style.display = 'block';
       } catch (e) {
         console.error('Error fetching node details:', e);
       }
@@ -1654,7 +2203,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       : '<span class="facility-pill">Standard campus facility</span>';
 
     const node = state.graph.nodes ? state.graph.nodes.find((n) => n.id === bldg.nodeId) : null;
-    const connectedPaths = getConnectedPaths(bldg.nodeId);
+    const connectedPaths = bldg.nodeId ? getConnectedPaths(bldg.nodeId) : [];
 
     const pathsHtml = connectedPaths.length > 0
       ? connectedPaths.map((cp) => `
@@ -1665,29 +2214,16 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
         `).join('')
       : '<span style="font-size:0.75rem; color:var(--text-subtle);">Direct walkway connections not indexed.</span>';
 
-    const hasLowConfidence = connectedPaths.some((p) => p.confidence === 'LOW');
+    const hasLowConfidence = bldg.accessConfidence === 'LOW' || bldg.accessConfidence === 'UNRESOLVED' || connectedPaths.some((p) => p.confidence === 'LOW');
 
     dom.detailContent.innerHTML = `
       <div class="detail-row">
         <span class="lbl">Category</span>
-        <span class="val" style="color:var(--accent-cyan); font-weight:600;">${escapeHtml(bldg.category)}</span>
-      </div>
-      <div class="detail-row">
-        <span class="lbl">Campus Node</span>
-        <span class="val" style="font-weight:bold;">${escapeHtml(bldg.nodeId)}</span>
-      </div>
-      ${node && node.lat != null && node.lng != null ? `
-      <div class="detail-row">
-        <span class="lbl">GPS (Lat, Lng)</span>
-        <span class="val" style="font-family:monospace; font-size:0.75rem;">${node.lat.toFixed(6)}, ${node.lng.toFixed(6)}</span>
-      </div>` : ''}
-      <div class="detail-row">
-        <span class="lbl">Building Floors</span>
-        <span class="val">${bldg.floors} Storeys</span>
+        <span class="val">${escapeHtml(bldg.category)}</span>
       </div>
       <div class="detail-row">
         <span class="lbl">Wheelchair Access</span>
-        <span class="val">${node && node.accessible ? '✓ Accessible' : '✕ Step access'}</span>
+        <span class="val">${node ? (node.accessible ? '✓ Accessible path' : '✕ Step access') : 'Not mapped'}</span>
       </div>
       <div style="margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-muted); line-height:1.4;">
         ${escapeHtml(bldg.description || 'Campus landmark facility at Netaji Subhas University of Technology.')}
@@ -1702,13 +2238,13 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       </div>
       ${hasLowConfidence ? `
       <div class="confidence-notice">
-        ℹ️ Access route: Building connection is an approximate access point; subject to ground survey review.
+        ${escapeHtml(bldg.accessNote || 'The mapped endpoint is the nearest walkway access point; the exact door needs an on-site check.')}
       </div>` : ''}
-      <div class="detail-actions-row">
-        <button class="btn-detail-action" id="btnFocusFacility">📍 Focus</button>
-        <button class="btn-detail-action" id="btnSetStartFacility">🚩 From Here</button>
-        <button class="btn-detail-action" id="btnSetDestFacility">🎯 To Here</button>
-      </div>
+      ${bldg.nodeId ? `<div class="detail-actions-row">
+        <button class="btn-detail-action" id="btnFocusFacility">Focus mapped access</button>
+        <button class="btn-detail-action" id="btnSetStartFacility">Set as start</button>
+        <button class="btn-detail-action" id="btnSetDestFacility">Set as destination</button>
+      </div>` : ''}
     `;
 
     const btnFocus = document.getElementById('btnFocusFacility');
@@ -1875,10 +2411,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
 
   function fitCampus() {
     if (!dom.svgContainer || typeof CampusCalibration === 'undefined') return;
-    setMapViewBox(CampusCalibration.fitViewBox(
-      dom.svgContainer.clientWidth,
-      dom.svgContainer.clientHeight
-    ));
+    setMapViewBox(CampusCalibration.fitViewBox(dom.svgContainer.clientWidth, dom.svgContainer.clientHeight));
     mapIsFit = true;
   }
 
@@ -1964,6 +2497,9 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     if (dom.tabRouteBtn) {
       dom.tabRouteBtn.addEventListener('click', () => switchMobileTab('route'));
     }
+    if (dom.tabAlgorithmsBtn) {
+      dom.tabAlgorithmsBtn.addEventListener('click', () => switchMobileTab('algorithms'));
+    }
     if (dom.tabMapBtn) {
       dom.tabMapBtn.addEventListener('click', () => switchMobileTab('map'));
     }
@@ -1980,6 +2516,10 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       dom.tabRouteBtn.classList.toggle('active', targetTab === 'route');
       dom.tabRouteBtn.setAttribute('aria-selected', targetTab === 'route' ? 'true' : 'false');
     }
+    if (dom.tabAlgorithmsBtn) {
+      dom.tabAlgorithmsBtn.classList.toggle('active', targetTab === 'algorithms');
+      dom.tabAlgorithmsBtn.setAttribute('aria-selected', targetTab === 'algorithms' ? 'true' : 'false');
+    }
     if (dom.tabMapBtn) {
       dom.tabMapBtn.classList.toggle('active', targetTab === 'map');
       dom.tabMapBtn.setAttribute('aria-selected', targetTab === 'map' ? 'true' : 'false');
@@ -1988,6 +2528,7 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
     if (dom.appContainer) {
       dom.appContainer.classList.toggle('show-directory', targetTab === 'directory');
       dom.appContainer.classList.toggle('show-route', targetTab === 'route');
+      dom.appContainer.classList.toggle('show-algorithms', targetTab === 'algorithms');
       dom.appContainer.classList.toggle('show-map', targetTab === 'map');
     }
 
@@ -1995,6 +2536,8 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
       switchSidebarMode('route');
     } else if (targetTab === 'directory') {
       switchSidebarMode('directory');
+    } else if (targetTab === 'algorithms') {
+      switchSidebarMode('algorithms');
     }
 
     if (targetTab === 'map' && mapIsFit) {
@@ -2007,6 +2550,19 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
    */
   function bindEvents() {
     installMapNavigation();
+
+    if (dom.mapToneBtn && dom.mapCanvasContainer) {
+      dom.mapToneBtn.addEventListener('click', () => {
+        const original = dom.mapCanvasContainer.classList.toggle('original-map');
+        dom.mapToneBtn.textContent = original ? 'Darken map' : 'Original colors';
+        dom.mapToneBtn.title = original ? 'Use the dark map colors' : 'Restore original map colors';
+        updateMapRasterTheme(original ? 'original' : 'dark');
+      });
+    }
+
+    const closeDetails = () => { if (dom.detailPanel) dom.detailPanel.style.display = 'none'; };
+    document.getElementById('detailBackBtn')?.addEventListener('click', closeDetails);
+    document.getElementById('closeDetailBtn')?.addEventListener('click', closeDetails);
 
     if (dom.searchInput) {
       dom.searchInput.addEventListener('input', (e) => {
@@ -2058,68 +2614,10 @@ Accessible: ${node.accessible ? 'Yes' : 'No'}`;
         renderMapElements();
         renderBuildingList();
         populateRouteSelectors();
+        populateAlgorithmSelectors();
       });
     }
 
-    if (dom.drawerToggle) {
-      dom.drawerToggle.addEventListener('click', () => {
-        dom.inspectorDrawer.classList.toggle('collapsed');
-      });
-    }
-  }
-
-  /**
-   * Live REST API Inspector Setup
-   */
-  function setupApiInspector() {
-    ApiClient.onApiCall((entry) => {
-      state.apiLogs.unshift(entry);
-      if (state.apiLogs.length > 30) state.apiLogs.pop();
-      renderApiLogs();
-    });
-  }
-
-  function renderApiLogs() {
-    if (!dom.apiLogsList) return;
-    dom.apiLogsList.innerHTML = '';
-    state.apiLogs.forEach((log, idx) => {
-      const item = document.createElement('div');
-      item.className = `log-entry ${idx === 0 ? 'active' : ''}`;
-      item.innerHTML = `
-        <div style="display:flex; align-items:center;">
-          <span class="log-method ${log.method}">${log.method}</span>
-          <span class="log-endpoint">${log.endpoint}</span>
-        </div>
-        <div>
-          <span style="font-size:0.7rem; color:${log.status === 200 ? 'var(--accent-emerald)' : 'var(--accent-rose)'}; margin-right:6px;">
-            ${log.status}
-          </span>
-          <span class="log-time">${log.durationMs}ms</span>
-        </div>
-      `;
-
-      item.addEventListener('click', () => {
-        document.querySelectorAll('.log-entry').forEach((e) => e.classList.remove('active'));
-        item.classList.add('active');
-        displayJsonPayload(log);
-      });
-
-      dom.apiLogsList.appendChild(item);
-    });
-
-    if (state.apiLogs.length > 0) {
-      displayJsonPayload(state.apiLogs[0]);
-    }
-  }
-
-  function displayJsonPayload(log) {
-    if (!dom.jsonViewer) return;
-    const header = `// [${log.method}] ${log.endpoint} — Status: ${log.status} (${log.durationMs}ms)
-// Timestamp: ${log.timestamp}
-
-`;
-    const body = log.data ? JSON.stringify(log.data, null, 2) : (log.error ? `// ERROR: ${log.error}` : '// No payload');
-    dom.jsonViewer.textContent = header + body;
   }
 
   function escapeHtml(str) {
